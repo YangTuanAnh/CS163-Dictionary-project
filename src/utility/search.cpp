@@ -41,7 +41,7 @@ void LoadData(const std::string& filePath) {
     }
 
     std::string line;
-    Word* lastWord;
+    Word* lastWord = NULL;
     while (getline(fin, line)) {
         auto tmp = Split(line, '`');
         

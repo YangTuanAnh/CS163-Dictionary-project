@@ -1,10 +1,9 @@
 #pragma once
 #include <raylib.h>
 #define RAYGUI_IMPLEMENTATION
-#include "raygui.h"
 #include "pages/home.h"
 
-const int WIDTH = 1000, HEIGHT = 600;
+const int WIDTH = 1200, HEIGHT = 850;
 enum Screen
 {
     HOME = 0,
@@ -18,11 +17,10 @@ class Program
 private:
     Screen Screen = HOME;
     Home Home;
-
+    Rectangle rec_top{ 0,0,1200,100 };
 public:
     void run()
     {
-
         switch (Screen)
         {
         case HOME:
@@ -39,6 +37,8 @@ public:
         default:
             break;
         }
+        DrawRectangleRec(rec_top, DARKBLUE);
+        DrawText("CS163_GROUP8_DICTIONARY", 390, 60, 28, WHITE);
         EndDrawing();
     }
 };
