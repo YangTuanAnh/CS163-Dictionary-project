@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\build",
+    "\\data",
+    "\\include",
+    "\\lib",
+    "\\src",
+    "\\src\\pages",
+    "\\src\\utility"
+  ],
+  "SelectedNode": "\\src\\utility\\Trie.cpp",
+  "PreviewInSolutionExplorer": false
+}
