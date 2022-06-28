@@ -1,27 +1,20 @@
 #pragma once
 #include <iostream>
+#include "../../include/raygui.h"
 #include "../utility/search.h"
 
 class Home
 {
 private:
-    const int WIDTH = 1000, HEIGHT = 600;
+    const int WIDTH = 1200, HEIGHT = 850;
     bool SearchEdit = false;
     char SearchInput[101] = "";
-
+    std::vector<Word*> word;
+    Rectangle rec_result[20];
+    Rectangle rec_modes{ 25, 115, 310, 720 };
+    Rectangle rec_search{ 370, 115, 620, 65 };
+    Font fnt = LoadFont("CS163_github/data/Font.ttf");
 public:
-    void update()
-    {
-        if (SearchInput[0] != '\0')
-        {
-            for (auto word : SearchWord(SearchInput))
-                std::cerr << word->data << ' ';
-            std::cerr << std::endl;
-        }
-    }
-    void draw()
-    {
-        if (GuiTextBox({130, 170, 800, 30}, SearchInput, 20, SearchEdit))
-            SearchEdit ^= 1;
-    }
+    void update();
+    void draw();
 };
