@@ -14,10 +14,9 @@ private:
     Rectangle rec_search{350, 115, 620, 65};
     Rectangle rec_search_button{1000, 115, 175, 65};
     Font fnt = LoadFont("../data/Font.ttf");
-    std::vector<std::string> Modes = {"Eng-Eng", "Eng-Vie", "Slang", "Emotional", "ABC", "CDE"};
+    std::vector<std::string> Modes = {"Eng - Eng", "Eng - Vie", "Slang", "Emotional", "ABC", "CDE"};
 
 public:
-    void
-    update();
+    void update();
     void draw();
 };

@@ -42,7 +42,7 @@ void Home::draw()
         if (index < Modes.size())
         {
             DrawRectangle(rec_modes.x, rec_modes.y + index * (rec_modes.height / Modes.size()), rec_modes.width, rec_modes.height / Modes.size(), LIGHTGRAY);
-            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
             {
                 DrawRectangle(rec_modes.x, rec_modes.y + index * (rec_modes.height / Modes.size()), rec_modes.width, rec_modes.height / Modes.size(), GRAY);
                 std::cerr << "Load " << Modes[index] << '\n';
@@ -51,7 +51,7 @@ void Home::draw()
     }
     for (int i = 0; i < Modes.size(); i++)
     {
-        DrawText(Modes[i].c_str(), rec_modes.x + 20, rec_modes.y + rec_modes.height * (i + 0.5) / Modes.size(), 20, BLACK);
+        DrawTextEx(fnt, Modes[i].c_str(), { rec_modes.x + 20, rec_modes.y + rec_modes.height * (i + (float)0.4) / Modes.size() }, 30, 2, BLACK);
     }
     DrawRectangleLinesEx(rec_modes, 3, BLACK);
 
@@ -74,9 +74,9 @@ void Home::draw()
         SearchEdit ^= 1;
     }
 
-    if (GuiButton(rec_search_button, "Search"))
+    if (GuiButton(rec_search_button, "SEARCH"))
         std::cerr << "Pressed search button\n";
 
     if (SearchInput[0] == '\0')
-        DrawText("Search bar", 385, 135, 30, LIGHTGRAY);
+        DrawText("Search bar", 380, 135, 30, LIGHTGRAY);
 }
