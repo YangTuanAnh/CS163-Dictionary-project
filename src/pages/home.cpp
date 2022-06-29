@@ -25,7 +25,7 @@ void Home::update()
         if (GetKeyPressed())
         {
             for (int i = 0; i < 20; i++)
-                rec_result[i] = {350, (float)200 + 120 * i, 800, 115};
+                rec_result[i] = {350, (float)200 + 120 * i, 825, 115};
         }
     }
 }
@@ -70,9 +70,13 @@ void Home::draw()
     if (GuiTextBox(rec_search, SearchInput, 20, SearchEdit))
     {
         for (int i = 0; i < 20; i++)
-            rec_result[i] = {350, (float)200 + 120 * i, 800, 115};
+            rec_result[i] = {350, (float)200 + 120 * i, 825, 115};
         SearchEdit ^= 1;
     }
+
+    if (GuiButton(rec_search_button, "Search"))
+        std::cerr << "Pressed search button\n";
+
     if (SearchInput[0] == '\0')
         DrawText("Search bar", 385, 135, 30, LIGHTGRAY);
 }

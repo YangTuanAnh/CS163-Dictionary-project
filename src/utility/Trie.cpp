@@ -79,9 +79,9 @@ success. Otherwise, return duplicated_error */
 	int position = 0;
 	Trie_Node<Record, branch_limit> *cur_Node = root;
 	Trie_Node<Record, branch_limit> *next = root;
-	while (next && position < target.data.length())
+	while (next && position < new_Data.data.length())
 	{
-		next = cur_Node->branch[alphabetic_branch(target.data[position])];
+		next = cur_Node->branch[alphabetic_branch(new_Data.data[position])];
 		if (next)
 		{
 			cur_Node = next;
@@ -95,7 +95,7 @@ success. Otherwise, return duplicated_error */
 	else
 	{
 		next = new Trie_Node<Record, branch_limit>(new_Data);
-		cur_Node->branch[alphabetic_branch(target.data[position--])] = next;
+		cur_Node->branch[alphabetic_branch(new_Data.data[position--])] = next;
 		return success;
 	}
 }
