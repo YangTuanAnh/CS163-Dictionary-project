@@ -6,15 +6,17 @@
 class Home
 {
 private:
-    const int WIDTH = 1200, HEIGHT = 850;
     bool SearchEdit = false;
     char SearchInput[101] = "";
-    std::vector<Word*> word;
+    std::vector<Word *> word;
     Rectangle rec_result[20];
-    Rectangle rec_modes{ 25, 115, 310, 720 };
-    Rectangle rec_search{ 370, 115, 620, 65 };
-    Font fnt = LoadFont("CS163_github/data/Font.ttf");
+    Rectangle rec_modes{25, 115, 310, 470};
+    Rectangle rec_search{370, 115, 620, 65};
+    Font fnt = LoadFont("../data/Font.ttf");
+    std::vector<std::string> Modes = {"Eng-Eng", "Eng-Vie", "Slang", "Emotional", "ABC", "CDE"};
+
 public:
-    void update();
+    void
+    update();
     void draw();
 };

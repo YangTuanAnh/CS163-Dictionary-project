@@ -13,7 +13,8 @@ int alphabetic_branch(char x)
 }
 /*******************************************************************************************************/
 // Trie_Node Defs
-Trie_Node::Trie_Node()
+template <class Record>
+Trie_Node<Record>::Trie_Node()
 {
 	for (int i = 0; i < MAX_BRANCH; i++)
 		branch[i] = nullptr;
@@ -28,10 +29,10 @@ Trie<Record>::Trie()
 }
 
 template <class Record>
-Error_Code Trie<Record>::trie_search(Record target, Record& result)
+Error_Code Trie<Record>::trie_search(Record target, Record &result)
 {
 	int position = 0;
-	Trie_Node<Record>* cur_Node = root;
+	Trie_Node<Record> *cur_Node = root;
 	while (cur_Node && position < target.data.length())
 	{
 		cur_Node = cur_Node->branch[alphabetic_branch(target.data[position])];

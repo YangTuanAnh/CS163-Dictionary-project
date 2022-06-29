@@ -3,7 +3,7 @@
 #define RAYGUI_IMPLEMENTATION
 #include "pages/home.h"
 
-const int WIDTH = 1200, HEIGHT = 850;
+const int WIDTH = 1200, HEIGHT = 600;
 enum Screen
 {
     HOME = 0,
@@ -17,7 +17,8 @@ class Program
 private:
     Screen Screen = HOME;
     Home Home;
-    Rectangle rec_top{ 0,0,1200,100 };
+    Rectangle rec_top{0, 0, 1200, 100};
+
 public:
     void run()
     {
@@ -25,6 +26,7 @@ public:
         {
         case HOME:
             Home.update();
+            break;
         default:
             break;
         }
@@ -34,6 +36,7 @@ public:
         {
         case HOME:
             Home.draw();
+            break;
         default:
             break;
         }
