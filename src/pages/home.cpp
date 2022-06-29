@@ -72,7 +72,7 @@ void Home::draw()
         }
     }
 
-    if (GuiButton(rec_search_button, "Search"))
+    if (GuiButton(rec_search_button, "SEARCH"))
         std::cerr << "Pressed search button\n";
 
     if (SearchInput[0] == '\0')
