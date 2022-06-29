@@ -6,9 +6,6 @@
 #include <iostream>
 #include <fstream>
 
-const int SEARCH_RESULTS_LIMIT = 20;
-const int HISTORY_LIMIT = 20;
-
 class Word;
 class Definition;
 

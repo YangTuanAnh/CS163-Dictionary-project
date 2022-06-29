@@ -1,7 +1,10 @@
 #include "search.h"
+#include "Trie.h"
+#include "limits.h"
 
 std::vector<Word *> allWords;
 std::vector<Definition *> allDefs;
+Trie<Word *, 256> *trie;
 
 Word::Word(const std::string &s)
 {
@@ -51,6 +54,8 @@ void LoadData(const std::string &filePath)
         throw 1;
     }
 
+    trie = new Trie<Word *, 256>(nullptr);
+
     std::string line;
     Word *lastWord = NULL;
     while (getline(fin, line))
@@ -60,6 +65,7 @@ void LoadData(const std::string &filePath)
         if (tmp.size() > 1)
         {
             lastWord = new Word(tmp[0]);
+            trie->insert(lastWord->data, lastWord);
             allWords.push_back(lastWord);
             tmp.erase(tmp.begin());
         }
@@ -76,15 +82,7 @@ void LoadData(const std::string &filePath)
 
 std::vector<Word *> SearchWord(const std::string &key)
 {
-    std::vector<Word *> results;
-    for (auto word : allWords)
-    {
-        if (IsPrefix(key, word->data) && results.size() < SEARCH_RESULTS_LIMIT)
-        {
-            results.push_back(word);
-        }
-    }
-    return results;
+    return trie->search(key);
 }
 
 std::vector<Word *> SearchDef(const std::string &key)
@@ -112,4 +110,5 @@ void Deallocate()
     }
     allWords.clear();
     allDefs.clear();
+    delete trie;
 }

@@ -1,5 +1,5 @@
 #include "program.h"
-#include "search.h"
+#include "utility/search.h"
 
 int main()
 {
