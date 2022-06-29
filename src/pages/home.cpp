@@ -72,26 +72,31 @@ void Home::draw()
         }
     }
 
-    if (GuiButton(rec_search_button, "SEARCH"))
-        std::cerr << "Pressed search button\n";
-
     if (SearchInput[0] == '\0')
         DrawText("Search bar", 375, 135, 30, LIGHTGRAY);
+
+    if (GuiButton(rec_reset, "RESET DB"))
+    {
+        std::cerr << "Resetted database\n";
+    }
 }
 
 void Home::LoadDefinition(Word *word = NULL)
 {
     if (!word)
         return;
-    DrawRectangleRec(rec_def, WHITE);
-    DrawRectangleLinesEx(rec_def, 3, BLACK);
-
-    const int button_width = 45;
-    if (GuiButton({rec_def.x + 15, rec_def.y + 15, button_width, button_width}, "->"))
+    GuiSetStyle(DEFAULT, TEXT_SIZE, 16);
+    if (GuiWindowBox(rec_def, "Definition"))
         selectedWord = NULL;
-    GuiButton({rec_def.x + rec_def.width - 15 - button_width, rec_def.y + 15, button_width, button_width}, "X");
-    GuiButton({rec_def.x + rec_def.width - (15 + button_width) * 2, rec_def.y + 15, button_width, button_width}, "<3");
-    GuiButton({rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + 15, button_width, button_width}, "!!");
+    //  DrawRectangleRec(rec_def, WHITE);
+    //  DrawRectangleLinesEx(rec_def, 3, BLACK);
+
+    const int button_width = 100;
+    // if (GuiButton({rec_def.x + 15, rec_def.y + 15, button_width, button_width}, GuiIconText()))
+    // selectedWord = NULL;
+    GuiButton({rec_def.x + rec_def.width - 15 - button_width, rec_def.y + rec_def.height - 60, button_width, 45}, "Delete");
+    GuiButton({rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2, 45}, "Add Favorite");
+    GuiButton({rec_def.x + rec_def.width - (15 + button_width) * 4, rec_def.y + rec_def.height - 60, button_width, 45}, "Edit");
 
     DrawTextEx(fnt, word->data.c_str(), {rec_def.x + 15, rec_def.y + 30 + button_width}, 40, 2, BLACK);
     for (int j = 0; j < word->defs.size(); j++)

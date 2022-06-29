@@ -12,6 +12,7 @@ enum Screen
     GAME,
     RESET
 };
+
 class Program
 {
 private:
@@ -20,6 +21,14 @@ private:
     Rectangle rec_top{0, 0, 1200, 100};
 
 public:
+    Program()
+    {
+        LoadData("../data/slang.txt");
+        Font fnt = LoadFont("../data/Font.ttf");
+        fnt.baseSize /= 1.4;
+        GuiSetFont(fnt);
+        GuiSetStyle(TEXTBOX, BASE_COLOR_PRESSED, 0xffffffff);
+    }
     void run()
     {
         switch (Screen)
