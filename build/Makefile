@@ -1,2 +1,13 @@
+CXX      := -g++
+CXXFLAGS := -O2 -Wall -Wno-missing-braces
+LDFLAGS  := -L lib/ -lraylib -lopengl32 -lgdi32 -lwinmm
+BUILD    := build
+TARGET   := DictionaryCS163
+INCLUDES  := -I include/ 
+SRC      :=                      \
+   $(wildcard ../src/*.cpp)         \
+   $(wildcard ../src/pages/*.cpp)   \
+   $(wildcard ../src/utility/*.cpp) \
+
 default:
-	g++ ../src/main.cpp -o DictionaryCS163.exe ../src/pages/home.cpp ../src/utility/search.cpp ../src/utility/Trie.cpp -O2 -Wall -Wno-missing-braces -I ../include/ -L ../lib/ -lraylib -lopengl32 -lgdi32 -lwinmm
+	$(CXX) $(CXXFLAGS) $(SRC) -o $(BUILD)\$(TARGET) $(OBJ) $(INCLUDES) $(LDFLAGS)
