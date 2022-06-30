@@ -89,7 +89,7 @@ void LoadData(const std::string &filePath)
     trie = new Trie<Word *, 256>(nullptr);
 
     std::string line;
-    Word *lastWord = NULL;
+    Word *lastWord = nullptr;
     while (getline(fin, line))
     {
         auto tmp = Split(line, '`');

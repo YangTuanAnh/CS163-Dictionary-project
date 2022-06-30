@@ -14,17 +14,12 @@ private:
     Rectangle rec_modes{25, 115, 310, 475};
     Rectangle rec_search{350, 115, 620, 65};
     Rectangle rec_reset{1000, 115, 175, 65};
-    Rectangle rec_def{350, 200, 825, 390};
+    Rectangle rec_def{350, 125, 825, 450};
     Font fnt = LoadFont("../data/Font.ttf");
     std::vector<std::string> Modes = {"Eng - Eng", "Eng - Vie", "Slang", "Emotional"};
 
 public:
-    Home()
-    {
-        for (int i = 0; i < 20; i++)
-            rec_result[i] = {350, (float)200 + 120 * i, 825, 115};
-    }
     void update();
     void draw();
-    void LoadDefinition(Word *word);
+    bool LoadDefinition(Word *word);
 };
