@@ -56,7 +56,7 @@ void Home::draw()
                 std::cerr << "Load " << Modes[i] << '\n';
             }
         }
-        DrawText(Modes[i].c_str(), rec_modes.x + 20, rec_modes.y + rec_modes.height * (i + 0.5) / Modes.size(), 20, BLACK);
+        DrawTextEx(fnt, Modes[i].c_str(), { rec_modes.x + 60, float(rec_modes.y + rec_modes.height * (i + 0.4) / Modes.size()) }, 30, 2, BLACK);
     }
 
     DrawRectangleLinesEx(rec_modes, 3, BLACK);
@@ -85,7 +85,7 @@ void Home::draw()
     }
 
     if (SearchInput[0] == '\0')
-        DrawText("Search bar", 375, 135, 30, LIGHTGRAY);
+        DrawText("Search bar", 365, 135, 30, LIGHTGRAY);
 
     if (GuiButton(rec_reset, "RESET DB"))
     {
