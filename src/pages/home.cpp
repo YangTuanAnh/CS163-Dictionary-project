@@ -1,4 +1,5 @@
 #include "home.h"
+#include "favorites.h"
 
 void Home::update()
 {
@@ -26,7 +27,10 @@ void Home::update()
         for (int i = 0; i < word.size(); i++)
         {
             if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && mousePos.y > 180 && CheckCollisionPointRec(mousePos, rec_result[i]))
+            {
                 selectedWord = word[i];
+                SearchInput[0] = '\0';
+            }
         }
     }
     if (SearchEdit)
@@ -34,7 +38,7 @@ void Home::update()
         if (GetKeyPressed())
         {
             for (int i = 0; i < 20; i++)
-                rec_result[i] = { 350, (float)200 + 120 * i,800, 115 };
+                rec_result[i] = {350, (float)200 + 120 * i, 800, 115};
         }
     }
 }
@@ -80,7 +84,7 @@ void Home::draw()
     if (GuiTextBox(rec_search, SearchInput, 20, SearchEdit))
     {
         for (int i = 0; i < 20; i++)
-            rec_result[i] = { 350, (float)200 + 120 * i,800, 115 };
+            rec_result[i] = {350, (float)200 + 120 * i, 800, 115};
         SearchEdit ^= 1;
     }
 
@@ -110,7 +114,11 @@ bool Home::LoadDefinition(Word *word = NULL)
     // if (GuiButton({rec_def.x + 15, rec_def.y + 15, button_width, button_width}, GuiIconText()))
     // selectedWord = NULL;
     GuiButton({rec_def.x + rec_def.width - 15 - button_width, rec_def.y + rec_def.height - 60, button_width, 45}, "Delete");
-    GuiButton({rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2, 45}, "Add Favorite");
+    if (GuiButton({rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2 + 15, 45}, "Add Favorite"))
+    {
+        insertFavorites(selectedWord);
+        printFavorites();
+    }
     GuiButton({rec_def.x + rec_def.width - (15 + button_width) * 4, rec_def.y + rec_def.height - 60, button_width, 45}, "Edit");
 
     DrawTextEx(fnt, word->data.c_str(), {rec_def.x + 15, rec_def.y + 30 + button_width}, 40, 2, BLACK);
