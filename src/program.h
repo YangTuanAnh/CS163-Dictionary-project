@@ -25,11 +25,11 @@ public:
     Favorites Favorites;
     Program()
     {
-        Font fnt = LoadFont("../data/Font.ttf");
+        Font fnt = LoadFont("CS163_github/data/Font.ttf");
         fnt.baseSize /= 1.4;
         GuiSetFont(fnt);
         GuiSetStyle(TEXTBOX, BASE_COLOR_PRESSED, 0xffffffff);
-        LoadData("../data/slang.txt");
+        LoadData("CS163_github/data/slang.txt");
     }
     void run()
     {

@@ -3,10 +3,7 @@
 
 void Home::update()
 {
-    if (SearchInput[0] != '\0')
-    {
-        word = SearchWord(SearchInput);
-    }
+    word = SearchWord(SearchInput);
     if (GetMouseWheelMove() == -1 && rec_result[word.size() - 1].y > 450)
     {
         for (int i = 0; i < word.size(); i++)
@@ -21,16 +18,11 @@ void Home::update()
             rec_result[i].y += 20;
         }
     }
-    if (SearchInput[0] != '\0')
+    for (int i = 0; i < word.size(); i++)
     {
-        Vector2 mousePos = GetMousePosition();
-        for (int i = 0; i < word.size(); i++)
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && GetMousePosition().y > 180 && CheckCollisionPointRec(GetMousePosition(), rec_result[i]))
         {
-            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && mousePos.y > 180 && CheckCollisionPointRec(mousePos, rec_result[i]))
-            {
-                selectedWord = word[i];
-                SearchInput[0] = '\0';
-            }
+            selectedWord = word[i];
         }
     }
     if (SearchEdit)
@@ -66,18 +58,15 @@ void Home::draw()
     DrawRectangleLinesEx(rec_modes, 3, BLACK);
     if (LoadDefinition(selectedWord))
         return;
-    if (SearchInput[0] != '\0')
+    for (int i = 0; i < word.size(); i++)
     {
-        for (int i = 0; i < word.size(); i++)
-        {
-            DrawRectangleRec(rec_result[i], DARKBLUE);
-            if (CheckCollisionPointRec(mousePos, rec_result[i]) && mousePos.y > 180)
-                DrawRectangleRec(rec_result[i], BLUE);
+        DrawRectangleRec(rec_result[i], DARKBLUE);
+        if (CheckCollisionPointRec(mousePos, rec_result[i]) && mousePos.y > 180)
+            DrawRectangleRec(rec_result[i], BLUE);
 
-            DrawTextEx(fnt, word[i]->data.c_str(), {rec_result[i].x + 13, rec_result[i].y + 10}, 25, 2, WHITE);
-            for (int j = 0; j < word[i]->defs.size(); j++)
-                DrawTextEx(fnt, word[i]->defs[j]->data.c_str(), {rec_result[i].x + 13, rec_result[i].y + 40 * (j + 1)}, 25, 2, WHITE);
-        }
+        DrawTextEx(fnt, word[i]->data.c_str(), { rec_result[i].x + 13, rec_result[i].y + 10 }, 25, 2, WHITE);
+        for (int j = 0; j < word[i]->defs.size(); j++)
+            DrawTextEx(fnt, word[i]->defs[j]->data.c_str(), { rec_result[i].x + 13, rec_result[i].y + 40 * (j + 1) }, 25, 2, WHITE);
     }
     DrawRectangle(350, 100, 850, 90, RAYWHITE);
     DrawRectangleLinesEx(rec_search, 3, BLACK);
@@ -107,12 +96,9 @@ bool Home::LoadDefinition(Word *word = NULL)
     if (GuiWindowBox(rec_def, "Definition"))
         selectedWord = NULL;
     GuiSetStyle(DEFAULT, TEXT_SIZE, 16);
-    //  DrawRectangleRec(rec_def, WHITE);
-    //  DrawRectangleLinesEx(rec_def, 3, BLACK);
 
     const int button_width = 100;
-    // if (GuiButton({rec_def.x + 15, rec_def.y + 15, button_width, button_width}, GuiIconText()))
-    // selectedWord = NULL;
+
     GuiButton({rec_def.x + rec_def.width - 15 - button_width, rec_def.y + rec_def.height - 60, button_width, 45}, "Delete");
     if (GuiButton({rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2 + 15, 45}, "Add Favorite"))
     {

@@ -48,7 +48,7 @@ bool IsPrefix(const std::string &p, const std::string &s)
 
 void LoadHistory()
 {
-    std::ifstream fin("../data/history.txt");
+    std::ifstream fin("CS163_github/data/history.txt");
     if (!fin.is_open())
     {
         std::cerr << "could not load file " << "../data/history.txt" << std::endl;
@@ -116,16 +116,8 @@ void LoadData(const std::string &filePath)
 
 std::vector<Word *> SearchWord(const std::string &key)
 {
-    //return trie->search(key);
-    auto v = trie->search(key);
-    if (!v.empty()) {
-        view_Word(v[0]);
-    }
-    for (auto h : get_Search_History()) {
-        std::cerr << h->data << ' ';
-    }
-    std::cerr << std::endl;
-    return v;
+    if (key != "") return trie->search(key);
+    return get_Search_History();
 }
 
 std::vector<Word *> SearchDef(const std::string &key)
@@ -156,8 +148,13 @@ void Deallocate()
     {
         delete def;
     }
+    for (auto his : history)
+    {
+        delete his;
+    }
     allWords.clear();
     allDefs.clear();
+    history.clear();
     delete trie;
 }
 
