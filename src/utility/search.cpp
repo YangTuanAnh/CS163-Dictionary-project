@@ -48,7 +48,7 @@ bool IsPrefix(const std::string &p, const std::string &s)
 
 void LoadHistory()
 {
-    std::ifstream fin("CS163_github/data/history.txt");
+    std::ifstream fin("../data/history.txt");
     if (!fin.is_open())
     {
         std::cerr << "could not load file " << "../data/history.txt" << std::endl;
@@ -75,7 +75,7 @@ void updateHistory(Word* word)
     history.insert(history.begin(), word);
     if (history.size() > HISTORY_LIMIT)
         history.pop_back();
-    std::ofstream fout("CS163_github/data/history.txt");
+    std::ofstream fout("../data/history.txt");
     if (!fout.is_open())
     {
         std::cerr << "could not load file " << "../data/history.txt" << std::endl;
