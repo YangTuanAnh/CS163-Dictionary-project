@@ -6,7 +6,7 @@ void Home::update()
     {
         word = SearchWord(SearchInput);
     }
-    if (GetMouseWheelMove() == -1 && rec_result[word.size() - 1].y > 660)
+    if (GetMouseWheelMove() == -1 && rec_result[word.size() - 1].y > 450)
     {
         for (int i = 0; i < word.size(); i++)
         {
@@ -20,21 +20,27 @@ void Home::update()
             rec_result[i].y += 20;
         }
     }
-    if (SearchEdit)
+    if (SearchInput[0] != '\0')
     {
         Vector2 mousePos = GetMousePosition();
         for (int i = 0; i < word.size(); i++)
         {
-            if (CheckCollisionPointRec(mousePos, rec_result[i]) && IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && mousePos.y > 180 && CheckCollisionPointRec(mousePos, rec_result[i]))
                 selectedWord = word[i];
+        }
+    }
+    if (SearchEdit)
+    {
+        if (GetKeyPressed())
+        {
+            for (int i = 0; i < 20; i++)
+                rec_result[i] = { 350, (float)200 + 120 * i,800, 115 };
         }
     }
 }
 
 void Home::draw()
 {
-    LoadDefinition(selectedWord);
-
     DrawRectangleRec(rec_modes, WHITE);
     Vector2 mousePos = GetMousePosition();
 
@@ -44,7 +50,7 @@ void Home::draw()
         if (CheckCollisionPointRec(mousePos, rec_mode))
         {
             DrawRectangleRec(rec_mode, LIGHTGRAY);
-            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
             {
                 DrawRectangleRec(rec_mode, GRAY);
                 std::cerr << "Load " << Modes[i] << '\n';
@@ -52,24 +58,30 @@ void Home::draw()
         }
         DrawText(Modes[i].c_str(), rec_modes.x + 20, rec_modes.y + rec_modes.height * (i + 0.5) / Modes.size(), 20, BLACK);
     }
+
     DrawRectangleLinesEx(rec_modes, 3, BLACK);
-
-    DrawRectangleLinesEx(rec_search, 3, BLACK);
-    if (GuiTextBox(rec_search, SearchInput, 20, SearchEdit))
-        SearchEdit ^= 1;
-
-    if (SearchEdit)
+    if (LoadDefinition(selectedWord))
+        return;
+    if (SearchInput[0] != '\0')
     {
         for (int i = 0; i < word.size(); i++)
         {
             DrawRectangleRec(rec_result[i], DARKBLUE);
-            if (CheckCollisionPointRec(mousePos, rec_result[i]))
+            if (CheckCollisionPointRec(mousePos, rec_result[i]) && mousePos.y > 180)
                 DrawRectangleRec(rec_result[i], BLUE);
 
             DrawTextEx(fnt, word[i]->data.c_str(), {rec_result[i].x + 13, rec_result[i].y + 10}, 25, 2, WHITE);
             for (int j = 0; j < word[i]->defs.size(); j++)
                 DrawTextEx(fnt, word[i]->defs[j]->data.c_str(), {rec_result[i].x + 13, rec_result[i].y + 40 * (j + 1)}, 25, 2, WHITE);
         }
+    }
+    DrawRectangle(350, 100, 850, 90, RAYWHITE);
+    DrawRectangleLinesEx(rec_search, 3, BLACK);
+    if (GuiTextBox(rec_search, SearchInput, 20, SearchEdit))
+    {
+        for (int i = 0; i < 20; i++)
+            rec_result[i] = { 350, (float)200 + 120 * i,800, 115 };
+        SearchEdit ^= 1;
     }
 
     if (SearchInput[0] == '\0')
@@ -81,13 +93,16 @@ void Home::draw()
     }
 }
 
-void Home::LoadDefinition(Word *word = NULL)
+bool Home::LoadDefinition(Word *word = NULL)
 {
     if (!word)
-        return;
-    GuiSetStyle(DEFAULT, TEXT_SIZE, 16);
+    {
+        GuiSetStyle(DEFAULT, TEXT_SIZE, 22);
+        return false;
+    }
     if (GuiWindowBox(rec_def, "Definition"))
         selectedWord = NULL;
+    GuiSetStyle(DEFAULT, TEXT_SIZE, 16);
     //  DrawRectangleRec(rec_def, WHITE);
     //  DrawRectangleLinesEx(rec_def, 3, BLACK);
 
@@ -101,4 +116,5 @@ void Home::LoadDefinition(Word *word = NULL)
     DrawTextEx(fnt, word->data.c_str(), {rec_def.x + 15, rec_def.y + 30 + button_width}, 40, 2, BLACK);
     for (int j = 0; j < word->defs.size(); j++)
         DrawTextEx(fnt, word->defs[j]->data.c_str(), {rec_def.x + 15, rec_def.y + 50 + button_width + 40 * (j + 1)}, 25, 2, BLACK);
+    return true;
 }

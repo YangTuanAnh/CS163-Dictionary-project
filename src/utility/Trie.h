@@ -49,7 +49,7 @@ private:
 int alphabetic_branch(char x)
 // Returns the branch corresponding to char x
 {
-	return int(x);
+	return int(x) + 128;
 	/*
 	// ASCII used
 	// Currently for English alphabet
