@@ -64,7 +64,7 @@ void LoadHistory()
     fin.close();
 }
 
-void view_Word(Word* word)
+void updateHistory(Word* word)
 {
     // add to history
     for (int i = 0; i < history.size(); i++)
@@ -75,6 +75,20 @@ void view_Word(Word* word)
     history.insert(history.begin(), word);
     if (history.size() > HISTORY_LIMIT)
         history.pop_back();
+    std::ofstream fout("CS163_github/data/history.txt");
+    if (!fout.is_open())
+    {
+        std::cerr << "could not load file " << "../data/history.txt" << std::endl;
+        throw 1;
+    }
+
+    std::cerr << "Open file history successfully" << std::endl;
+
+    for (int i = 0; i < history.size(); i++)
+    {
+        fout << history[i]->data << std::endl;
+    }
+    fout.close();
 }
 
 void LoadData(const std::string &filePath)

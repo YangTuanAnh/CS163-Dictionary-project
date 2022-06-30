@@ -20,9 +20,12 @@ void Home::update()
     }
     for (int i = 0; i < word.size(); i++)
     {
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && GetMousePosition().y > 180 && CheckCollisionPointRec(GetMousePosition(), rec_result[i]))
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && GetMousePosition().y > 180 && CheckCollisionPointRec(GetMousePosition(), rec_result[i]))
         {
             selectedWord = word[i];
+            updateHistory(selectedWord);
+            for (int i = 0; i < 20; i++)
+                rec_result[i] = { 350, (float)200 + 120 * i, 800, 115 };
         }
     }
     if (SearchEdit)
