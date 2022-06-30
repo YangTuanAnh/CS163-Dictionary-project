@@ -5,6 +5,7 @@
 std::vector<Word *> allWords;
 std::vector<Definition *> allDefs;
 Trie<Word *, 256> *trie;
+std::vector<Word*> history;
 
 Word::Word(const std::string &s)
 {
@@ -45,6 +46,37 @@ bool IsPrefix(const std::string &p, const std::string &s)
     return (p == s.substr(0, p.size()));
 }
 
+void LoadHistory()
+{
+    std::ifstream fin("../data/history.txt");
+    if (!fin.is_open())
+    {
+        std::cerr << "could not load file " << "../data/history.txt" << std::endl;
+        throw 1;
+    }
+    std::string line;
+    while (getline(fin, line))
+    {
+        Word* temp;
+        trie->find(line, temp);
+        history.push_back(temp);
+    }
+    fin.close();
+}
+
+void view_Word(Word* word)
+{
+    // add to history
+    for (int i = 0; i < history.size(); i++)
+        if (history[i] == word)
+        {
+            history.erase(history.begin() + i);
+        }
+    history.insert(history.begin(), word);
+    if (history.size() > HISTORY_LIMIT)
+        history.pop_back();
+}
+
 void LoadData(const std::string &filePath)
 {
     std::ifstream fin(filePath);
@@ -78,11 +110,22 @@ void LoadData(const std::string &filePath)
     }
 
     fin.close();
+
+    LoadHistory();
 }
 
 std::vector<Word *> SearchWord(const std::string &key)
 {
-    return trie->search(key);
+    //return trie->search(key);
+    auto v = trie->search(key);
+    if (!v.empty()) {
+        view_Word(v[0]);
+    }
+    for (auto h : get_Search_History()) {
+        std::cerr << h->data << ' ';
+    }
+    std::cerr << std::endl;
+    return v;
 }
 
 std::vector<Word *> SearchDef(const std::string &key)
@@ -100,15 +143,28 @@ std::vector<Word *> SearchDef(const std::string &key)
 
 void Deallocate()
 {
+    std::ofstream fout("../data/history.txt");
+    for (int i = 0; i < history.size(); i++)
+        fout << history[i]->data << "\n";
+    fout.close();
+
     for (auto word : allWords)
     {
         delete word;
     }
-    for (auto def : allWords)
+    for (auto def : allDefs)
     {
         delete def;
     }
     allWords.clear();
     allDefs.clear();
     delete trie;
+}
+
+std::vector<Word*> get_Search_History()
+/* Returns the latest searched words, up to 20 records
+*/
+{
+    std::vector<Word*> result = history;
+    return result;
 }

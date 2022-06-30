@@ -1,2 +1,16 @@
-.vscode
+raylib-master
+_build
+_bin
 .vs
+.vscode
+_app
+_lib
+README.md
+raylib_premake5.lua
+premake5.lua
+premake5.exe
+premake5
+premake-VisualStudio.bat
+premake-mingw.bat
+LICENSE
+DICTIONARY.sln

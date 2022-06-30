@@ -28,8 +28,13 @@ public:
 extern std::vector<Word *> allWords;
 extern std::vector<Definition *> allDefs;
 
+// For UI
+std::vector<Word*> get_Search_History();
+
 std::vector<std::string> Split(const std::string &s, char delim);
 bool IsPrefix(const std::string &p, const std::string &s);
+void LoadHistory();
+void view_Word(Word* word);
 void LoadData(const std::string &filePath);
 std::vector<Word *> SearchWord(const std::string &word);
 std::vector<Word *> SearchDef(const std::string &key);
