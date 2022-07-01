@@ -1,12 +1,11 @@
 #include "favorites.h"
-#include <vector>
 
-std::vector<Word *> favorites;
-void insertFavorites(Word *word)
+std::vector<Word*> favorites;
+void insertFavorites(Word* word)
 {
     favorites.push_back(word);
 }
-void removeFavorites(Word *word)
+void removeFavorites(Word* word)
 {
 }
 void printFavorites()

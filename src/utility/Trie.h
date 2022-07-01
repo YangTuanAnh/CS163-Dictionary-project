@@ -19,7 +19,7 @@ class Trie_Node
 public:
 	// data members
 	Record data;
-	Trie_Node<Record, branch_limit> **branch;
+	Trie_Node<Record, branch_limit>** branch;
 	// Constructors
 	Trie_Node(Record data);
 	// Destructor
@@ -35,13 +35,13 @@ public:
 	// Destructor
 	~Trie();
 	// Methods
-	Trie_error find(const std::string &target, Record &data);
-	Trie_error insert(const std::string &newData, const Record &data);
-	std::vector<Record> search(const std::string &key);
+	Trie_error find(const std::string& target, Record& data);
+	Trie_error insert(const std::string& newData, const Record& data);
+	std::vector<Record> search(const std::string& key);
 private:
 	Record defaultValue;
-	Trie_Node<Record, branch_limit> *root;
-	void getSearchResults(Trie_Node<Record, branch_limit> *cur, std::vector<Record> &results);
+	Trie_Node<Record, branch_limit>* root;
+	void getSearchResults(Trie_Node<Record, branch_limit>* cur, std::vector<Record>& results);
 };
 
 
@@ -88,7 +88,7 @@ Trie_Node<Record, branch_limit>::~Trie_Node()
 // Trie Defs
 
 template <class Record, int branch_limit>
-Trie<Record, branch_limit>::Trie(const Record &defaultVal)
+Trie<Record, branch_limit>::Trie(const Record& defaultVal)
 {
 	defaultValue = defaultVal;
 	root = new Trie_Node<Record, branch_limit>(defaultValue);
@@ -101,12 +101,12 @@ Trie<Record, branch_limit>::~Trie()
 }
 
 template <class Record, int branch_limit>
-Trie_error Trie<Record, branch_limit>::find(const std::string &target, Record &data)
+Trie_error Trie<Record, branch_limit>::find(const std::string& target, Record& data)
 /* Search from the root of Trie, if target is found, result is assigned as a copy of target and return success.
  * Otherwise, return non_exist.
  */
 {
-	Trie_Node<Record, branch_limit> *cur = root;
+	Trie_Node<Record, branch_limit>* cur = root;
 	for (auto c : target) {
 		int brachId = alphabetic_branch(c);
 		if (brachId == -1) {
@@ -119,18 +119,19 @@ Trie_error Trie<Record, branch_limit>::find(const std::string &target, Record &d
 	}
 	if (cur->data == defaultValue) {
 		return non_exist;
-	} else {
+	}
+	else {
 		data = cur->data;
 		return success;
 	}
 }
 
 template <class Record, int branch_limit>
-Trie_error Trie<Record, branch_limit>::insert(const std::string &newData, const Record &data)
+Trie_error Trie<Record, branch_limit>::insert(const std::string& newData, const Record& data)
 /* If new_Data has yet appeared in the Trie, a new Trie_Node with data = new_Data is inserted to Trie and return
 success. Otherwise, return duplicated_error */
 {
-	Trie_Node<Record, branch_limit> *cur = root;
+	Trie_Node<Record, branch_limit>* cur = root;
 	for (auto c : newData) {
 		int brachId = alphabetic_branch(c);
 		if (brachId == -1) {
@@ -144,14 +145,15 @@ success. Otherwise, return duplicated_error */
 	if (cur->data == defaultValue) {
 		cur->data = data;
 		return success;
-	} else {
+	}
+	else {
 		return duplicated_error;
 	}
 }
 
 template <class Record, int branch_limit>
-std::vector<Record> Trie<Record, branch_limit>::search(const std::string &key) {
-	Trie_Node<Record, branch_limit> *cur = root;
+std::vector<Record> Trie<Record, branch_limit>::search(const std::string& key) {
+	Trie_Node<Record, branch_limit>* cur = root;
 	for (auto c : key) {
 		int brachId = alphabetic_branch(c);
 		if (brachId == -1) {
@@ -168,7 +170,7 @@ std::vector<Record> Trie<Record, branch_limit>::search(const std::string &key) {
 }
 
 template <class Record, int branch_limit>
-void Trie<Record, branch_limit>::getSearchResults(Trie_Node<Record, branch_limit> *cur, std::vector<Record> &results) {
+void Trie<Record, branch_limit>::getSearchResults(Trie_Node<Record, branch_limit>* cur, std::vector<Record>& results) {
 	if (cur == nullptr || results.size() >= SEARCH_RESULTS_LIMIT) {
 		return;
 	}

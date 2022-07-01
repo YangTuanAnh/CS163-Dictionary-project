@@ -33,7 +33,7 @@ void Home::update()
         if (GetKeyPressed())
         {
             for (int i = 0; i < 20; i++)
-                rec_result[i] = {350, (float)200 + 120 * i, 800, 115};
+                rec_result[i] = { 350, (float)200 + 120 * i, 800, 115 };
         }
     }
 }
@@ -45,17 +45,18 @@ void Home::draw()
 
     for (int i = 0; i < Modes.size(); i++)
     {
-        Rectangle rec_mode = {rec_modes.x, rec_modes.y + i * (rec_modes.height / Modes.size()), rec_modes.width, rec_modes.height / Modes.size()};
+        Rectangle rec_mode = { rec_modes.x, rec_modes.y + i * (rec_modes.height / Modes.size()), rec_modes.width, rec_modes.height / Modes.size() };
         if (CheckCollisionPointRec(mousePos, rec_mode))
         {
             DrawRectangleRec(rec_mode, LIGHTGRAY);
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
             {
-                DrawRectangleRec(rec_mode, GRAY);
+                modeChosen = i;
                 std::cerr << "Load " << Modes[i] << '\n';
             }
         }
-        DrawTextEx(fnt, Modes[i].c_str(), { rec_modes.x + 60, float(rec_modes.y + rec_modes.height * (i + 0.4) / Modes.size()) }, 30, 2, BLACK);
+        if (modeChosen == i) DrawRectangleRec(rec_mode, GRAY);
+        DrawTextEx(fnt, Modes[i].c_str(), { rec_modes.x + 70, float(rec_modes.y + rec_modes.height * (i + 0.35) / Modes.size()) }, 35, 2, BLACK);
     }
 
     DrawRectangleLinesEx(rec_modes, 3, BLACK);
@@ -76,7 +77,7 @@ void Home::draw()
     if (GuiTextBox(rec_search, SearchInput, 20, SearchEdit))
     {
         for (int i = 0; i < 20; i++)
-            rec_result[i] = {350, (float)200 + 120 * i, 800, 115};
+            rec_result[i] = { 350, (float)200 + 120 * i, 800, 115 };
         SearchEdit ^= 1;
     }
 
@@ -89,7 +90,7 @@ void Home::draw()
     }
 }
 
-bool Home::LoadDefinition(Word *word = NULL)
+bool Home::LoadDefinition(Word* word = NULL)
 {
     if (!word)
     {
@@ -102,16 +103,16 @@ bool Home::LoadDefinition(Word *word = NULL)
 
     const int button_width = 100;
 
-    GuiButton({rec_def.x + rec_def.width - 15 - button_width, rec_def.y + rec_def.height - 60, button_width, 45}, "Delete");
-    if (GuiButton({rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2 + 15, 45}, "Add Favorite"))
+    GuiButton({ rec_def.x + rec_def.width - 15 - button_width, rec_def.y + rec_def.height - 60, button_width, 45 }, "Delete");
+    if (GuiButton({ rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2 + 15, 45 }, "Add Favorite"))
     {
         insertFavorites(selectedWord);
         printFavorites();
     }
-    GuiButton({rec_def.x + rec_def.width - (15 + button_width) * 4, rec_def.y + rec_def.height - 60, button_width, 45}, "Edit");
+    GuiButton({ rec_def.x + rec_def.width - (15 + button_width) * 4, rec_def.y + rec_def.height - 60, button_width, 45 }, "Edit");
 
-    DrawTextEx(fnt, word->data.c_str(), {rec_def.x + 15, rec_def.y + 30 + button_width}, 40, 2, BLACK);
+    DrawTextEx(fnt, word->data.c_str(), { rec_def.x + 15, rec_def.y + 30 + button_width }, 40, 2, BLACK);
     for (int j = 0; j < word->defs.size(); j++)
-        DrawTextEx(fnt, word->defs[j]->data.c_str(), {rec_def.x + 15, rec_def.y + 50 + button_width + 40 * (j + 1)}, 25, 2, BLACK);
+        DrawTextEx(fnt, word->defs[j]->data.c_str(), { rec_def.x + 15, rec_def.y + 50 + button_width + 40 * (j + 1) }, 25, 2, BLACK);
     return true;
 }

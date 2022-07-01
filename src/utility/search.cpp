@@ -2,22 +2,22 @@
 #include "Trie.h"
 #include "limits.h"
 
-std::vector<Word *> allWords;
-std::vector<Definition *> allDefs;
-Trie<Word *, 256> *trie;
+std::vector<Word*> allWords;
+std::vector<Definition*> allDefs;
+Trie<Word*, 256>* trie;
 std::vector<Word*> history;
 
-Word::Word(const std::string &s)
+Word::Word(const std::string& s)
 {
     data = s;
 }
 
-Definition::Definition(const std::string &s)
+Definition::Definition(const std::string& s)
 {
     data = s;
 }
 
-std::vector<std::string> Split(const std::string &s, char delim)
+std::vector<std::string> Split(const std::string& s, char delim)
 {
     std::string tmp;
     std::vector<std::string> res;
@@ -37,7 +37,7 @@ std::vector<std::string> Split(const std::string &s, char delim)
     return res;
 }
 
-bool IsPrefix(const std::string &p, const std::string &s)
+bool IsPrefix(const std::string& p, const std::string& s)
 {
     if (p.size() > s.size())
     {
@@ -48,7 +48,7 @@ bool IsPrefix(const std::string &p, const std::string &s)
 
 void LoadHistory()
 {
-    std::ifstream fin("../data/history.txt");
+    std::ifstream fin("CS163_github/data/history.txt");
     if (!fin.is_open())
     {
         std::cerr << "could not load file " << "../data/history.txt" << std::endl;
@@ -75,7 +75,7 @@ void updateHistory(Word* word)
     history.insert(history.begin(), word);
     if (history.size() > HISTORY_LIMIT)
         history.pop_back();
-    std::ofstream fout("../data/history.txt");
+    std::ofstream fout("CS163_github/data/history.txt");
     if (!fout.is_open())
     {
         std::cerr << "could not load file " << "../data/history.txt" << std::endl;
@@ -91,7 +91,7 @@ void updateHistory(Word* word)
     fout.close();
 }
 
-void LoadData(const std::string &filePath)
+void LoadData(const std::string& filePath)
 {
     std::ifstream fin(filePath);
     if (!fin.is_open())
@@ -100,10 +100,10 @@ void LoadData(const std::string &filePath)
         throw 1;
     }
 
-    trie = new Trie<Word *, 256>(nullptr);
+    trie = new Trie<Word*, 256>(nullptr);
 
     std::string line;
-    Word *lastWord = nullptr;
+    Word* lastWord = nullptr;
     while (getline(fin, line))
     {
         auto tmp = Split(line, '`');
@@ -116,7 +116,7 @@ void LoadData(const std::string &filePath)
             tmp.erase(tmp.begin());
         }
 
-        Definition *def = new Definition(tmp[0]);
+        Definition* def = new Definition(tmp[0]);
         lastWord->defs.push_back(def);
         def->word = lastWord;
 
@@ -128,15 +128,15 @@ void LoadData(const std::string &filePath)
     LoadHistory();
 }
 
-std::vector<Word *> SearchWord(const std::string &key)
+std::vector<Word*> SearchWord(const std::string& key)
 {
     if (key != "") return trie->search(key);
     return get_Search_History();
 }
 
-std::vector<Word *> SearchDef(const std::string &key)
+std::vector<Word*> SearchDef(const std::string& key)
 {
-    std::vector<Word *> results;
+    std::vector<Word*> results;
     for (auto def : allDefs)
     {
         if (IsPrefix(key, def->data) && results.size() < SEARCH_RESULTS_LIMIT)
