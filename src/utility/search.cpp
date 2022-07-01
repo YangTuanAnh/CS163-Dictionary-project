@@ -2,9 +2,20 @@
 #include "Trie.h"
 #include "limits.h"
 
+const std::string digits = "0123456789";
+const std::string lowercase = "abcdefghijklmnopqrstuvwxyz";
+const std::string uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const std::string symbols = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+const std::string space = " ";
+constexpr int digitsSize = 10;
+constexpr int lowercaseSize = 26;
+constexpr int uppercaseSize = 26;
+constexpr int symbolsSize = 32;
+
+
 std::vector<Word*> allWords;
 std::vector<Definition*> allDefs;
-Trie<Word*, 256>* trie;
+Trie<Word*, uppercaseSize + symbolsSize>* trie;
 std::vector<Word*> history;
 
 Word::Word(const std::string& s)
@@ -85,7 +96,7 @@ void LoadData(const std::string& filePath)
         throw 1;
     }
 
-    trie = new Trie<Word*, 256>(nullptr);
+    trie = new Trie<Word*,  uppercaseSize + symbolsSize>(uppercase + symbols, nullptr);
 
     std::string line;
     Word* lastWord = nullptr;

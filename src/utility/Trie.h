@@ -11,8 +11,6 @@ enum Trie_error
 	invalid_character
 };
 
-int alphabetic_branch(char x); // Returns the alphabetic order of x
-
 template <class Record, int branch_limit>
 class Trie_Node
 {
@@ -31,7 +29,7 @@ class Trie
 {
 public:
 	// Constructor
-	Trie(const Record& defaultVal);
+	Trie(const std::string& chars, const Record& defaultVal);
 	// Destructor
 	~Trie();
 	// Methods
@@ -39,26 +37,11 @@ public:
 	Trie_error insert(const std::string& newData, const Record& data);
 	std::vector<Record> search(const std::string& key);
 private:
+	char alphabeticId[256];
 	Record defaultValue;
 	Trie_Node<Record, branch_limit>* root;
 	void getSearchResults(Trie_Node<Record, branch_limit>* cur, std::vector<Record>& results);
 };
-
-int alphabetic_branch(char x)
-// Returns the branch corresponding to char x
-{
-	return int(x) + 128;
-	/*
-	// ASCII used
-	// Currently for English alphabet
-	if (x >= 97 && x <= 122) // Lowercase
-		return x - 97;
-	else if (x >= 65 && x <= 90) // Uppercase
-		return x - 65;
-	return -1; // Not a letter
-	*/
-}
-/*******************************************************************************************************/
 
 template <class Record, int branch_limit>
 Trie_Node<Record, branch_limit>::Trie_Node(Record data)
@@ -86,8 +69,18 @@ Trie_Node<Record, branch_limit>::~Trie_Node()
 // Trie Defs
 
 template <class Record, int branch_limit>
-Trie<Record, branch_limit>::Trie(const Record& defaultVal)
+Trie<Record, branch_limit>::Trie(const std::string& chars, const Record& defaultVal)
 {
+	if ((int)chars.size() != branch_limit) {
+		std::cerr << "ERROR: size of alphabet must be equal to branch_limit." << std::endl;
+		exit(0);
+	}
+	for (int i = 0; i < 256; ++i) {
+		alphabeticId[i] = -1;
+	}
+	for (int i = 0; i < branch_limit; ++i) {
+		alphabeticId[chars[i]] = i; 
+	}
 	defaultValue = defaultVal;
 	root = new Trie_Node<Record, branch_limit>(defaultValue);
 }
@@ -106,7 +99,7 @@ Trie_error Trie<Record, branch_limit>::find(const std::string& target, Record& d
 {
 	Trie_Node<Record, branch_limit>* cur = root;
 	for (auto c : target) {
-		int brachId = alphabetic_branch(c);
+		int brachId = alphabeticId[c];
 		if (brachId == -1) {
 			return non_exist;
 		}
@@ -131,7 +124,7 @@ success. Otherwise, return duplicated_error */
 {
 	Trie_Node<Record, branch_limit>* cur = root;
 	for (auto c : newData) {
-		int brachId = alphabetic_branch(c);
+		int brachId = alphabeticId[c];
 		if (brachId == -1) {
 			return invalid_character;
 		}
@@ -153,7 +146,7 @@ template <class Record, int branch_limit>
 std::vector<Record> Trie<Record, branch_limit>::search(const std::string& key) {
 	Trie_Node<Record, branch_limit>* cur = root;
 	for (auto c : key) {
-		int brachId = alphabetic_branch(c);
+		int brachId = alphabeticId[c];
 		if (brachId == -1) {
 			return std::vector<Record>();
 		}
