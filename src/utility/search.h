@@ -1,5 +1,4 @@
-#ifndef SEARCH_H
-#define SEARCH_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -39,5 +38,3 @@ void LoadData(const std::string& filePath);
 std::vector<Word*> SearchWord(const std::string& word);
 std::vector<Word*> SearchDef(const std::string& key);
 void Deallocate();
-
-#endif

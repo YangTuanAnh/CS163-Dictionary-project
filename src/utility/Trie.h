@@ -44,8 +44,6 @@ private:
 	void getSearchResults(Trie_Node<Record, branch_limit>* cur, std::vector<Record>& results);
 };
 
-
-
 int alphabetic_branch(char x)
 // Returns the branch corresponding to char x
 {
