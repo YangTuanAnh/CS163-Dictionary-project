@@ -3,7 +3,7 @@
 
 void Home::update()
 {
-    word = SearchWord(SearchInput);
+    word = slang.SearchWord(SearchInput);
     if (GetMouseWheelMove() == -1 && rec_result[word.size() - 1].y > 450)
     {
         for (int i = 0; i < word.size(); i++)
@@ -23,7 +23,9 @@ void Home::update()
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && GetMousePosition().y > 180 && CheckCollisionPointRec(GetMousePosition(), rec_result[i]))
         {
             selectedWord = word[i];
-            updateHistory(selectedWord);
+            
+            slang.getFullDefinition(selectedWord->data);
+
             for (int i = 0; i < 20; i++)
                 rec_result[i] = { 350, (float)200 + 120 * i, 800, 115 };
         }
