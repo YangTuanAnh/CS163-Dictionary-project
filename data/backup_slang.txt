@@ -1,4 +1,3 @@
-Slag`Meaning
 #1`Number one
 $`Dollar| money
 $_$`Has money
@@ -564,7 +563,6 @@ AWKY`Awkward
 AWNP`All Work, No Play
 AWOL`Absent Without Leave
 AWP`Arctic Warfare Police sniper rifle
-AWS`As We Speak
 AWS`As We Speak
 AWSM`Awesome
 AWW`Cute
@@ -1211,7 +1209,6 @@ CHEDDA`Cash| money
 CHEDDAR`Money
 CHEERIO`Goodbye
 CHEERS`Thanks| Goodbye
-CHEESE`Drug| starter heroin| Money
 CHEESE`Drug| starter heroin| Money
 CHEESY`Corny| lame
 CHEEZ`Cheese
@@ -2181,7 +2178,6 @@ FLA`Florida
 FLAFF`Foot Loose And Fancy Free
 FLAG`Bandana
 FLAGGED`Banned
-FLAGGED`Banned
 FLAKE`Unreliable person
 FLAKE OUT`Cancel at the last minute
 FLAKY`Unreliable
@@ -2340,8 +2336,6 @@ FYP`Fixed Your Post
 FYR`For Your Review| For Your Records
 FYT`For Your Time
 G`Grin
-G O A T`Greatest Of All Time
-GOAT`Greatest Of All Time
 G'DAY`Good Day, hello
 G1`Good One| Gone
 G2B`Go To Bed
@@ -2735,7 +2729,7 @@ HAYT`How Are You Today?
 HAYWIRE`Crazy
 HAZE`Type of marijuana
 HB`Hug Back
-HB`Hurry Back
+Hurry Back
 HBCU`Historically Black Colleges and Universities
 HBD`Happy Birthday
 HBK`Heart Break Kid
@@ -2797,7 +2791,7 @@ HGL`Happy Go Lucky
 HGTV`Home and Garden Television
 HGV`Heavy Goods Vehicle
 HH`Ha-Ha
-HH`Holding Hands
+Holding Hands
 HHIS`Hanging Head In Shame
 HHOJ`Ha-Ha, Only Joking
 HHOK`Ha-Ha, Only Kidding
@@ -3467,8 +3461,6 @@ JGB`Just Got Back
 JGH`Just Got Home
 JGI`Just Google It
 JGL`Just Get Lost
-JGI`Just Google It
-JGL`Just Get Lost
 JHC`Jesus H Christ
 JHEEZE`OMG| wow
 JHP`Jacketed Hollow Point (bullet)
@@ -4116,8 +4108,6 @@ MCM`Man Crush Monday
 MCP`Male Chauvanist Pig
 MCR`My Chemical Romance (band)
 MD`Doctor of Medicine| Managing Director
- MCR`My Chemical Romance (band)
-MD`Doctor of Medicine| Managing Director
 MDA`Drug related to Ecstasy (MDMA)
 MDF`Medium Density Fiberboard
 MDK`Murder Death Kill
@@ -4438,7 +4428,6 @@ NACKER`Irish gypsy| traveller
 NACKERED`Tired| worn out
 NADA`Nothing
 NADDA`Nothing
-NAE`No
 NAE`No
 NAFF`Poor quality| uncool| Substitute swear word
 NAGL`Not A Good Look
@@ -4999,7 +4988,7 @@ OTT`Over The Top
 OTTH`On The Third Hand
 OTTOMH`Off The Top Of My Head
 OTW`On The Way
-OTW`On The Whole
+On The Whole
 OTY`Over To You
 OTZ`ORZ
 OU`Open University
@@ -5084,7 +5073,6 @@ PBP`Please Be Patient
 PBQ`Please Be Quiet
 PBR`Pabst Blue Ribbon (beer)
 PBS`Public Broadcasting Service
-PBUH`Peace Be Upon Him
 PBUH`Peace Be Upon Him
 PBWU`Peace Be With You
 PBWY`Peace Be With You
@@ -5406,8 +5394,6 @@ PWOS`Parents Watching Over Shoulder
 PWP`Plot? What Plot?
 PWT`Poor White Trash
 PX`Post Exchange| Part Exchange
-PYP`Play Your Position
-PYT`Pretty Young Thing
 PYP`Play Your Position
 PYT`Pretty Young Thing
 PZ`Peace
@@ -6053,7 +6039,6 @@ SOUND`Cool| awesome| good
 SOUR`Strong WEED
 SOW`Female police officer
 SOWIE`Sorry
-SOWIE`Sorry
 SOX`Socks
 SOY`Shame On You
 SOYW`Something On Your Wall
@@ -6375,7 +6360,6 @@ TEKKERS`Technique
 TELNET`Network Virtual Terminal Protocol
 TEMP`Temporary
 TEN`Person with a perfect body
-TEOTWAWKI`The End Of The World As We Know It
 TEOTWAWKI`The End Of The World As We Know It
 TERRIBAD`Terrible and Bad, awful
 TEVS`Whatever
@@ -7334,7 +7318,6 @@ WUWT`What's Up With That
 WUWTA`What You Wanna Talk About?
 WUWTB`What You Wanna Talk 'Bout?
 WUWU`What's Up With You?
-WUWU`What's Up With You?
 WUZ`Was
 WW`White Widow| White Woman
 WW1`World War One
@@ -7658,5 +7641,3 @@ ZZZ`Sleepy| bored| tired
 |O|`LOL
 }:-)`Devilish smile
 ~`Denotes Sarcasm| Put At The End Of A Word To Make It Longer
-Æ`Registered Trademark Symbol
-ô`Trademark
