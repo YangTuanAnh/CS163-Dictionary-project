@@ -72,7 +72,7 @@ void LoadHistory()
 
 void updateHistory(Word* word)
 {
-    for (int i = 0; i < history.size(); i++)
+    for (int i = 0; i < (int)history.size(); i++)
         if (history[i] == word)
         {
             history.erase(history.begin() + i);
@@ -91,20 +91,32 @@ void LoadData(const std::string& filePath)
         throw 1;
     }
 
-    trie = new Trie<Word*>(uppercase + symbols, nullptr);
+    trie = new Trie<Word*>(uppercase + digits + symbols + space, nullptr);
 
     std::string line;
     Word* lastWord = nullptr;
+    bool ignore = false;
     while (getline(fin, line))
     {
         auto tmp = Split(line, '`');
 
         if (tmp.size() > 1)
         {
+            ignore = false;
             lastWord = new Word(tmp[0]);
-            trie->insert(lastWord->data, lastWord);
-            allWords.push_back(lastWord);
-            tmp.erase(tmp.begin());
+
+            if (trie->insert(lastWord->data, lastWord) != success) {
+                std::cerr << "ERROR: could not insert word " << tmp[0] << std::endl;
+                ignore = true;
+                delete lastWord;
+            } else {
+                allWords.push_back(lastWord);
+                tmp.erase(tmp.begin());
+            }
+        }
+
+        if (ignore) {
+            continue;
         }
 
         Definition* def = new Definition(tmp[0]);
@@ -141,7 +153,7 @@ std::vector<Word*> SearchDef(const std::string& key)
 void Deallocate()
 {
     std::ofstream fout("../data/history.txt");
-    for (int i = 0; i < history.size(); i++)
+    for (int i = 0; i < (int)history.size(); i++)
         fout << history[i]->data << "\n";
     fout.close();
 
@@ -152,10 +164,6 @@ void Deallocate()
     for (auto def : allDefs)
     {
         delete def;
-    }
-    for (auto his : history)
-    {
-        delete his;
     }
     allWords.clear();
     allDefs.clear();

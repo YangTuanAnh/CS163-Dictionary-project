@@ -42,6 +42,7 @@ private:
 	Record defaultValue;
 	Trie_Node<Record>* root;
 	void getSearchResults(Trie_Node<Record>* cur, std::vector<Record>& results);
+	void Deallocate(Trie_Node<Record>* cur);
 };
 
 template <class Record>
@@ -56,14 +57,8 @@ Trie_Node<Record>::Trie_Node(int branchLimit, Record data)
 
 template <class Record>
 Trie_Node<Record>::~Trie_Node()
-{
-	for (int i = 0; i < sizeof(branch) / sizeof(branch[i]); ++i) {
-		if (branch[i] != nullptr) {
-			delete branch[i];
-		}
-	}
-	delete[] this->branch;
-	this->branch = nullptr;
+{	
+	//std::cerr << "dying" << std::endl;
 }
 
 /*******************************************************************************************************/
@@ -77,7 +72,7 @@ Trie<Record>::Trie(const std::string& chars, const Record& defaultVal)
 		alphabeticId[i] = -1;
 	}
 	for (int i = 0; i < branchLimit; ++i) {
-		alphabeticId[chars[i]] = i; 
+		alphabeticId[(int)chars[i]] = i; 
 	}
 	defaultValue = defaultVal;
 	root = new Trie_Node<Record>(branchLimit, defaultValue);
@@ -86,7 +81,18 @@ Trie<Record>::Trie(const std::string& chars, const Record& defaultVal)
 template <class Record>
 Trie<Record>::~Trie()
 {
-	delete root;
+	Deallocate(root);
+}
+
+template <class Record>
+void Trie<Record>::Deallocate(Trie_Node<Record>* cur) {
+	if (cur == nullptr) {
+		return;
+	}
+	for (int i = 0; i < branchLimit; ++i) {
+		Deallocate(cur->branch[i]);
+	}
+	delete cur;
 }
 
 template <class Record>
@@ -97,7 +103,7 @@ Trie_error Trie<Record>::find(const std::string& target, Record& data)
 {
 	Trie_Node<Record>* cur = root;
 	for (auto c : target) {
-		int brachId = alphabeticId[c];
+		int brachId = alphabeticId[(int)c];
 		if (brachId == -1) {
 			return non_exist;
 		}
@@ -122,7 +128,7 @@ success. Otherwise, return duplicated_error */
 {
 	Trie_Node<Record>* cur = root;
 	for (auto c : newData) {
-		int brachId = alphabeticId[c];
+		int brachId = alphabeticId[(int)c];
 		if (brachId == -1) {
 			return invalid_character;
 		}
@@ -144,7 +150,7 @@ template <class Record>
 std::vector<Record> Trie<Record>::search(const std::string& key) {
 	Trie_Node<Record>* cur = root;
 	for (auto c : key) {
-		int brachId = alphabeticId[c];
+		int brachId = alphabeticId[(int)c];
 		if (brachId == -1) {
 			return std::vector<Record>();
 		}
