@@ -7,15 +7,10 @@ const std::string lowercase = "abcdefghijklmnopqrstuvwxyz";
 const std::string uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const std::string symbols = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
 const std::string space = " ";
-constexpr int digitsSize = 10;
-constexpr int lowercaseSize = 26;
-constexpr int uppercaseSize = 26;
-constexpr int symbolsSize = 32;
-
 
 std::vector<Word*> allWords;
 std::vector<Definition*> allDefs;
-Trie<Word*, uppercaseSize + symbolsSize>* trie;
+Trie<Word*>* trie;
 std::vector<Word*> history;
 
 Word::Word(const std::string& s)
@@ -96,7 +91,7 @@ void LoadData(const std::string& filePath)
         throw 1;
     }
 
-    trie = new Trie<Word*,  uppercaseSize + symbolsSize>(uppercase + symbols, nullptr);
+    trie = new Trie<Word*>(uppercase + symbols, nullptr);
 
     std::string line;
     Word* lastWord = nullptr;
