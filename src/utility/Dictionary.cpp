@@ -108,8 +108,6 @@ void Dictionary::LoadData()
     }
 
     fin.close();
-
-    LoadHistory();
 }
 
 std::vector<Word*> Dictionary::SearchWord(const std::string& key)
@@ -138,11 +136,7 @@ std::vector<std::string> Dictionary::getFullDefinition(const std::string& word) 
         return std::vector<std::string>();
     }
     updateHistory(ptr);
-    for (auto x : history) {
-        std::cerr << x->data << ' ';
-    }
-    std::cerr << std::endl;
-
+    
     std::vector<std::string> defs;
     for (auto def : ptr->defs) {
         defs.push_back(def->data);
