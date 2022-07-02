@@ -3,7 +3,7 @@
 
 void Home::update()
 {
-    word = slang.SearchWord(SearchInput);
+
     if (GetMouseWheelMove() == -1 && rec_result[word.size() - 1].y > 450)
     {
         for (int i = 0; i < word.size(); i++)
@@ -34,6 +34,7 @@ void Home::update()
     {
         if (GetKeyPressed())
         {
+            word = slang.SearchWord(SearchInput);
             for (int i = 0; i < 20; i++)
                 rec_result[i] = {350, (float)200 + 120 * i, 800, 115};
         }
@@ -72,7 +73,7 @@ void Home::draw()
             DrawRectangleRec(rec_result[i], BLUE);
 
         DrawTextEx(fnt, word[i]->data.c_str(), {rec_result[i].x + 13, rec_result[i].y + 10}, 25, 2, WHITE);
-        for (int j = 0; j <= 1; j++)
+        for (int j = 0; j < std::min(2, int(word[i]->defs.size())); j++)
         {
             std::string s = word[i]->defs[j]->data;
             if (s.length() * 12 > rec_result[i].width - 13)
