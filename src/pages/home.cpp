@@ -3,7 +3,7 @@
 
 void Home::update()
 {
-
+    word = slang.SearchWord(SearchInput);
     if (GetMouseWheelMove() == -1 && rec_result[word.size() - 1].y > 450)
     {
         for (int i = 0; i < word.size(); i++)
@@ -34,7 +34,6 @@ void Home::update()
     {
         if (GetKeyPressed())
         {
-            word = slang.SearchWord(SearchInput);
             for (int i = 0; i < 20; i++)
                 rec_result[i] = {350, (float)200 + 120 * i, 800, 115};
         }
