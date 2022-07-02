@@ -1,5 +1,4 @@
 #include "program.h"
-#include "utility/search.h"
 
 int main()
 {
@@ -8,7 +7,6 @@ int main()
     Program Program;
     while (!WindowShouldClose())
         Program.run();
-    Deallocate();
     CloseWindow();
     return 0;
 }

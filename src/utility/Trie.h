@@ -11,27 +11,25 @@ enum Trie_error
 	invalid_character
 };
 
-int alphabetic_branch(char x); // Returns the alphabetic order of x
-
-template <class Record, int branch_limit>
+template <class Record>
 class Trie_Node
 {
 public:
 	// data members
 	Record data;
-	Trie_Node<Record, branch_limit>** branch;
+	Trie_Node<Record>** branch;
 	// Constructors
-	Trie_Node(Record data);
+	Trie_Node(int branchLimit, Record data);
 	// Destructor
 	~Trie_Node();
 };
 
-template <class Record, int branch_limit>
+template <class Record>
 class Trie
 {
 public:
 	// Constructor
-	Trie(const Record& defaultVal);
+	Trie(const std::string& chars, const Record& defaultVal);
 	// Destructor
 	~Trie();
 	// Methods
@@ -39,76 +37,73 @@ public:
 	Trie_error insert(const std::string& newData, const Record& data);
 	std::vector<Record> search(const std::string& key);
 private:
+	char alphabeticId[256];
+	int branchLimit;
 	Record defaultValue;
-	Trie_Node<Record, branch_limit>* root;
-	void getSearchResults(Trie_Node<Record, branch_limit>* cur, std::vector<Record>& results);
+	Trie_Node<Record>* root;
+	void getSearchResults(Trie_Node<Record>* cur, std::vector<Record>& results);
+	void Deallocate(Trie_Node<Record>* cur);
 };
 
-
-
-int alphabetic_branch(char x)
-// Returns the branch corresponding to char x
-{
-	return int(x) + 128;
-	/*
-	// ASCII used
-	// Currently for English alphabet
-	if (x >= 97 && x <= 122) // Lowercase
-		return x - 97;
-	else if (x >= 65 && x <= 90) // Uppercase
-		return x - 65;
-	return -1; // Not a letter
-	*/
-}
-/*******************************************************************************************************/
-
-template <class Record, int branch_limit>
-Trie_Node<Record, branch_limit>::Trie_Node(Record data)
+template <class Record>
+Trie_Node<Record>::Trie_Node(int branchLimit, Record data)
 {
 	this->data = data;
-	this->branch = new Trie_Node<Record, branch_limit> *[branch_limit];
-	for (int i = 0; i < branch_limit; ++i) {
+	this->branch = new Trie_Node<Record> *[branchLimit];
+	for (int i = 0; i < branchLimit; ++i) {
 		branch[i] = nullptr;
 	}
 }
 
-template <class Record, int branch_limit>
-Trie_Node<Record, branch_limit>::~Trie_Node()
-{
-	for (int i = 0; i < branch_limit; ++i) {
-		if (branch[i] != nullptr) {
-			delete branch[i];
-		}
-	}
-	delete[] this->branch;
-	this->branch = nullptr;
+template <class Record>
+Trie_Node<Record>::~Trie_Node()
+{	
+	//std::cerr << "dying" << std::endl;
 }
 
 /*******************************************************************************************************/
 // Trie Defs
 
-template <class Record, int branch_limit>
-Trie<Record, branch_limit>::Trie(const Record& defaultVal)
+template <class Record>
+Trie<Record>::Trie(const std::string& chars, const Record& defaultVal)
 {
+	branchLimit = chars.size();
+	for (int i = 0; i < 256; ++i) {
+		alphabeticId[i] = -1;
+	}
+	for (int i = 0; i < branchLimit; ++i) {
+		alphabeticId[(int)chars[i]] = i; 
+	}
 	defaultValue = defaultVal;
-	root = new Trie_Node<Record, branch_limit>(defaultValue);
+	root = new Trie_Node<Record>(branchLimit, defaultValue);
 }
 
-template <class Record, int branch_limit>
-Trie<Record, branch_limit>::~Trie()
+template <class Record>
+Trie<Record>::~Trie()
 {
-	delete root;
+	Deallocate(root);
 }
 
-template <class Record, int branch_limit>
-Trie_error Trie<Record, branch_limit>::find(const std::string& target, Record& data)
+template <class Record>
+void Trie<Record>::Deallocate(Trie_Node<Record>* cur) {
+	if (cur == nullptr) {
+		return;
+	}
+	for (int i = 0; i < branchLimit; ++i) {
+		Deallocate(cur->branch[i]);
+	}
+	delete cur;
+}
+
+template <class Record>
+Trie_error Trie<Record>::find(const std::string& target, Record& data)
 /* Search from the root of Trie, if target is found, result is assigned as a copy of target and return success.
  * Otherwise, return non_exist.
  */
 {
-	Trie_Node<Record, branch_limit>* cur = root;
+	Trie_Node<Record>* cur = root;
 	for (auto c : target) {
-		int brachId = alphabetic_branch(c);
+		int brachId = alphabeticId[(int)c];
 		if (brachId == -1) {
 			return non_exist;
 		}
@@ -126,19 +121,19 @@ Trie_error Trie<Record, branch_limit>::find(const std::string& target, Record& d
 	}
 }
 
-template <class Record, int branch_limit>
-Trie_error Trie<Record, branch_limit>::insert(const std::string& newData, const Record& data)
+template <class Record>
+Trie_error Trie<Record>::insert(const std::string& newData, const Record& data)
 /* If new_Data has yet appeared in the Trie, a new Trie_Node with data = new_Data is inserted to Trie and return
 success. Otherwise, return duplicated_error */
 {
-	Trie_Node<Record, branch_limit>* cur = root;
+	Trie_Node<Record>* cur = root;
 	for (auto c : newData) {
-		int brachId = alphabetic_branch(c);
+		int brachId = alphabeticId[(int)c];
 		if (brachId == -1) {
 			return invalid_character;
 		}
 		if (cur->branch[brachId] == nullptr) {
-			cur->branch[brachId] = new Trie_Node<Record, branch_limit>(defaultValue);
+			cur->branch[brachId] = new Trie_Node<Record>(branchLimit, defaultValue);
 		}
 		cur = cur->branch[brachId];
 	}
@@ -151,11 +146,11 @@ success. Otherwise, return duplicated_error */
 	}
 }
 
-template <class Record, int branch_limit>
-std::vector<Record> Trie<Record, branch_limit>::search(const std::string& key) {
-	Trie_Node<Record, branch_limit>* cur = root;
+template <class Record>
+std::vector<Record> Trie<Record>::search(const std::string& key) {
+	Trie_Node<Record>* cur = root;
 	for (auto c : key) {
-		int brachId = alphabetic_branch(c);
+		int brachId = alphabeticId[(int)c];
 		if (brachId == -1) {
 			return std::vector<Record>();
 		}
@@ -165,19 +160,19 @@ std::vector<Record> Trie<Record, branch_limit>::search(const std::string& key) {
 		cur = cur->branch[brachId];
 	}
 	std::vector<Record> results;
-	Trie<Record, branch_limit>::getSearchResults(cur, results);
+	Trie<Record>::getSearchResults(cur, results);
 	return results;
 }
 
-template <class Record, int branch_limit>
-void Trie<Record, branch_limit>::getSearchResults(Trie_Node<Record, branch_limit>* cur, std::vector<Record>& results) {
+template <class Record>
+void Trie<Record>::getSearchResults(Trie_Node<Record>* cur, std::vector<Record>& results) {
 	if (cur == nullptr || results.size() >= SEARCH_RESULTS_LIMIT) {
 		return;
 	}
 	if (cur->data != defaultValue) {
 		results.push_back(cur->data);
 	}
-	for (int i = 0; i < branch_limit; ++i) {
-		Trie<Record, branch_limit>::getSearchResults(cur->branch[i], results);
+	for (int i = 0; i < branchLimit; ++i) {
+		Trie<Record>::getSearchResults(cur->branch[i], results);
 	}
 }
