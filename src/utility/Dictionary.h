@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <cassert>
 #include "Trie.h"
 #include "limits.h"
 

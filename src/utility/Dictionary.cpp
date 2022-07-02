@@ -75,36 +75,30 @@ void Dictionary::LoadData()
     }
 
     std::string line;
-    Word* lastWord = nullptr;
-    bool ignore = false;
+    int lineNum = 0;
     while (getline(fin, line))
     {
-        auto tmp = Split(line, '`');
-
-        if (tmp.size() > 1)
-        {
-            ignore = false;
-            lastWord = new Word(tmp[0]);
-
-            if (trie->insert(lastWord->data, lastWord) != success) {
-                std::cerr << trie->insert(lastWord->data, lastWord) << std::endl;
-                std::cerr << "ERROR: could not insert word " << tmp[0] << std::endl;
-                ignore = true;
-                delete lastWord;
-            } else {
-                tmp.erase(tmp.begin());
+        ++lineNum;
+        auto tmp = Split(line, '\t');
+        
+        if (tmp.size() != 2) {
+            std::cerr << "in file: " << filePath << ":" << std::endl;
+            std::cerr << "skip line " << lineNum << ": " << line << std::endl;
+        } else {
+            Word* word;
+            if (trie->find(tmp[0], word) != success) {
+                word = new Word(tmp[0]);
+                if (trie->insert(tmp[0], word) != success) {
+                    std::cerr << "in file: " << filePath << ":" << std::endl;
+                    std::cerr << "could not insert word " << tmp[0] << std::endl;
+                    continue;
+                }
             }
+            Definition* def = new Definition(tmp[1]);
+            word->defs.push_back(def);
+            def->word = word;
+            allDefs.push_back(def);
         }
-
-        if (ignore) {
-            continue;
-        }
-
-        Definition* def = new Definition(tmp[0]);
-        lastWord->defs.push_back(def);
-        def->word = lastWord;
-
-        allDefs.push_back(def);
     }
 
     fin.close();
