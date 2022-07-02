@@ -20,7 +20,7 @@ void Home::update()
     }
     for (int i = 0; i < word.size(); i++)
     {
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && GetMousePosition().y > 180 && CheckCollisionPointRec(GetMousePosition(), rec_result[i]))
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && GetMousePosition().y > 180 && CheckCollisionPointRec(GetMousePosition(), rec_result[i]) && !selectedWord)
         {
             selectedWord = word[i];
 
