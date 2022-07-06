@@ -84,7 +84,7 @@ void Home::draw()
             DrawTextEx(fnt, s.c_str(), { rec_result[i].x + 13, rec_result[i].y + 40 * (j + 1) }, 25, 2, WHITE);
         }
     }
-    DrawRectangle(350, 100, 850, 90, RAYWHITE);
+    DrawRectangle(330, 100, 850, 90, RAYWHITE);
     DrawRectangleLinesEx(rec_search, 3, BLACK);
     if (GuiTextBox(rec_search, SearchInput, 20, SearchEdit))
     {
