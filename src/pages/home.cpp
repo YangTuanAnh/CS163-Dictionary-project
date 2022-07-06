@@ -27,7 +27,7 @@ void Home::update()
             slang.getFullDefinition(selectedWord->data);
 
             for (int i = 0; i < 20; i++)
-                rec_result[i] = { 350, (float)200 + 120 * i, 800, 115 };
+                rec_result[i] = {350, (float)200 + 120 * i, 800, 115};
         }
     }
     if (SearchEdit)
@@ -35,7 +35,7 @@ void Home::update()
         if (GetKeyPressed())
         {
             for (int i = 0; i < 20; i++)
-                rec_result[i] = { 350, (float)200 + 120 * i, 800, 115 };
+                rec_result[i] = {350, (float)200 + 120 * i, 800, 115};
         }
     }
 }
@@ -47,7 +47,7 @@ void Home::draw()
 
     for (int i = 0; i < Modes.size(); i++)
     {
-        Rectangle rec_mode = { rec_modes.x, rec_modes.y + i * (rec_modes.height / Modes.size()), rec_modes.width, rec_modes.height / Modes.size() };
+        Rectangle rec_mode = {rec_modes.x, rec_modes.y + i * (rec_modes.height / Modes.size()), rec_modes.width, rec_modes.height / Modes.size()};
         if (CheckCollisionPointRec(mousePos, rec_mode))
         {
             DrawRectangleRec(rec_mode, LIGHTGRAY);
@@ -59,7 +59,7 @@ void Home::draw()
         }
         if (modeChosen == i)
             DrawRectangleRec(rec_mode, GRAY);
-        DrawTextEx(fnt, Modes[i].c_str(), { rec_modes.x + 70, float(rec_modes.y + rec_modes.height * (i + 0.35) / Modes.size()) }, 35, 2, BLACK);
+        DrawTextEx(fnt, Modes[i].c_str(), {rec_modes.x + 70, float(rec_modes.y + rec_modes.height * (i + 0.35) / Modes.size())}, 35, 2, BLACK);
     }
 
     DrawRectangleLinesEx(rec_modes, 3, BLACK);
@@ -71,17 +71,17 @@ void Home::draw()
         if (CheckCollisionPointRec(mousePos, rec_result[i]) && mousePos.y > 180)
             DrawRectangleRec(rec_result[i], BLUE);
 
-        DrawTextEx(fnt, word[i]->data.c_str(), { rec_result[i].x + 13, rec_result[i].y + 10 }, 25, 2, WHITE);
+        DrawTextEx(fnt, word[i]->data.c_str(), {rec_result[i].x + 13, rec_result[i].y + 10}, 25, 2, WHITE);
         for (int j = 0; j < std::min(2, int(word[i]->defs.size())); j++)
         {
             std::string s = word[i]->defs[j]->data;
-            if (s.length() * 12 > rec_result[i].width - 13)
+            if (s.length() * 13 > rec_result[i].width - 13)
             {
-                for (int k = 1; k <= 3; k++)
-                    s.insert(s.begin() + rec_result[i].width / 12 + k, '.');
-                s.insert(s.begin() + rec_result[i].width / 12 + 4, '\0');
+                for (int k = 0; k < 3; k++)
+                    s.insert(s.begin() + rec_result[i].width / 13 + k, '.');
+                s.insert(s.begin() + rec_result[i].width / 13 + 3, '\0');
             }
-            DrawTextEx(fnt, s.c_str(), { rec_result[i].x + 13, rec_result[i].y + 40 * (j + 1) }, 25, 2, WHITE);
+            DrawTextEx(fnt, s.c_str(), {rec_result[i].x + 13, rec_result[i].y + 40 * (j + 1)}, 25, 2, WHITE);
         }
     }
     DrawRectangle(330, 100, 850, 90, RAYWHITE);
@@ -89,7 +89,7 @@ void Home::draw()
     if (GuiTextBox(rec_search, SearchInput, 20, SearchEdit))
     {
         for (int i = 0; i < 20; i++)
-            rec_result[i] = { 350, (float)200 + 120 * i, 800, 115 };
+            rec_result[i] = {350, (float)200 + 120 * i, 800, 115};
         SearchEdit ^= 1;
     }
 
@@ -102,7 +102,7 @@ void Home::draw()
     }
 }
 
-bool Home::LoadDefinition(Word* word = NULL)
+bool Home::LoadDefinition(Word *word = NULL)
 {
     if (!word)
     {
@@ -115,15 +115,15 @@ bool Home::LoadDefinition(Word* word = NULL)
 
     const int button_width = 100;
 
-    GuiButton({ rec_def.x + rec_def.width - 15 - button_width, rec_def.y + rec_def.height - 60, button_width, 45 }, "Delete");
-    if (GuiButton({ rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2 + 15, 45 }, "Add Favorite"))
+    GuiButton({rec_def.x + rec_def.width - 15 - button_width, rec_def.y + rec_def.height - 60, button_width, 45}, "Delete");
+    if (GuiButton({rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2 + 15, 45}, "Add Favorite"))
     {
         insertFavorites(selectedWord);
         printFavorites();
     }
-    GuiButton({ rec_def.x + rec_def.width - (15 + button_width) * 4, rec_def.y + rec_def.height - 60, button_width, 45 }, "Edit");
+    GuiButton({rec_def.x + rec_def.width - (15 + button_width) * 4, rec_def.y + rec_def.height - 60, button_width, 45}, "Edit");
 
-    DrawTextEx(fnt, word->data.c_str(), { rec_def.x + 15, rec_def.y + 40 }, 40, 2, BLACK);
+    DrawTextEx(fnt, word->data.c_str(), {rec_def.x + 15, rec_def.y + 40}, 40, 2, BLACK);
     int cnt = 1;
     for (int j = 0; j < word->defs.size(); j++)
     {
@@ -141,7 +141,7 @@ bool Home::LoadDefinition(Word* word = NULL)
                 extended++;
             }
         }
-        DrawTextEx(fnt, s.c_str(), { rec_def.x + 15, rec_def.y + 60 + 30 * cnt }, 20, 2, BLACK);
+        DrawTextEx(fnt, s.c_str(), {rec_def.x + 15, rec_def.y + 60 + 30 * cnt}, 20, 2, BLACK);
         cnt += extended;
     }
     return true;
