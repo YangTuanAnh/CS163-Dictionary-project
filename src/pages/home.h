@@ -15,7 +15,7 @@ private:
     Rectangle rec_search{ 340, 115, 630, 65 };
     Rectangle rec_reset{ 1000, 115, 175, 65 };
     Rectangle rec_def{ 340, 125, 835, 450 };
-    Font fnt = LoadFont("CS163_github/data/Font.ttf");
+    Font fnt = LoadFont("../data/Font.ttf");
     std::vector<std::string> Modes = { "Eng - Eng", "Eng - Vie", "Slang", "Emotional" };
     short modeChosen = 2;
 

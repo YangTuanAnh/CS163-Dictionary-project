@@ -2,6 +2,7 @@
 
 Word::Word(const std::string& s)
 {
+    isFavorite = false;
     data = s;
 }
 
@@ -14,25 +15,32 @@ Dictionary::Dictionary(const std::string& _dir, const std::string &chars)
 {   
     dir = _dir;
     trie = new Trie<Word*>(chars, nullptr);
-    LoadData();
-    LoadHistory();
+    loadData();
+    loadHistory();
+    loadFavorite();
 }
 
 Dictionary::~Dictionary()
 {   
     saveData();
     saveHistory();
+    saveFavorite();
+    for (auto word : allWords)
+    {
+        delete word;
+    }
     for (auto def : allDefs)
     {
         delete def;
     }
+    allWords.clear();
     allDefs.clear();
     history.clear();
     delete trie;
 }
 
 
-void Dictionary::LoadHistory()
+void Dictionary::loadHistory()
 {   
     std::string filePath = dir + "/history.txt";
     std::ifstream fin(filePath);
@@ -45,26 +53,37 @@ void Dictionary::LoadHistory()
     while (getline(fin, line))
     {
         Word* temp;
-        trie->find(line, temp);
+        if (trie->find(line, temp) != success) {
+            std::cerr << "Could not load history (" << line << ")" << std::endl;
+            continue;
+        }
         history.push_back(temp);
     }
     fin.close();
 }
 
-void Dictionary::updateHistory(Word* word)
-{
-    for (int i = 0; i < (int)history.size(); i++)
-        if (history[i] == word)
-        {
-            history.erase(history.begin() + i);
+void Dictionary::loadFavorite() {
+    std::string filePath = dir + "/favorite.txt";
+    std::ifstream fin(filePath);
+    if (!fin.is_open())
+    {
+        std::cerr << "Could not load file " << filePath << std::endl;
+        exit(0);
+    }
+    std::string line;
+    while (getline(fin, line))
+    {
+        Word* temp;
+        if (trie->find(line, temp) != success) {
+            std::cerr << "Could not load favorite (" << line << ")" << std::endl;
+            continue;
         }
-    history.insert(history.begin(), word);
-    if (history.size() > HISTORY_LIMIT)
-        history.pop_back();
-    
+        updateFavorite(temp);
+    }
+    fin.close();
 }
 
-void Dictionary::LoadData()
+void Dictionary::loadData()
 {
     std::string filePath = dir + "/data.txt";
     std::ifstream fin(filePath);
@@ -93,6 +112,7 @@ void Dictionary::LoadData()
                     std::cerr << "could not insert word " << tmp[0] << std::endl;
                     continue;
                 }
+                allWords.push_back(word);
             }
             Definition* def = new Definition(tmp[1]);
             word->defs.push_back(def);
@@ -102,6 +122,25 @@ void Dictionary::LoadData()
     }
 
     fin.close();
+}
+
+void Dictionary::updateHistory(Word* word)
+{
+    for (int i = 0; i < (int)history.size(); i++)
+        if (history[i] == word)
+        {
+            history.erase(history.begin() + i);
+        }
+    history.insert(history.begin(), word);
+    if (history.size() > HISTORY_LIMIT)
+        history.pop_back();
+    
+}
+
+void Dictionary::updateFavorite(Word* word)
+{
+    word->isFavorite = !word->isFavorite;
+    std::cerr << "set " << word->data << "->isFavorite = " << std::boolalpha << word->isFavorite << std::endl;
 }
 
 std::vector<Word*> Dictionary::SearchWord(const std::string& key)
@@ -146,6 +185,16 @@ std::vector<Word*> Dictionary::getSearchHistory()
     return result;
 }
 
+std::vector<Word*> Dictionary::getFavoriteList(){
+    std::vector<Word*> result;
+    for (auto word : allWords) {
+        if (word->isFavorite) {
+            result.push_back(word);
+        }
+    }
+    return result;
+}
+
 void Dictionary::saveData() 
 {
     // implement later
@@ -159,6 +208,19 @@ void Dictionary::saveHistory()
     } else {
         for (int i = 0; i < (int)history.size(); i++)
             fout << history[i]->data << "\n";
+    }
+    fout.close();
+}
+
+void Dictionary::saveFavorite()
+{
+    std::ofstream fout(dir + "/favorite.txt");
+    if (!fout.is_open()) {
+        std::cerr << "could not save file" + dir + "/favorite.txt" << std::endl;
+    } else {
+        for (auto word : getFavoriteList()) {
+            fout << word->data << "\n";
+        }
     }
     fout.close();
 }

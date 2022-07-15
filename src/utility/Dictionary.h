@@ -14,6 +14,7 @@ class Definition;
 class Word
 {
 public:
+    bool isFavorite;
     std::string data;
     std::vector<Definition *> defs;
     Word(const std::string &s);
@@ -35,19 +36,23 @@ public:
     std::vector<Word *> SearchWord(const std::string &word);
     std::vector<Word *> SearchDef(const std::string &key);
     std::vector<std::string> getFullDefinition(const std::string &word);
+    void updateFavorite(Word *word);
+    std::vector<Word *> getFavoriteList();
 
 private:
     std::string dir;
     std::vector<Definition *> allDefs;
-    std::vector<Word *> history;
+    std::vector<Word *> allWords, history;
     Trie<Word *> *trie;
 
-    void LoadData();
-    void LoadHistory();
+    void loadData();
+    void loadHistory();
+    void loadFavorite();
     void updateHistory(Word *word);
     std::vector<Word *> getSearchHistory();
     void saveData();
     void saveHistory();
+    void saveFavorite();
 };
 
 std::vector<std::string> Split(const std::string &s, char delim);

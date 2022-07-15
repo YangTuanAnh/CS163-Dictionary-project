@@ -1,5 +1,4 @@
 #include "home.h"
-#include "favorites.h"
 
 void Home::update()
 {
@@ -118,8 +117,13 @@ bool Home::LoadDefinition(Word *word = NULL)
     GuiButton({rec_def.x + rec_def.width - 15 - button_width, rec_def.y + rec_def.height - 60, button_width, 45}, "Delete");
     if (GuiButton({rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2 + 15, 45}, "Add Favorite"))
     {
-        insertFavorites(selectedWord);
-        printFavorites();
+        slang.updateFavorite(selectedWord);
+        // just debug 
+        std::cerr << "Favorite list: ";
+        for (auto word : slang.getFavoriteList()) {
+            std::cerr << word->data << ' ';
+        }
+        std::cerr << std::endl;
     }
     GuiButton({rec_def.x + rec_def.width - (15 + button_width) * 4, rec_def.y + rec_def.height - 60, button_width, 45}, "Edit");
 

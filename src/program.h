@@ -2,7 +2,6 @@
 #include <raylib.h>
 #define RAYGUI_IMPLEMENTATION
 #include "pages/home.h"
-#include "pages/favorites.h"
 
 const int WIDTH = 1200, HEIGHT = 600;
 enum Screen
@@ -22,7 +21,6 @@ private:
 
 public:
     Home Home;
-    Favorites Favorites;
     Program()
     {
         Font fnt = LoadFont("../data/Font.ttf");
