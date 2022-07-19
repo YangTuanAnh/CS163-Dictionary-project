@@ -1,26 +1,23 @@
 #pragma once
+
 #include <raylib.h>
 #define RAYGUI_IMPLEMENTATION
+#include <raygui.h>
+#include "utility/screen.h"
 #include "pages/home.h"
+#include "pages/favorite.h"
 
 const int WIDTH = 1200, HEIGHT = 600;
-enum Screen
-{
-    HOME = 0,
-    HISTORY,
-    FAVORITE,
-    GAME,
-    RESET
-};
 
 class Program
 {
 private:
-    Screen Screen = HOME;
-    Rectangle rec_top{ 0, 0, 1200, 100 };
+    Rectangle rec_top{0, 0, 1200, 100};
+    Home Home;
+    Favorite Favorite;
+    Screen currScreen = HOME;
 
 public:
-    Home Home;
     Program()
     {
         Font fnt = LoadFont("../data/Font.ttf");
@@ -30,20 +27,26 @@ public:
     }
     void run()
     {
-        switch (Screen)
+        switch (currScreen)
         {
         case HOME:
-            Home.update();
+            currScreen = Home.update();
+            break;
+        case FAVORITE:
+            currScreen = Favorite.update();
             break;
         default:
             break;
         }
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        switch (Screen)
+        switch (currScreen)
         {
         case HOME:
             Home.draw();
+            break;
+        case FAVORITE:
+            Favorite.draw();
             break;
         default:
             break;

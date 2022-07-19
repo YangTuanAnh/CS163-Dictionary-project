@@ -1,9 +1,9 @@
-#include "home.h"
+#include "favorite.h"
 #include <raygui.h>
 
-Screen Home::update()
+Screen Favorite::update()
 {
-    word = slang.SearchWord(SearchInput);
+    word = slang.getFavoriteList();
     if (GetMouseWheelMove() == -1 && rec_result[word.size() - 1].y > 475)
     {
         for (int i = 0; i < word.size(); i++)
@@ -30,23 +30,16 @@ Screen Home::update()
                 rec_result[i] = {350, (float)200 + 120 * i, 800, 115};
         }
     }
-    if (SearchEdit)
+
+    if (goToHome)
     {
-        if (GetKeyPressed())
-        {
-            for (int i = 0; i < 20; i++)
-                rec_result[i] = {350, (float)200 + 120 * i, 800, 115};
-        }
+        goToHome ^= 1;
+        return HOME;
     }
-    if (goToFavorites)
-    {
-        goToFavorites ^= 1;
-        return FAVORITE;
-    }
-    return HOME;
+    return FAVORITE;
 }
 
-void Home::draw()
+void Favorite::draw()
 {
     DrawRectangleRec(rec_modes, WHITE);
     Vector2 mousePos = GetMousePosition();
@@ -67,10 +60,11 @@ void Home::draw()
             DrawRectangleRec(rec_mode, GRAY);
         DrawTextEx(fnt, Modes[i].c_str(), {rec_modes.x + 70, float(rec_modes.y + rec_modes.height * (i + 0.35) / Modes.size())}, 35, 2, BLACK);
     }
-
     DrawRectangleLinesEx(rec_modes, 3, BLACK);
+
     if (LoadDefinition(selectedWord))
         return;
+
     for (int i = 0; i < word.size(); i++)
     {
         DrawRectangleRec(rec_result[i], DARKBLUE);
@@ -90,26 +84,16 @@ void Home::draw()
             DrawTextEx(fnt, s.c_str(), {rec_result[i].x + 13, rec_result[i].y + 40 * (j + 1)}, 25, 2, WHITE);
         }
     }
-    DrawRectangle(330, 100, 850, 90, RAYWHITE);
-    DrawRectangleLinesEx(rec_search, 3, BLACK);
-    if (GuiTextBox(rec_search, SearchInput, 20, SearchEdit))
-    {
-        for (int i = 0; i < 20; i++)
-            rec_result[i] = {350, (float)200 + 120 * i, 800, 115};
-        SearchEdit ^= 1;
-    }
+    DrawRectangle(330, 25, 850, 90, RAYWHITE);
 
-    if (SearchInput[0] == '\0')
-        DrawText("Search bar", 365, 135, 30, LIGHTGRAY);
-
-    if (GuiButton(rec_reset, "FAVORITES"))
+    if (GuiButton(rec_reset, "HOME"))
     {
-        std::cerr << "Go to Favorites\n";
-        goToFavorites = true;
+        std::cerr << "Go to Home\n";
+        goToHome = true;
     }
 }
 
-bool Home::LoadDefinition(Word *word = NULL)
+bool Favorite::LoadDefinition(Word *word = NULL)
 {
     if (!word)
     {
@@ -123,9 +107,9 @@ bool Home::LoadDefinition(Word *word = NULL)
     const int button_width = 100;
 
     GuiButton({rec_def.x + rec_def.width - 15 - button_width, rec_def.y + rec_def.height - 60, button_width, 45}, "Delete");
-    if (GuiButton({rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2 + 15, 45}, "Add Favorite"))
+    if (GuiButton({rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2 + 15, 45}, "Remove Favorite"))
     {
-        slang.updateFavorite(selectedWord);
+        slang.removeFavorite(selectedWord);
         // just debug
         std::cerr << "Favorite list: ";
         for (auto word : slang.getFavoriteList())
@@ -133,6 +117,8 @@ bool Home::LoadDefinition(Word *word = NULL)
             std::cerr << word->data << ' ';
         }
         std::cerr << std::endl;
+        selectedWord = NULL;
+        return false;
     }
     GuiButton({rec_def.x + rec_def.width - (15 + button_width) * 4, rec_def.y + rec_def.height - 60, button_width, 45}, "Edit");
 

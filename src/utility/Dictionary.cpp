@@ -1,27 +1,27 @@
 #include "Dictionary.h"
 
-Word::Word(const std::string& s)
+Word::Word(const std::string &s)
 {
     isFavorite = false;
     data = s;
 }
 
-Definition::Definition(const std::string& s)
+Definition::Definition(const std::string &s)
 {
     data = s;
 }
 
-Dictionary::Dictionary(const std::string& _dir, const std::string &chars)
-{   
+Dictionary::Dictionary(const std::string &_dir, const std::string &chars)
+{
     dir = _dir;
-    trie = new Trie<Word*>(chars, nullptr);
+    trie = new Trie<Word *>(chars, nullptr);
     loadData();
     loadHistory();
     loadFavorite();
 }
 
 Dictionary::~Dictionary()
-{   
+{
     saveData();
     saveHistory();
     saveFavorite();
@@ -39,9 +39,8 @@ Dictionary::~Dictionary()
     delete trie;
 }
 
-
 void Dictionary::loadHistory()
-{   
+{
     std::string filePath = dir + "/history.txt";
     std::ifstream fin(filePath);
     if (!fin.is_open())
@@ -52,8 +51,9 @@ void Dictionary::loadHistory()
     std::string line;
     while (getline(fin, line))
     {
-        Word* temp;
-        if (trie->find(line, temp) != success) {
+        Word *temp;
+        if (trie->find(line, temp) != success)
+        {
             std::cerr << "Could not load history (" << line << ")" << std::endl;
             continue;
         }
@@ -62,7 +62,8 @@ void Dictionary::loadHistory()
     fin.close();
 }
 
-void Dictionary::loadFavorite() {
+void Dictionary::loadFavorite()
+{
     std::string filePath = dir + "/favorite.txt";
     std::ifstream fin(filePath);
     if (!fin.is_open())
@@ -73,8 +74,9 @@ void Dictionary::loadFavorite() {
     std::string line;
     while (getline(fin, line))
     {
-        Word* temp;
-        if (trie->find(line, temp) != success) {
+        Word *temp;
+        if (trie->find(line, temp) != success)
+        {
             std::cerr << "Could not load favorite (" << line << ")" << std::endl;
             continue;
         }
@@ -99,22 +101,27 @@ void Dictionary::loadData()
     {
         ++lineNum;
         auto tmp = Split(line, '\t');
-        
-        if (tmp.size() != 2) {
+
+        if (tmp.size() != 2)
+        {
             std::cerr << "in file: " << filePath << ":" << std::endl;
             std::cerr << "skip line " << lineNum << ": " << line << std::endl;
-        } else {
-            Word* word;
-            if (trie->find(tmp[0], word) != success) {
+        }
+        else
+        {
+            Word *word;
+            if (trie->find(tmp[0], word) != success)
+            {
                 word = new Word(tmp[0]);
-                if (trie->insert(tmp[0], word) != success) {
+                if (trie->insert(tmp[0], word) != success)
+                {
                     std::cerr << "in file: " << filePath << ":" << std::endl;
                     std::cerr << "could not insert word " << tmp[0] << std::endl;
                     continue;
                 }
                 allWords.push_back(word);
             }
-            Definition* def = new Definition(tmp[1]);
+            Definition *def = new Definition(tmp[1]);
             word->defs.push_back(def);
             def->word = word;
             allDefs.push_back(def);
@@ -124,7 +131,7 @@ void Dictionary::loadData()
     fin.close();
 }
 
-void Dictionary::updateHistory(Word* word)
+void Dictionary::updateHistory(Word *word)
 {
     for (int i = 0; i < (int)history.size(); i++)
         if (history[i] == word)
@@ -134,24 +141,29 @@ void Dictionary::updateHistory(Word* word)
     history.insert(history.begin(), word);
     if (history.size() > HISTORY_LIMIT)
         history.pop_back();
-    
 }
 
-void Dictionary::updateFavorite(Word* word)
+void Dictionary::updateFavorite(Word *word)
 {
-    word->isFavorite = !word->isFavorite;
+    word->isFavorite = true;
+    std::cerr << "set " << word->data << "->isFavorite = " << std::boolalpha << word->isFavorite << std::endl;
+}
+void Dictionary::removeFavorite(Word *word)
+{
+    word->isFavorite = false;
     std::cerr << "set " << word->data << "->isFavorite = " << std::boolalpha << word->isFavorite << std::endl;
 }
 
-std::vector<Word*> Dictionary::SearchWord(const std::string& key)
+std::vector<Word *> Dictionary::SearchWord(const std::string &key)
 {
-    if (key != "") return trie->search(key);
+    if (key != "")
+        return trie->search(key);
     return getSearchHistory();
 }
 
-std::vector<Word*> Dictionary::SearchDef(const std::string& key)
+std::vector<Word *> Dictionary::SearchDef(const std::string &key)
 {
-    std::vector<Word*> results;
+    std::vector<Word *> results;
     for (auto def : allDefs)
     {
         if (IsPrefix(key, def->data) && results.size() < SEARCH_RESULTS_LIMIT)
@@ -162,50 +174,59 @@ std::vector<Word*> Dictionary::SearchDef(const std::string& key)
     return results;
 }
 
-std::vector<std::string> Dictionary::getFullDefinition(const std::string& word) {
-    Word* ptr;
-    if (trie->find(word, ptr) != success) {
+std::vector<std::string> Dictionary::getFullDefinition(const std::string &word)
+{
+    Word *ptr;
+    if (trie->find(word, ptr) != success)
+    {
         std::cerr << "Word " << word << " not exist.";
         return std::vector<std::string>();
     }
     updateHistory(ptr);
-    
+
     std::vector<std::string> defs;
-    for (auto def : ptr->defs) {
+    for (auto def : ptr->defs)
+    {
         defs.push_back(def->data);
     }
     return defs;
 }
 
-std::vector<Word*> Dictionary::getSearchHistory()
+std::vector<Word *> Dictionary::getSearchHistory()
 /* Returns the latest searched words, up to 20 records
-*/
+ */
 {
-    std::vector<Word*> result = history;
+    std::vector<Word *> result = history;
     return result;
 }
 
-std::vector<Word*> Dictionary::getFavoriteList(){
-    std::vector<Word*> result;
-    for (auto word : allWords) {
-        if (word->isFavorite) {
+std::vector<Word *> Dictionary::getFavoriteList()
+{
+    std::vector<Word *> result;
+    for (auto word : allWords)
+    {
+        if (word->isFavorite)
+        {
             result.push_back(word);
         }
     }
     return result;
 }
 
-void Dictionary::saveData() 
+void Dictionary::saveData()
 {
     // implement later
 }
 
-void Dictionary::saveHistory() 
+void Dictionary::saveHistory()
 {
     std::ofstream fout(dir + "/history.txt");
-    if (!fout.is_open()) {
+    if (!fout.is_open())
+    {
         std::cerr << "could not save file" + dir + "/history.txt" << std::endl;
-    } else {
+    }
+    else
+    {
         for (int i = 0; i < (int)history.size(); i++)
             fout << history[i]->data << "\n";
     }
@@ -215,17 +236,21 @@ void Dictionary::saveHistory()
 void Dictionary::saveFavorite()
 {
     std::ofstream fout(dir + "/favorite.txt");
-    if (!fout.is_open()) {
+    if (!fout.is_open())
+    {
         std::cerr << "could not save file" + dir + "/favorite.txt" << std::endl;
-    } else {
-        for (auto word : getFavoriteList()) {
+    }
+    else
+    {
+        for (auto word : getFavoriteList())
+        {
             fout << word->data << "\n";
         }
     }
     fout.close();
 }
 
-std::vector<std::string> Split(const std::string& s, char delim)
+std::vector<std::string> Split(const std::string &s, char delim)
 {
     std::string tmp;
     std::vector<std::string> res;
@@ -245,7 +270,7 @@ std::vector<std::string> Split(const std::string& s, char delim)
     return res;
 }
 
-bool IsPrefix(const std::string& p, const std::string& s)
+bool IsPrefix(const std::string &p, const std::string &s)
 {
     if (p.size() > s.size())
     {

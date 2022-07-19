@@ -37,6 +37,7 @@ public:
     std::vector<Word *> SearchDef(const std::string &key);
     std::vector<std::string> getFullDefinition(const std::string &word);
     void updateFavorite(Word *word);
+    void removeFavorite(Word *word);
     std::vector<Word *> getFavoriteList();
 
 private:
