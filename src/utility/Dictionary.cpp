@@ -250,6 +250,40 @@ void Dictionary::saveFavorite()
     fout.close();
 }
 
+std::vector<int> Dictionary::generateRandQuiz()
+/* This functions returns a vector of 5 integers quiz[5], where quiz[0..3] are indices of random chosen Words,
+and quiz[4] is the Answer. 
+            quiz[0] -> response given by option A
+            quiz[1] -> response given by option B
+            quiz[2] -> response given by option C
+            quiz[3] -> response given by option D
+            quiz[4] -> one of the value{0, 1, 2, 3} corresponding to the correct answer
+*/
+{
+    using namespace std::chrono;
+    std::vector<int> quiz;
+    auto seedValue = duration_cast<seconds>(steady_clock::now().time_since_epoch()).count();
+    std::srand(seedValue);
+    for (int i = 0; i < 4; i++);
+    {
+        auto new_option = rand() % (allWords.size()); // generate an index from 0 to allWords.size()-1
+        while (!checkQuizValidation(new_option, quiz)) // Check to prevent options duplication
+            new_option = rand() % (allWords.size());
+        quiz.push_back(new_option);
+    }
+    quiz.push_back(rand() % 4); // generate the Answer
+}
+
+bool checkQuizValidation(int new_option, std::vector<int>& quiz)
+/* This function helps Dictionary::generateRandQuiz() with checking if a new generated option already exists.
+If it does, return false - invalid. Else, return true - valid. */
+{
+    for (int i = 0; i < quiz.size(); i++)
+        if (quiz[i] == new_option)
+            return false;
+    return true;
+}
+
 std::vector<std::string> Split(const std::string &s, char delim)
 {
     std::string tmp;

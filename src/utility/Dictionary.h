@@ -5,6 +5,8 @@
 #include <iostream>
 #include <fstream>
 #include <cassert>
+#include <chrono>
+#include <utility>
 #include "Trie.h"
 #include "limits.h"
 
@@ -39,6 +41,7 @@ public:
     void updateFavorite(Word *word);
     void removeFavorite(Word *word);
     std::vector<Word *> getFavoriteList();
+    std::vector<int> generateRandQuiz();
 
 private:
     std::string dir;
