@@ -30,11 +30,11 @@ Screen Home::update()
     {
         for (int i = 0; i < word.size(); i++)
         {
-            if (SearchInput[0] == '\0' && CheckCollisionPointRec(GetMousePosition(), { rec_result[i].x + 650, rec_result[i].y + 30, 48, 48 }))
+            if (SearchInput[0] == '\0' && CheckCollisionPointRec(GetMousePosition(), {rec_result[i].x + 715, rec_result[i].y + 5, 32, 32}))
             {
                 slang.updateHistory(word[i], false);
             }
-            else if (CheckCollisionPointRec(GetMousePosition(), { rec_result[i].x + 720, rec_result[i].y + 30, 48, 48 }))
+            else if (CheckCollisionPointRec(GetMousePosition(), {rec_result[i].x + 760, rec_result[i].y + 5, 32, 32}))
                 strncpy(SearchInput, word[i]->data.c_str(), sizeof(word[i]->data));
             else if (GetMousePosition().y > 180 && CheckCollisionPointRec(GetMousePosition(), rec_result[i]) && !selectedWord)
             {
@@ -91,18 +91,20 @@ void Home::draw()
     for (int i = 0; i < word.size(); i++)
     {
         DrawRectangleRec(rec_result[i], DARKBLUE);
-        if (SearchInput[0] == '\0' && CheckCollisionPointRec(mousePos, {rec_result[i].x + 650, rec_result[i].y + 30, 48, 48}))
-            GuiDrawIcon(202, rec_result[i].x + 650, rec_result[i].y + 30, 3, RED);
-        else if (CheckCollisionPointRec(mousePos, { rec_result[i].x + 720, rec_result[i].y + 30, 48, 48 }))
-            GuiDrawIcon(201, rec_result[i].x + 720, rec_result[i].y + 30, 3, GREEN);
+        if (SearchInput[0] == '\0' && CheckCollisionPointRec(mousePos, {rec_result[i].x + 715, rec_result[i].y + 5, 32, 32}))
+            GuiDrawIcon(202, rec_result[i].x + 715, rec_result[i].y + 5, 2, RED);
+        else if (CheckCollisionPointRec(mousePos, { rec_result[i].x + 760, rec_result[i].y + 5, 32, 32 }))
+            GuiDrawIcon(201, rec_result[i].x + 760, rec_result[i].y + 5, 2, GREEN);
         else 
         {
             if (CheckCollisionPointRec(mousePos, rec_result[i]) && mousePos.y > 180)
                 DrawRectangleRec(rec_result[i], BLUE);
             if (SearchInput[0] == '\0')
-                GuiDrawIcon(202, rec_result[i].x + 650, rec_result[i].y + 30, 3, BLACK);
-            GuiDrawIcon(201, rec_result[i].x + 720, rec_result[i].y + 30, 3, BLACK);
+                GuiDrawIcon(202, rec_result[i].x + 715, rec_result[i].y + 5, 2, BLACK);
+            GuiDrawIcon(201, rec_result[i].x + 760, rec_result[i].y + 5, 2, BLACK);
         }
+        if (word[i]->isFavorite) GuiDrawIcon(186, rec_result[i].x + 665, rec_result[i].y + 5, 2, RED);
+        else GuiDrawIcon(200, rec_result[i].x + 665, rec_result[i].y + 5, 2, BLACK);
         DrawTextEx(fnt, word[i]->data.c_str(), {rec_result[i].x + 13, rec_result[i].y + 10}, 25, 2, WHITE);
         for (int j = 0; j < std::min(2, int(word[i]->defs.size())); j++)
         {
