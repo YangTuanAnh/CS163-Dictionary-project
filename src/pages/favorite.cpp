@@ -1,5 +1,5 @@
 #include "favorite.h"
-#include <raygui.h>
+#include "../include/raygui.h"
 
 Screen Favorite::update()
 {

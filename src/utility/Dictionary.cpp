@@ -264,7 +264,7 @@ and quiz[4] is the Answer.
     std::vector<int> quiz;
     auto seedValue = duration_cast<seconds>(steady_clock::now().time_since_epoch()).count();
     std::srand(seedValue);
-    for (int i = 0; i < 4; i++);
+    for (int i = 0; i < 4; i++)
     {
         auto new_option = rand() % (allWords.size()); // generate an index from 0 to allWords.size()-1
         while (!checkQuizValidation(new_option, quiz)) // Check to prevent options duplication
