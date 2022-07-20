@@ -272,6 +272,7 @@ and quiz[4] is the Answer.
         quiz.push_back(new_option);
     }
     quiz.push_back(rand() % 4); // generate the Answer
+    return quiz;
 }
 
 bool checkQuizValidation(int new_option, std::vector<int>& quiz)

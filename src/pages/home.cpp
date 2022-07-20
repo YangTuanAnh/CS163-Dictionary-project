@@ -1,5 +1,5 @@
 #include "home.h"
-#include <raygui.h>
+#include "../include/raygui.h"
 
 Screen Home::update()
 {

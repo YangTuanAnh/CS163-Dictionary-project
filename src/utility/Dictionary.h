@@ -61,3 +61,4 @@ private:
 
 std::vector<std::string> Split(const std::string &s, char delim);
 bool IsPrefix(const std::string &p, const std::string &s);
+bool checkQuizValidation(int new_option, std::vector<int>& quiz);

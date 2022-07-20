@@ -2,7 +2,7 @@
 
 #include <raylib.h>
 #define RAYGUI_IMPLEMENTATION
-#include <raygui.h>
+#include "../include/raygui.h"
 #include "utility/screen.h"
 #include "pages/home.h"
 #include "pages/favorite.h"
