@@ -1,6 +1,13 @@
+#define _CRT_SECURE_NO_WARNINGS
+#define RAYGUI_IMPLEMENTATION
+#include "../../include/raygui.h"
 #include "home.h"
-#include <raygui.h>
-
+Home::Home()
+{
+    char** icon = GuiLoadIcons("icons.rgi", true);
+    for (int i = 0; i < 20; i++)
+        rec_result[i] = { 350, (float)200 + 120 * i, 800, 115 };
+}
 Screen Home::update()
 {
     word = slang.SearchWord(SearchInput);
@@ -18,18 +25,27 @@ Screen Home::update()
             rec_result[i].y += 20;
         }
     }
-    for (int i = 0; i < word.size(); i++)
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && GetMousePosition().y > 180 && CheckCollisionPointRec(GetMousePosition(), rec_result[i]) && !selectedWord)
+        for (int i = 0; i < word.size(); i++)
         {
-            selectedWord = word[i];
+            if (SearchInput[0] == '\0' && CheckCollisionPointRec(GetMousePosition(), { rec_result[i].x + 650, rec_result[i].y + 30, 48, 48 }))
+            {
+                slang.updateHistory(word[i], false);
+            }
+            else if (CheckCollisionPointRec(GetMousePosition(), { rec_result[i].x + 720, rec_result[i].y + 30, 48, 48 }))
+                strncpy(SearchInput, word[i]->data.c_str(), sizeof(word[i]->data));
+            else if (GetMousePosition().y > 180 && CheckCollisionPointRec(GetMousePosition(), rec_result[i]) && !selectedWord)
+            {
+                selectedWord = word[i];
+                slang.getFullDefinition(selectedWord->data);
 
-            slang.getFullDefinition(selectedWord->data);
-
-            for (int i = 0; i < 20; i++)
-                rec_result[i] = {350, (float)200 + 120 * i, 800, 115};
+                for (int i = 0; i < 20; i++)
+                    rec_result[i] = { 350, (float)200 + 120 * i, 800, 115 };
+            }
         }
     }
+    
     if (SearchEdit)
     {
         if (GetKeyPressed())
@@ -38,6 +54,7 @@ Screen Home::update()
                 rec_result[i] = {350, (float)200 + 120 * i, 800, 115};
         }
     }
+
     if (goToFavorites)
     {
         goToFavorites ^= 1;
@@ -67,16 +84,24 @@ void Home::draw()
             DrawRectangleRec(rec_mode, GRAY);
         DrawTextEx(fnt, Modes[i].c_str(), {rec_modes.x + 70, float(rec_modes.y + rec_modes.height * (i + 0.35) / Modes.size())}, 35, 2, BLACK);
     }
-
     DrawRectangleLinesEx(rec_modes, 3, BLACK);
     if (LoadDefinition(selectedWord))
         return;
     for (int i = 0; i < word.size(); i++)
     {
         DrawRectangleRec(rec_result[i], DARKBLUE);
-        if (CheckCollisionPointRec(mousePos, rec_result[i]) && mousePos.y > 180)
-            DrawRectangleRec(rec_result[i], BLUE);
-
+        if (SearchInput[0] == '\0' && CheckCollisionPointRec(mousePos, {rec_result[i].x + 650, rec_result[i].y + 30, 48, 48}))
+            GuiDrawIcon(202, rec_result[i].x + 650, rec_result[i].y + 30, 3, RED);
+        else if (CheckCollisionPointRec(mousePos, { rec_result[i].x + 720, rec_result[i].y + 30, 48, 48 }))
+            GuiDrawIcon(201, rec_result[i].x + 720, rec_result[i].y + 30, 3, GREEN);
+        else 
+        {
+            if (CheckCollisionPointRec(mousePos, rec_result[i]) && mousePos.y > 180)
+                DrawRectangleRec(rec_result[i], BLUE);
+            if (SearchInput[0] == '\0')
+                GuiDrawIcon(202, rec_result[i].x + 650, rec_result[i].y + 30, 3, BLACK);
+            GuiDrawIcon(201, rec_result[i].x + 720, rec_result[i].y + 30, 3, BLACK);
+        }
         DrawTextEx(fnt, word[i]->data.c_str(), {rec_result[i].x + 13, rec_result[i].y + 10}, 25, 2, WHITE);
         for (int j = 0; j < std::min(2, int(word[i]->defs.size())); j++)
         {
@@ -107,33 +132,57 @@ void Home::draw()
         std::cerr << "Go to Favorites\n";
         goToFavorites = true;
     }
+
 }
 
 bool Home::LoadDefinition(Word *word = NULL)
 {
-    if (!word)
+    if (!selectedWord)
     {
-        GuiSetStyle(DEFAULT, TEXT_SIZE, 22);
         return false;
     }
     if (GuiWindowBox(rec_def, "Definition"))
+    {
         selectedWord = NULL;
+        GuiSetStyle(DEFAULT, TEXT_SIZE, 22);
+        return false;
+    }
     GuiSetStyle(DEFAULT, TEXT_SIZE, 16);
 
     const int button_width = 100;
 
     GuiButton({rec_def.x + rec_def.width - 15 - button_width, rec_def.y + rec_def.height - 60, button_width, 45}, "Delete");
-    if (GuiButton({rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2 + 15, 45}, "Add Favorite"))
+    if (!selectedWord->isFavorite)
     {
-        slang.updateFavorite(selectedWord);
-        // just debug
-        std::cerr << "Favorite list: ";
-        for (auto word : slang.getFavoriteList())
+        GuiDrawIcon(200, 500, 150, 4, BLACK);
+        if (GuiButton({ rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2 + 15, 45 }, "Add Favorite"))
         {
-            std::cerr << word->data << ' ';
+            slang.updateFavorite(selectedWord);
+            // just debug
+            std::cerr << "Favorite list: ";
+            for (auto word : slang.getFavoriteList())
+            {
+                std::cerr << word->data << ' ';
+            }
+            std::cerr << std::endl;
         }
-        std::cerr << std::endl;
     }
+    else
+    {
+        GuiDrawIcon(186, 500, 150, 4, RED);
+        if (GuiButton({ rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2 + 15, 45 }, "Remove Favorite"))
+        {
+            slang.removeFavorite(selectedWord);
+            // just debug
+            std::cerr << "Favorite list: ";
+            for (auto word : slang.getFavoriteList())
+            {
+                std::cerr << word->data << ' ';
+            }
+            std::cerr << std::endl;
+        }
+    }
+    
     GuiButton({rec_def.x + rec_def.width - (15 + button_width) * 4, rec_def.y + rec_def.height - 60, button_width, 45}, "Edit");
 
     DrawTextEx(fnt, word->data.c_str(), {rec_def.x + 15, rec_def.y + 40}, 40, 2, BLACK);

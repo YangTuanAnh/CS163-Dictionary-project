@@ -131,14 +131,15 @@ void Dictionary::loadData()
     fin.close();
 }
 
-void Dictionary::updateHistory(Word *word)
+void Dictionary::updateHistory(Word *word, bool addOrDel)
 {
     for (int i = 0; i < (int)history.size(); i++)
         if (history[i] == word)
         {
             history.erase(history.begin() + i);
         }
-    history.insert(history.begin(), word);
+    if (addOrDel)
+        history.insert(history.begin(), word);
     if (history.size() > HISTORY_LIMIT)
         history.pop_back();
 }
@@ -182,7 +183,7 @@ std::vector<std::string> Dictionary::getFullDefinition(const std::string &word)
         std::cerr << "Word " << word << " not exist.";
         return std::vector<std::string>();
     }
-    updateHistory(ptr);
+    updateHistory(ptr, true);
 
     std::vector<std::string> defs;
     for (auto def : ptr->defs)
@@ -272,6 +273,7 @@ and quiz[4] is the Answer.
         quiz.push_back(new_option);
     }
     quiz.push_back(rand() % 4); // generate the Answer
+    return quiz;
 }
 
 bool checkQuizValidation(int new_option, std::vector<int>& quiz)

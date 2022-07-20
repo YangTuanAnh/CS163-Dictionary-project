@@ -1,8 +1,6 @@
 #pragma once
-
 #include <raylib.h>
-#define RAYGUI_IMPLEMENTATION
-#include <raygui.h>
+#include "../include/raygui.h"
 #include "utility/screen.h"
 #include "pages/home.h"
 #include "pages/favorite.h"
@@ -16,11 +14,11 @@ private:
     Home Home;
     Favorite Favorite;
     Screen currScreen = HOME;
-
+    Font fnt;
 public:
     Program()
     {
-        Font fnt = LoadFont("../data/Font.ttf");
+        fnt = LoadFont("CS163_github/data/Font.ttf");
         fnt.baseSize /= 1.4;
         GuiSetFont(fnt);
         GuiSetStyle(TEXTBOX, BASE_COLOR_PRESSED, 0xffffffff);

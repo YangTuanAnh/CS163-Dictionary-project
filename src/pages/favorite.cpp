@@ -1,5 +1,5 @@
 #include "favorite.h"
-#include <raygui.h>
+#include "../../include/raygui.h"
 
 Screen Favorite::update()
 {
@@ -95,30 +95,50 @@ void Favorite::draw()
 
 bool Favorite::LoadDefinition(Word *word = NULL)
 {
-    if (!word)
+    if (!selectedWord)
     {
-        GuiSetStyle(DEFAULT, TEXT_SIZE, 22);
         return false;
     }
     if (GuiWindowBox(rec_def, "Definition"))
+    {
         selectedWord = NULL;
+        GuiSetStyle(DEFAULT, TEXT_SIZE, 22);
+        return false;
+    }
     GuiSetStyle(DEFAULT, TEXT_SIZE, 16);
 
     const int button_width = 100;
 
     GuiButton({rec_def.x + rec_def.width - 15 - button_width, rec_def.y + rec_def.height - 60, button_width, 45}, "Delete");
-    if (GuiButton({rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2 + 15, 45}, "Remove Favorite"))
+    if (!selectedWord->isFavorite)
     {
-        slang.removeFavorite(selectedWord);
-        // just debug
-        std::cerr << "Favorite list: ";
-        for (auto word : slang.getFavoriteList())
+        GuiDrawIcon(200, 500, 150, 4, BLACK);
+        if (GuiButton({ rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2 + 15, 45 }, "Add Favorite"))
         {
-            std::cerr << word->data << ' ';
+            slang.updateFavorite(selectedWord);
+            // just debug
+            std::cerr << "Favorite list: ";
+            for (auto word : slang.getFavoriteList())
+            {
+                std::cerr << word->data << ' ';
+            }
+            std::cerr << std::endl;
         }
-        std::cerr << std::endl;
-        selectedWord = NULL;
-        return false;
+    }
+    else
+    {
+        GuiDrawIcon(186, 500, 150, 4, RED);
+        if (GuiButton({ rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2 + 15, 45 }, "Remove Favorite"))
+        {
+            slang.removeFavorite(selectedWord);
+            // just debug
+            std::cerr << "Favorite list: ";
+            for (auto word : slang.getFavoriteList())
+            {
+                std::cerr << word->data << ' ';
+            }
+            std::cerr << std::endl;
+        }
     }
     GuiButton({rec_def.x + rec_def.width - (15 + button_width) * 4, rec_def.y + rec_def.height - 60, button_width, 45}, "Edit");
 

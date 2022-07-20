@@ -42,6 +42,7 @@ public:
     void removeFavorite(Word *word);
     std::vector<Word *> getFavoriteList();
     std::vector<int> generateRandQuiz();
+    void updateHistory(Word* word, bool addOrDel);
 
 private:
     std::string dir;
@@ -52,7 +53,6 @@ private:
     void loadData();
     void loadHistory();
     void loadFavorite();
-    void updateHistory(Word *word);
     std::vector<Word *> getSearchHistory();
     void saveData();
     void saveHistory();
@@ -61,3 +61,4 @@ private:
 
 std::vector<std::string> Split(const std::string &s, char delim);
 bool IsPrefix(const std::string &p, const std::string &s);
+bool checkQuizValidation(int new_option, std::vector<int>& quiz);

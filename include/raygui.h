@@ -181,7 +181,6 @@
 
 #ifndef RAYGUI_H
 #define RAYGUI_H
-
 #define RAYGUI_VERSION  "3.0"
 
 #if !defined(RAYGUI_STANDALONE)
