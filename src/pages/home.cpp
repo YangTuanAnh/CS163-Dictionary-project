@@ -8,6 +8,7 @@ Home::Home()
     for (int i = 0; i < 20; i++)
         rec_result[i] = { 350, (float)200 + 120 * i, 800, 115 };
 }
+
 Screen Home::update()
 {
     word = slang.SearchWord(SearchInput);
