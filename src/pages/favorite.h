@@ -11,7 +11,6 @@ private:
     Word *selectedWord = NULL;
     Rectangle rec_result[20];
     Rectangle rec_modes{25, 115, 300, 475};
-    Rectangle rec_search{340, 115, 630, 65};
     Rectangle rec_reset{340, 115, 175, 65};
     Rectangle rec_def{340, 125, 835, 450};
     Font fnt = LoadFont("../data/Font.ttf");

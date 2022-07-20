@@ -34,6 +34,8 @@ Screen Favorite::update()
     if (goToHome)
     {
         goToHome ^= 1;
+        for (int i = 0; i < 20; i++)
+            rec_result[i] = { 350, (float)200 + 120 * i, 800, 115 };
         return HOME;
     }
     return FAVORITE;
@@ -84,8 +86,7 @@ void Favorite::draw()
             DrawTextEx(fnt, s.c_str(), {rec_result[i].x + 13, rec_result[i].y + 40 * (j + 1)}, 25, 2, WHITE);
         }
     }
-    DrawRectangle(330, 25, 850, 90, RAYWHITE);
-
+    DrawRectangle(330, 100, 850, 90, RAYWHITE);
     if (GuiButton(rec_reset, "HOME"))
     {
         std::cerr << "Go to Home\n";
@@ -112,7 +113,7 @@ bool Favorite::LoadDefinition(Word *word = NULL)
     GuiButton({rec_def.x + rec_def.width - 15 - button_width, rec_def.y + rec_def.height - 60, button_width, 45}, "Delete");
     if (!selectedWord->isFavorite)
     {
-        GuiDrawIcon(200, 500, 150, 4, BLACK);
+        GuiDrawIcon(200, 1000, 150, 5, BLACK);
         if (GuiButton({ rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2 + 15, 45 }, "Add Favorite"))
         {
             slang.updateFavorite(selectedWord);
@@ -127,7 +128,7 @@ bool Favorite::LoadDefinition(Word *word = NULL)
     }
     else
     {
-        GuiDrawIcon(186, 500, 150, 4, RED);
+        GuiDrawIcon(186, 1000, 150, 5, RED);
         if (GuiButton({ rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2 + 15, 45 }, "Remove Favorite"))
         {
             slang.removeFavorite(selectedWord);

@@ -155,7 +155,7 @@ bool Home::LoadDefinition(Word *word = NULL)
     GuiButton({rec_def.x + rec_def.width - 15 - button_width, rec_def.y + rec_def.height - 60, button_width, 45}, "Delete");
     if (!selectedWord->isFavorite)
     {
-        GuiDrawIcon(200, 500, 150, 4, BLACK);
+        GuiDrawIcon(200, 1000, 150, 5, GRAY);
         if (GuiButton({ rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2 + 15, 45 }, "Add Favorite"))
         {
             slang.updateFavorite(selectedWord);
@@ -170,7 +170,7 @@ bool Home::LoadDefinition(Word *word = NULL)
     }
     else
     {
-        GuiDrawIcon(186, 500, 150, 4, RED);
+        GuiDrawIcon(186, 1000, 150, 5, RED);
         if (GuiButton({ rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2 + 15, 45 }, "Remove Favorite"))
         {
             slang.removeFavorite(selectedWord);

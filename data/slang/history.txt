@@ -1,6 +1,6 @@
-D;
-AA
 %)
+AA
+D;
 :>
 A2DP
 ABC
