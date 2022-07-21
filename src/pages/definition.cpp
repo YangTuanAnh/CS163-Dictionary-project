@@ -1,58 +1,44 @@
 #include "definition.h"
 #include "../../include/raygui.h"
-Rectangle rec_def{ 340, 125, 835, 450 };
-bool definitionPage(Word*& word)
+
+const int button_width = 100;
+Screen Definitionmenu::update()
 {
-    if (!word) return false;
+    if (!selectedWord) return HOME;
+    return DEFINITION;
+}
+
+void Definitionmenu::draw()
+{
     if (GuiWindowBox(rec_def, "Definition"))
     {
-        word = NULL;
+        selectedWord = NULL;
         GuiSetStyle(DEFAULT, TEXT_SIZE, 22);
-        return false;
+        return;
     }
     GuiSetStyle(DEFAULT, TEXT_SIZE, 16);
 
-    const int button_width = 100;
-
     GuiButton({ rec_def.x + rec_def.width - 15 - button_width, rec_def.y + rec_def.height - 60, button_width, 45 }, "Delete");
-    if (!word->isFavorite)
+    if (!selectedWord->isFavorite)
     {
         GuiDrawIcon(200, 1060, 140, 5, GRAY);
         if (GuiButton({ rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2 + 15, 45 }, "Add Favorite"))
-        {
-            slang.updateFavorite(word);
-            // just debug
-            std::cerr << "Favorite list: ";
-            for (auto word : slang.getFavoriteList())
-            {
-                std::cerr << word->data << ' ';
-            }
-            std::cerr << std::endl;
-        }
+            slang.updateFavorite(selectedWord);
     }
     else
     {
         GuiDrawIcon(186, 1060, 140, 5, RED);
         if (GuiButton({ rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2 + 15, 45 }, "Remove Favorite"))
-        {
-            slang.removeFavorite(word);
-            // just debug
-            std::cerr << "Favorite list: ";
-            for (auto word : slang.getFavoriteList())
-            {
-                std::cerr << word->data << ' ';
-            }
-            std::cerr << std::endl;
-        }
+            slang.removeFavorite(selectedWord);
     }
 
     GuiButton({ rec_def.x + rec_def.width - (15 + button_width) * 4, rec_def.y + rec_def.height - 60, button_width, 45 }, "Edit");
 
-    DrawTextEx(fnt, word->data.c_str(), { rec_def.x + 15, rec_def.y + 40 }, 40, 2, BLACK);
+    DrawTextEx(fnt, selectedWord->data.c_str(), { rec_def.x + 15, rec_def.y + 40 }, 40, 2, BLACK);
     int cnt = 1;
-    for (int j = 0; j < word->defs.size(); j++)
+    for (int j = 0; j < selectedWord->defs.size(); j++)
     {
-        std::string s = word->defs[j]->data;
+        std::string s = selectedWord->defs[j]->data;
         int extended = 1;
         if (s.length() * 10 > rec_def.width - 15)
         {
@@ -69,5 +55,4 @@ bool definitionPage(Word*& word)
         DrawTextEx(fnt, s.c_str(), { rec_def.x + 15, rec_def.y + 60 + 30 * cnt }, 20, 2, BLACK);
         cnt += extended;
     }
-    return true;
 }

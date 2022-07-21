@@ -4,7 +4,7 @@
 #include "home.h"
 #include "definition.h"
 
-
+Word* selectedWord = NULL;
 Home::Home()
 {
     char** icon = GuiLoadIcons("icons.rgi", true);
@@ -52,7 +52,7 @@ Screen Home::update()
 
                 for (int i = 0; i < 20; i++)
                     rec_result[i] = { 350, (float)200 + 120 * i, 800, 115 };
-                break;
+                return DEFINITION;
             }
         }
 
@@ -96,8 +96,6 @@ void Home::draw()
         DrawTextEx(fnt, Modes[i].c_str(), { rec_modes[i].x + 8, rec_modes[i].y + 27 }, 30, 1.5, BLACK);
         DrawRectangleLinesEx(rec_modes[i], 1.5, BLACK);
     }
-    if (definitionPage(selectedWord))
-        return;
     for (int i = 0; i < word.size(); i++)
     {
         DrawRectangleRec(rec_result[i], DARKBLUE);
@@ -140,10 +138,17 @@ void Home::draw()
     if (SearchInput[0] == '\0')
         DrawText("Search bar", 365, 135, 30, LIGHTGRAY);
 
-    if (GuiButton(rec_reset, "FAVORITES"))
+    if (GuiButton(rec_favor, "FAVORITES"))
     {
         std::cerr << "Go to Favorites\n";
         goToFavorites = true;
+    }/*
+    int* p = new int;
+    *p = 0;
+    if (GuiDropdownBox(rec_favor, "heyhey\nhaha", p, true))
+    {
+
     }
+    delete p;*/
 
 }

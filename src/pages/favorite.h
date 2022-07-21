@@ -5,7 +5,6 @@ class Favorite
 {
 private:
     std::vector<Word *> word;
-    Word *selectedWord = NULL;
     Rectangle rec_result[20];
     Rectangle rec_modes[4];
     Rectangle rec_reset{340, 115, 175, 65};

@@ -4,6 +4,7 @@
 #include "utility/screen.h"
 #include "pages/home.h"
 #include "pages/favorite.h"
+#include "pages/definition.h"
 
 const int WIDTH = 1200, HEIGHT = 600;
 Font fnt;
@@ -13,6 +14,7 @@ private:
     Rectangle rec_top{0, 0, 1200, 100};
     Home Home;
     Favorite Favorite;
+    Definitionmenu Definitionmenu;
     Screen currScreen = HOME;
 public:
     Program()
@@ -33,6 +35,9 @@ public:
         case FAVORITE:
             currScreen = Favorite.update();
             break;
+        case DEFINITION:
+            currScreen = Definitionmenu.update();
+            break;
         default:
             break;
         }
@@ -45,6 +50,9 @@ public:
             break;
         case FAVORITE:
             Favorite.draw();
+            break;
+        case DEFINITION:
+            Definitionmenu.draw();
             break;
         default:
             break;

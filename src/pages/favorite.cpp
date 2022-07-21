@@ -30,7 +30,7 @@ Screen Favorite::update()
 
                 for (int i = 0; i < 20; i++)
                     rec_result[i] = { 350, (float)200 + 120 * i, 800, 115 };
-                break;
+                return DEFINITION;
             }
         }
 
@@ -67,9 +67,6 @@ void Favorite::draw()
         DrawTextEx(fnt, Modes[i].c_str(), { rec_modes[i].x + 8, rec_modes[i].y + 27 }, 30, 1.5, BLACK);
         DrawRectangleLinesEx(rec_modes[i], 1.5, BLACK);
     }
-
-    if (definitionPage(selectedWord))
-        return;
 
     for (int i = 0; i < word.size(); i++)
     {
