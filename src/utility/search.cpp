@@ -7,7 +7,7 @@ const std::string uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const std::string symbols = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
 const std::string space = " ";
 
-Dictionary slang("CS163_github/data/slang", uppercase + digits + symbols + space);
+//Dictionary slang("CS163_github/data/slang", uppercase + digits + symbols + space);
 //Dictionary engeng("../data/engeng", lowercase + digits + space + "-\'.");
 
-//Dictionary slang("../data/engeng", lowercase + digits + space + "-\'.");
+Dictionary slang("CS163_github/data/engeng", lowercase + digits + space + "-\'.");

@@ -6,7 +6,7 @@
 #include "pages/favorite.h"
 
 const int WIDTH = 1200, HEIGHT = 600;
-
+Font fnt;
 class Program
 {
 private:
@@ -14,13 +14,13 @@ private:
     Home Home;
     Favorite Favorite;
     Screen currScreen = HOME;
-    Font fnt;
 public:
     Program()
     {
         fnt = LoadFont("CS163_github/data/Font.ttf");
-        fnt.baseSize /= 1.4;
-        GuiSetFont(fnt);
+        Font font = fnt;
+        font.baseSize /= 1.4;
+        GuiSetFont(font);
         GuiSetStyle(TEXTBOX, BASE_COLOR_PRESSED, 0xffffffff);
     }
     void run()

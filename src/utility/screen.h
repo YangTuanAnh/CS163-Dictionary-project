@@ -6,5 +6,6 @@ typedef enum
     HISTORY,
     FAVORITE,
     GAME,
+    DEFINITION,
     RESET
 } Screen;

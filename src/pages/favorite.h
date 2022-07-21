@@ -1,8 +1,5 @@
 #pragma once
-#include <iostream>
-#include "../utility/search.h"
-#include <raylib.h>
-#include "../utility/screen.h"
+#include "home.h"
 
 class Favorite
 {
@@ -12,8 +9,6 @@ private:
     Rectangle rec_result[20];
     Rectangle rec_modes{25, 115, 300, 475};
     Rectangle rec_reset{340, 115, 175, 65};
-    Rectangle rec_def{340, 125, 835, 450};
-    Font fnt = LoadFont("../data/Font.ttf");
     std::vector<std::string> Modes = {"Eng - Eng", "Eng - Vie", "Slang", "Emotional"};
     short modeChosen = 2;
     bool goToHome = false;
@@ -26,5 +21,4 @@ public:
     }
     Screen update();
     void draw();
-    bool LoadDefinition(Word *word);
 };
