@@ -7,9 +7,9 @@ private:
     std::vector<Word *> word;
     Word *selectedWord = NULL;
     Rectangle rec_result[20];
-    Rectangle rec_modes{25, 115, 300, 475};
+    Rectangle rec_modes[4];
     Rectangle rec_reset{340, 115, 175, 65};
-    std::vector<std::string> Modes = {"Eng - Eng", "Eng - Vie", "Slang", "Emotional"};
+    std::vector<std::string> Modes = { "English - English", "English - Vietnamese", "Slang", "Emotional" };
     short modeChosen = 2;
     bool goToHome = false;
 
@@ -18,6 +18,8 @@ public:
     {
         for (int i = 0; i < 20; i++)
             rec_result[i] = {350, (float)200 + 120 * i, 800, 115};
+        for (int i = 0;i < 4;i++)
+            rec_modes[i] = { 30, (float)200 + 85 * i, 290, 85 };
     }
     Screen update();
     void draw();

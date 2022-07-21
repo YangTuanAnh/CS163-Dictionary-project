@@ -12,11 +12,10 @@ private:
     std::vector<Word *> word;
     Word *selectedWord = NULL;
     Rectangle rec_result[20];
-    Rectangle rec_modes{25, 115, 300, 475};
+    Rectangle rec_modes[4];
     Rectangle rec_search{340, 115, 630, 65};
     Rectangle rec_reset{985, 115, 165, 65};
-    
-    std::vector<std::string> Modes = {"Eng - Eng", "Eng - Vie", "Slang", "Emotional"};
+    std::vector<std::string> Modes = {"English - English", "English - Vietnamese", "Slang", "Emotional"};
     short modeChosen = 2;
     bool goToFavorites = false;
 

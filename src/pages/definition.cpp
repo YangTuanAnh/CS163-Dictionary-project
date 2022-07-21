@@ -17,7 +17,7 @@ bool definitionPage(Word*& word)
     GuiButton({ rec_def.x + rec_def.width - 15 - button_width, rec_def.y + rec_def.height - 60, button_width, 45 }, "Delete");
     if (!word->isFavorite)
     {
-        GuiDrawIcon(200, 1000, 150, 5, GRAY);
+        GuiDrawIcon(200, 1060, 140, 5, GRAY);
         if (GuiButton({ rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2 + 15, 45 }, "Add Favorite"))
         {
             slang.updateFavorite(word);
@@ -32,7 +32,7 @@ bool definitionPage(Word*& word)
     }
     else
     {
-        GuiDrawIcon(186, 1000, 150, 5, RED);
+        GuiDrawIcon(186, 1060, 140, 5, RED);
         if (GuiButton({ rec_def.x + rec_def.width - (15 + button_width) * 3, rec_def.y + rec_def.height - 60, button_width * 2 + 15, 45 }, "Remove Favorite"))
         {
             slang.removeFavorite(word);

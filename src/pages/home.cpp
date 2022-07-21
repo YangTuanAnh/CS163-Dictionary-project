@@ -4,13 +4,14 @@
 #include "home.h"
 #include "definition.h"
 
-extern Font fnt;
 
 Home::Home()
 {
     char** icon = GuiLoadIcons("icons.rgi", true);
     for (int i = 0; i < 20; i++)
         rec_result[i] = { 350, (float)200 + 120 * i, 800, 115 };
+    for (int i = 0;i < 4;i++)
+        rec_modes[i] = { 30, (float)200 + 85 * i, 290, 85 };
 }
 
 Screen Home::update()
@@ -37,9 +38,13 @@ Screen Home::update()
             if (SearchInput[0] == '\0' && CheckCollisionPointRec(GetMousePosition(), {rec_result[i].x + 715, rec_result[i].y + 5, 32, 32}))
             {
                 slang.updateHistory(word[i], false);
+                break;;
             }
-            else if (CheckCollisionPointRec(GetMousePosition(), {rec_result[i].x + 760, rec_result[i].y + 5, 32, 32}))
+            else if (CheckCollisionPointRec(GetMousePosition(), { rec_result[i].x + 760, rec_result[i].y + 5, 32, 32 }))
+            {
                 strncpy(SearchInput, word[i]->data.c_str(), sizeof(word[i]->data));
+                break;
+            }
             else if (GetMousePosition().y > 180 && CheckCollisionPointRec(GetMousePosition(), rec_result[i]) && !selectedWord)
             {
                 selectedWord = word[i];
@@ -47,8 +52,16 @@ Screen Home::update()
 
                 for (int i = 0; i < 20; i++)
                     rec_result[i] = { 350, (float)200 + 120 * i, 800, 115 };
+                break;
             }
         }
+
+        for (int i = 0;i < 4;i++)
+            if (CheckCollisionPointRec(GetMousePosition(), rec_modes[i]))
+            {
+                modeChosen = i;
+                break;
+            }
     }
     
     if (SearchEdit)
@@ -70,26 +83,19 @@ Screen Home::update()
 
 void Home::draw()
 {
-    DrawRectangleRec(rec_modes, WHITE);
     Vector2 mousePos = GetMousePosition();
 
-    for (int i = 0; i < Modes.size(); i++)
+    for (int i = 0; i < 4; i++)
     {
-        Rectangle rec_mode = {rec_modes.x, rec_modes.y + i * (rec_modes.height / Modes.size()), rec_modes.width, rec_modes.height / Modes.size()};
-        if (CheckCollisionPointRec(mousePos, rec_mode))
-        {
-            DrawRectangleRec(rec_mode, LIGHTGRAY);
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-            {
-                modeChosen = i;
-                std::cerr << "Load " << Modes[i] << '\n';
-            }
-        }
+        DrawRectangleRec(rec_modes[i], WHITE);
+        if (CheckCollisionPointRec(mousePos, rec_modes[i]))
+            DrawRectangleRec(rec_modes[i], LIGHTGRAY);
+
         if (modeChosen == i)
-            DrawRectangleRec(rec_mode, GRAY);
-        DrawTextEx(fnt, Modes[i].c_str(), {rec_modes.x + 70, float(rec_modes.y + rec_modes.height * (i + 0.35) / Modes.size())}, 35, 2, BLACK);
+            DrawRectangleRec(rec_modes[i], LIGHTGRAY);
+        DrawTextEx(fnt, Modes[i].c_str(), { rec_modes[i].x + 8, rec_modes[i].y + 27 }, 30, 1.5, BLACK);
+        DrawRectangleLinesEx(rec_modes[i], 1.5, BLACK);
     }
-    DrawRectangleLinesEx(rec_modes, 3, BLACK);
     if (definitionPage(selectedWord))
         return;
     for (int i = 0; i < word.size(); i++)
@@ -109,7 +115,7 @@ void Home::draw()
         }
         if (word[i]->isFavorite) GuiDrawIcon(186, rec_result[i].x + 665, rec_result[i].y + 5, 2, RED);
         else GuiDrawIcon(200, rec_result[i].x + 665, rec_result[i].y + 5, 2, BLACK);
-        DrawTextEx(fnt, word[i]->data.c_str(), {rec_result[i].x + 10, rec_result[i].y + 8}, 36, 2, WHITE);
+        DrawTextEx(fnt, word[i]->data.c_str(), {rec_result[i].x + 10, rec_result[i].y + 8}, 34, 2, WHITE);
         for (int j = 0; j < std::min(2, int(word[i]->defs.size())); j++)
         {
             std::string s = word[i]->defs[j]->data;

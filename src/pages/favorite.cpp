@@ -19,17 +19,27 @@ Screen Favorite::update()
             rec_result[i].y += 20;
         }
     }
-    for (int i = 0; i < word.size(); i++)
+    if (IsMouseButtonPressed(0))
     {
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && GetMousePosition().y > 180 && CheckCollisionPointRec(GetMousePosition(), rec_result[i]) && !selectedWord)
+        for (int i = 0; i < word.size(); i++)
         {
-            selectedWord = word[i];
+            if (GetMousePosition().y > 180 && CheckCollisionPointRec(GetMousePosition(), rec_result[i]) && !selectedWord)
+            {
+                selectedWord = word[i];
+                slang.getFullDefinition(selectedWord->data);
 
-            slang.getFullDefinition(selectedWord->data);
-
-            for (int i = 0; i < 20; i++)
-                rec_result[i] = {350, (float)200 + 120 * i, 800, 115};
+                for (int i = 0; i < 20; i++)
+                    rec_result[i] = { 350, (float)200 + 120 * i, 800, 115 };
+                break;
+            }
         }
+
+        for (int i = 0;i < 4;i++)
+            if (CheckCollisionPointRec(GetMousePosition(), rec_modes[i]))
+            {
+                modeChosen = i;
+                break;
+            }
     }
 
     if (goToHome)
@@ -44,26 +54,19 @@ Screen Favorite::update()
 
 void Favorite::draw()
 {
-    DrawRectangleRec(rec_modes, WHITE);
     Vector2 mousePos = GetMousePosition();
 
-    for (int i = 0; i < Modes.size(); i++)
+    for (int i = 0; i < 4; i++)
     {
-        Rectangle rec_mode = {rec_modes.x, rec_modes.y + i * (rec_modes.height / Modes.size()), rec_modes.width, rec_modes.height / Modes.size()};
-        if (CheckCollisionPointRec(mousePos, rec_mode))
-        {
-            DrawRectangleRec(rec_mode, LIGHTGRAY);
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-            {
-                modeChosen = i;
-                std::cerr << "Load " << Modes[i] << '\n';
-            }
-        }
+        DrawRectangleRec(rec_modes[i], WHITE);
+        if (CheckCollisionPointRec(mousePos, rec_modes[i]))
+            DrawRectangleRec(rec_modes[i], LIGHTGRAY);
+
         if (modeChosen == i)
-            DrawRectangleRec(rec_mode, GRAY);
-        DrawTextEx(fnt, Modes[i].c_str(), {rec_modes.x + 70, float(rec_modes.y + rec_modes.height * (i + 0.35) / Modes.size())}, 35, 2, BLACK);
+            DrawRectangleRec(rec_modes[i], LIGHTGRAY);
+        DrawTextEx(fnt, Modes[i].c_str(), { rec_modes[i].x + 8, rec_modes[i].y + 27 }, 30, 1.5, BLACK);
+        DrawRectangleLinesEx(rec_modes[i], 1.5, BLACK);
     }
-    DrawRectangleLinesEx(rec_modes, 3, BLACK);
 
     if (definitionPage(selectedWord))
         return;
@@ -74,7 +77,7 @@ void Favorite::draw()
         if (CheckCollisionPointRec(mousePos, rec_result[i]) && mousePos.y > 180)
             DrawRectangleRec(rec_result[i], BLUE);
 
-        DrawTextEx(fnt, word[i]->data.c_str(), {rec_result[i].x + 13, rec_result[i].y + 10}, 25, 2, WHITE);
+        DrawTextEx(fnt, word[i]->data.c_str(), { rec_result[i].x + 10, rec_result[i].y + 8 }, 34, 2, WHITE);
         for (int j = 0; j < std::min(2, int(word[i]->defs.size())); j++)
         {
             std::string s = word[i]->defs[j]->data;
@@ -84,7 +87,7 @@ void Favorite::draw()
                     s.insert(s.begin() + rec_result[i].width / 13 + k, '.');
                 s.insert(s.begin() + rec_result[i].width / 13 + 3, '\0');
             }
-            DrawTextEx(fnt, s.c_str(), {rec_result[i].x + 13, rec_result[i].y + 40 * (j + 1)}, 25, 2, WHITE);
+            DrawTextEx(fnt, s.c_str(), { rec_result[i].x + 13, rec_result[i].y + 30 * j + 50 }, 25, 2, LIGHTGRAY);
         }
     }
     DrawRectangle(330, 100, 850, 90, RAYWHITE);
