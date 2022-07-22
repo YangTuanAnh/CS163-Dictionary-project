@@ -10,6 +10,13 @@
 #include "Trie.h"
 #include "limits.h"
 
+const std::string digits = "0123456789";
+const std::string lowercase = "abcdefghijklmnopqrstuvwxyz";
+const std::string uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const std::string symbols = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+const std::string space = " ";
+const std::string ALLCHAR = digits + lowercase + uppercase + symbols + space;
+
 class Word;
 class Definition;
 
@@ -20,6 +27,15 @@ public:
     std::string data;
     std::vector<Definition *> defs;
     Word(const std::string &s);
+};
+
+class ResourceWord : public Word
+{
+public:
+    std::vector<int> inDefOf;
+    ResourceWord(const std::string& s) : Word(s)
+    {
+    }
 };
 
 class Definition
@@ -37,6 +53,7 @@ public:
     ~Dictionary();
     std::vector<Word *> SearchWord(const std::string &word);
     std::vector<Word *> SearchDef(const std::string &key);
+    std::vector<Word*> SearchDeftoWord(const std::string& key);
     std::vector<std::string> getFullDefinition(const std::string &word);
     void updateFavorite(Word *word);
     void removeFavorite(Word *word);
@@ -44,11 +61,16 @@ public:
     std::vector<int> generateRandQuiz();
     void updateHistory(Word* word, bool addOrDel);
 
+
+    //std::vector<Definition*> allDefs;
+    //std::vector<Word*> allWords, history;
+    //Trie<ResourceWord*>* resource;
 private:
     std::string dir;
     std::vector<Definition *> allDefs;
     std::vector<Word *> allWords, history;
     Trie<Word *> *trie;
+    Trie<ResourceWord*> *resource;
 
     void loadData();
     void loadHistory();

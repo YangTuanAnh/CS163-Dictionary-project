@@ -15,6 +15,7 @@ Dictionary::Dictionary(const std::string &_dir, const std::string &chars)
 {
     dir = _dir;
     trie = new Trie<Word *>(chars, nullptr);
+    resource = new Trie<ResourceWord *>(ALLCHAR, nullptr);
     loadData();
     loadHistory();
     loadFavorite();
@@ -125,9 +126,23 @@ void Dictionary::loadData()
             word->defs.push_back(def);
             def->word = word;
             allDefs.push_back(def);
+
+            tmp = Split(tmp[1], ' ');
+            for (int i = 0; i < tmp.size(); i++)
+            {
+                ResourceWord* resourceWord = new ResourceWord(tmp[i]);
+                if (resource->insert(tmp[i], resourceWord) != success)
+                {
+                    //std::cerr << "Failed attemp inserting Resource " << tmp[i] << "\n";
+                    //continue;
+                    resource->find(tmp[i], resourceWord);
+                    resourceWord->inDefOf.push_back(allWords.size() - 1);
+                }
+                else
+                    resourceWord->inDefOf.push_back(allWords.size() - 1);
+            }
         }
     }
-
     fin.close();
 }
 
@@ -173,6 +188,28 @@ std::vector<Word *> Dictionary::SearchDef(const std::string &key)
         }
     }
     return results;
+}
+
+std::vector<Word*> Dictionary::SearchDeftoWord(const std::string& key)
+{
+    auto DefResource = Split(key, ' ');
+    std::vector<int> rank(allWords.size(), 0);
+    for (int i = 0; i < DefResource.size(); i++)
+    {
+        ResourceWord* tmp;
+        if (resource->find(DefResource[i], tmp) == success)
+        {
+            for (int j = 0; j < tmp->inDefOf.size(); j++)
+                rank[tmp->inDefOf[j]]++;
+        }
+    }
+    std::vector<Word*> result;
+    for (int j = 0; j < allWords.size(), result.size() < 20; j++)
+    {
+        if (rank[j] > 0)
+            result.push_back(allWords[j]);
+    }
+    return result;
 }
 
 std::vector<std::string> Dictionary::getFullDefinition(const std::string &word)
