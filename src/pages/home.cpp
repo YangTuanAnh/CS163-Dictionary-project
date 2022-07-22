@@ -7,11 +7,11 @@
 Word* selectedWord = NULL;
 Home::Home()
 {
-    char** icon = GuiLoadIcons("icons.rgi", true);
+    modeChosen = new int(0);
+    scroll = new int(0);
+    char** icon = GuiLoadIcons("CS163_github/data/icons.rgi", true);
     for (int i = 0; i < 20; i++)
         rec_result[i] = { 350, (float)200 + 120 * i, 800, 115 };
-    for (int i = 0;i < 4;i++)
-        rec_modes[i] = { 30, (float)200 + 85 * i, 290, 85 };
 }
 
 Screen Home::update()
@@ -31,7 +31,7 @@ Screen Home::update()
             rec_result[i].y += 20;
         }
     }
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !dropDowmBox)
     {
         for (int i = 0; i < word.size(); i++)
         {
@@ -45,7 +45,7 @@ Screen Home::update()
                 strncpy(SearchInput, word[i]->data.c_str(), sizeof(word[i]->data));
                 break;
             }
-            else if (GetMousePosition().y > 180 && CheckCollisionPointRec(GetMousePosition(), rec_result[i]) && !selectedWord)
+            else if (GetMousePosition().y > 180 && CheckCollisionPointRec(GetMousePosition(), rec_result[i]))
             {
                 selectedWord = word[i];
                 slang.getFullDefinition(selectedWord->data);
@@ -56,12 +56,12 @@ Screen Home::update()
             }
         }
 
-        for (int i = 0;i < 4;i++)
+        /*for (int i = 0;i < 4;i++)
             if (CheckCollisionPointRec(GetMousePosition(), rec_modes[i]))
             {
                 modeChosen = i;
                 break;
-            }
+            }*/
     }
     
     if (SearchEdit)
@@ -85,7 +85,7 @@ void Home::draw()
 {
     Vector2 mousePos = GetMousePosition();
 
-    for (int i = 0; i < 4; i++)
+    /*for (int i = 0; i < 4; i++)
     {
         DrawRectangleRec(rec_modes[i], WHITE);
         if (CheckCollisionPointRec(mousePos, rec_modes[i]))
@@ -95,7 +95,7 @@ void Home::draw()
             DrawRectangleRec(rec_modes[i], LIGHTGRAY);
         DrawTextEx(fnt, Modes[i].c_str(), { rec_modes[i].x + 8, rec_modes[i].y + 27 }, 30, 1.5, BLACK);
         DrawRectangleLinesEx(rec_modes[i], 1.5, BLACK);
-    }
+    }*/
     for (int i = 0; i < word.size(); i++)
     {
         DrawRectangleRec(rec_result[i], DARKBLUE);
@@ -105,7 +105,7 @@ void Home::draw()
             GuiDrawIcon(201, rec_result[i].x + 760, rec_result[i].y + 5, 2, GREEN);
         else 
         {
-            if (CheckCollisionPointRec(mousePos, rec_result[i]) && mousePos.y > 180)
+            if (CheckCollisionPointRec(mousePos, rec_result[i]) && mousePos.y > 180 && !dropDowmBox)
                 DrawRectangleRec(rec_result[i], BLUE);
             if (SearchInput[0] == '\0')
                 GuiDrawIcon(202, rec_result[i].x + 715, rec_result[i].y + 5, 2, BLACK);
@@ -134,21 +134,19 @@ void Home::draw()
             rec_result[i] = {350, (float)200 + 120 * i, 800, 115};
         SearchEdit ^= 1;
     }
-
+    if (GuiListView(rec_favor, "home\nfavorite\ngame\nsearch\n1\n2\n3\n4\n5", scroll, listView) == 1)
+    {
+        goToFavorites = true;
+    }
+    if (GuiDropdownBox(rec_modes, (Modes[0] + "\n" + Modes[1] + "\n" + Modes[2] + "\n" + Modes[3]).c_str(), modeChosen, dropDowmBox))
+        dropDowmBox ^= 1;
     if (SearchInput[0] == '\0')
         DrawText("Search bar", 365, 135, 30, LIGHTGRAY);
 
-    if (GuiButton(rec_favor, "FAVORITES"))
+    /*if (GuiButton(rec_favor, "FAVORITES"))
     {
         std::cerr << "Go to Favorites\n";
         goToFavorites = true;
-    }/*
-    int* p = new int;
-    *p = 0;
-    if (GuiDropdownBox(rec_favor, "heyhey\nhaha", p, true))
-    {
-
-    }
-    delete p;*/
+    }*/
 
 }

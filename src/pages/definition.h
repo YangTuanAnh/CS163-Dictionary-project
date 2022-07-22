@@ -4,7 +4,8 @@
 struct Definitionmenu
 {
 private:
-    Rectangle rec_def{ 340, 125, 835, 450 };
+    Rectangle rec_box{ 100, 125, 1000, 455 };
+    std::string fullDef;
 public:
     Screen update();
     void draw();

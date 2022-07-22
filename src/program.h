@@ -24,6 +24,7 @@ public:
         font.baseSize /= 1.4;
         GuiSetFont(font);
         GuiSetStyle(TEXTBOX, BASE_COLOR_PRESSED, 0xffffffff);
+        GuiSetStyle(DEFAULT, TEXT_SIZE, 20);
     }
     void run()
     {
