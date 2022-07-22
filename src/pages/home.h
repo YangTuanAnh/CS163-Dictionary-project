@@ -4,26 +4,28 @@
 #include <raylib.h>
 #include "../utility/screen.h"
 
+extern Word* selectedWord;
+extern Font fnt;
 class Home
 {
 private:
     bool SearchEdit = false;
     char SearchInput[101] = "";
     std::vector<Word *> word;
-    Word *selectedWord = NULL;
     Rectangle rec_result[20];
-    Rectangle rec_modes{25, 115, 300, 475};
-    Rectangle rec_search{340, 115, 630, 65};
-    Rectangle rec_reset{985, 115, 165, 65};
-    Rectangle rec_def{340, 125, 835, 450};
-    Font fnt = LoadFont("CS163_github/data/Font.ttf");
-    std::vector<std::string> Modes = {"Eng - Eng", "Eng - Vie", "Slang", "Emotional"};
-    short modeChosen = 2;
-    bool goToFavorites = false;
-
+    Rectangle rec_modes {985, 115, 165, 65};
+    Rectangle rec_search {340, 115, 630, 65};
+    Rectangle rec_favor { 20, 150, 200, 200 };
+    std::vector<std::string> Modes = {"ENG-ENG", "ENG-VIE", "SLANG", "EMOTIONAL"};
+    int* modeChosen = nullptr;
+    bool goToFavorites = false, dropDowmBox = false, listView = false;
+    int* scroll = nullptr;
 public:
     Home();
     Screen update();
     void draw();
-    bool LoadDefinition(Word *word);
+    ~Home()
+    {
+        delete modeChosen;
+    }
 };

@@ -4,24 +4,27 @@
 #include "utility/screen.h"
 #include "pages/home.h"
 #include "pages/favorite.h"
+#include "pages/definition.h"
 
 const int WIDTH = 1200, HEIGHT = 600;
-
+Font fnt;
 class Program
 {
 private:
     Rectangle rec_top{0, 0, 1200, 100};
     Home Home;
     Favorite Favorite;
+    Definitionmenu Definitionmenu;
     Screen currScreen = HOME;
-    Font fnt;
 public:
     Program()
     {
-        fnt = LoadFont("CS163_github/data/Font.ttf");
-        fnt.baseSize /= 1.4;
-        GuiSetFont(fnt);
+        fnt = LoadFont("../data/Font.ttf");
+        Font font = fnt;
+        font.baseSize /= 1.4;
+        GuiSetFont(font);
         GuiSetStyle(TEXTBOX, BASE_COLOR_PRESSED, 0xffffffff);
+        GuiSetStyle(DEFAULT, TEXT_SIZE, 20);
     }
     void run()
     {
@@ -32,6 +35,9 @@ public:
             break;
         case FAVORITE:
             currScreen = Favorite.update();
+            break;
+        case DEFINITION:
+            currScreen = Definitionmenu.update();
             break;
         default:
             break;
@@ -45,6 +51,9 @@ public:
             break;
         case FAVORITE:
             Favorite.draw();
+            break;
+        case DEFINITION:
+            Definitionmenu.draw();
             break;
         default:
             break;
