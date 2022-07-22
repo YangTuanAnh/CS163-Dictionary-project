@@ -9,7 +9,7 @@ Home::Home()
 {
     modeChosen = new int(0);
     scroll = new int(0);
-    char** icon = GuiLoadIcons("CS163_github/data/icons.rgi", true);
+    char** icon = GuiLoadIcons("../data/icons.rgi", true);
     for (int i = 0; i < 20; i++)
         rec_result[i] = { 350, (float)200 + 120 * i, 800, 115 };
 }
