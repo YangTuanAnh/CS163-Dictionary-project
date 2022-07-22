@@ -131,15 +131,11 @@ void Dictionary::loadData()
             for (int i = 0; i < tmp.size(); i++)
             {
                 ResourceWord* resourceWord = new ResourceWord(tmp[i]);
-                if (resource->insert(tmp[i], resourceWord) != success)
+                if (resource->find(tmp[i], resourceWord) != success)
                 {
-                    //std::cerr << "Failed attemp inserting Resource " << tmp[i] << "\n";
-                    //continue;
-                    resource->find(tmp[i], resourceWord);
-                    resourceWord->inDefOf.push_back(allWords.size() - 1);
+                    resource->insert(tmp[i], resourceWord);
                 }
-                else
-                    resourceWord->inDefOf.push_back(allWords.size() - 1);
+                resourceWord->inDefOf.push_back(allWords.size() - 1);
             }
         }
     }
@@ -193,21 +189,26 @@ std::vector<Word *> Dictionary::SearchDef(const std::string &key)
 std::vector<Word*> Dictionary::SearchDeftoWord(const std::string& key)
 {
     auto DefResource = Split(key, ' ');
-    std::vector<int> rank(allWords.size(), 0);
+    std::vector<std::pair<int, int>> rank(allWords.size(), std::pair<int, int>(0, -1));
+    for (int i = 0; i < rank.size(); i++)
+        rank[i].second = i;
     for (int i = 0; i < DefResource.size(); i++)
     {
         ResourceWord* tmp;
         if (resource->find(DefResource[i], tmp) == success)
         {
             for (int j = 0; j < tmp->inDefOf.size(); j++)
-                rank[tmp->inDefOf[j]]++;
+                rank[tmp->inDefOf[j]].first++;
         }
     }
+    quick_sort(rank, 0, rank.size() - 1);
     std::vector<Word*> result;
-    for (int j = 0; j < allWords.size(), result.size() < 20; j++)
+    for (int i = 0; i < rank.size(), result.size() < 50; i++)
     {
-        if (rank[j] > 0)
-            result.push_back(allWords[j]);
+        if (rank[i].first > 0)
+            result.push_back(allWords[rank[i].second]);
+        else if (rank[i].first == 0)
+            break;
     }
     return result;
 }
@@ -350,4 +351,34 @@ bool IsPrefix(const std::string &p, const std::string &s)
         return false;
     }
     return (p == s.substr(0, p.size()));
+}
+
+void quick_sort(std::vector<std::pair<int, int>> &a, int high, int low)
+/*Sort by key in pair<key, data>. Descending order */
+{
+    if (high >= low)
+        return;
+    int Pivot = a[(low + high) / 2].first;
+    int h = high;
+    int l = low;
+    do
+    {
+        while (a[h].first > Pivot)
+            h++;
+        while (a[l].first < Pivot)
+            l--;
+        if (h <= l)
+        {
+            if (h < l)
+            {
+                std::pair<int, int> temp = a[h];
+                a[h] = a[l];
+                a[l] = temp;
+            }
+            h++;
+            l--;
+        }
+    } while (h <= l);
+    quick_sort(a, high, l);
+    quick_sort(a, h, low);
 }
