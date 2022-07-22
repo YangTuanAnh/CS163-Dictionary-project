@@ -8,10 +8,11 @@ Word* selectedWord = NULL;
 Home::Home()
 {
     modeChosen = new int(0);
-    scroll = new int(0);
-    char** icon = GuiLoadIcons("../data/icons.rgi", true);
+    char** icon = GuiLoadIcons("CS163_github/data/icons.rgi", true);
     for (int i = 0; i < 20; i++)
         rec_result[i] = { 350, (float)200 + 120 * i, 800, 115 };
+    for (int i = 0;i < 4;i++)
+        rec_modes[i] = { 30, (float)140 + 90 * i, 290, 70 };
 }
 
 Screen Home::update()
@@ -73,10 +74,11 @@ Screen Home::update()
         }
     }
 
-    if (goToFavorites)
+    if (menuChosen)
     {
-        goToFavorites ^= 1;
-        return FAVORITE;
+        short tmp = menuChosen;
+        menuChosen = 0;
+        return static_cast<Screen>(tmp);
     }
     return HOME;
 }
@@ -85,17 +87,11 @@ void Home::draw()
 {
     Vector2 mousePos = GetMousePosition();
 
-    /*for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 4; i++)
     {
-        DrawRectangleRec(rec_modes[i], WHITE);
-        if (CheckCollisionPointRec(mousePos, rec_modes[i]))
-            DrawRectangleRec(rec_modes[i], LIGHTGRAY);
-
-        if (modeChosen == i)
-            DrawRectangleRec(rec_modes[i], LIGHTGRAY);
-        DrawTextEx(fnt, Modes[i].c_str(), { rec_modes[i].x + 8, rec_modes[i].y + 27 }, 30, 1.5, BLACK);
-        DrawRectangleLinesEx(rec_modes[i], 1.5, BLACK);
-    }*/
+        if (GuiButton(rec_modes[i], modes[i].c_str()))
+            menuChosen = i;
+    }
     for (int i = 0; i < word.size(); i++)
     {
         DrawRectangleRec(rec_result[i], DARKBLUE);
@@ -134,19 +130,8 @@ void Home::draw()
             rec_result[i] = {350, (float)200 + 120 * i, 800, 115};
         SearchEdit ^= 1;
     }
-    if (GuiListView(rec_favor, "home\nfavorite\ngame\nsearch\n1\n2\n3\n4\n5", scroll, listView) == 1)
-    {
-        goToFavorites = true;
-    }
-    if (GuiDropdownBox(rec_modes, (Modes[0] + "\n" + Modes[1] + "\n" + Modes[2] + "\n" + Modes[3]).c_str(), modeChosen, dropDowmBox))
+    if (GuiDropdownBox(rec_dictionary, (dictionary[0] + "\n" + dictionary[1] + "\n" + dictionary[2] + "\n" + dictionary[3]).c_str(), modeChosen, dropDowmBox))
         dropDowmBox ^= 1;
     if (SearchInput[0] == '\0')
         DrawText("Search bar", 365, 135, 30, LIGHTGRAY);
-
-    /*if (GuiButton(rec_favor, "FAVORITES"))
-    {
-        std::cerr << "Go to Favorites\n";
-        goToFavorites = true;
-    }*/
-
 }
