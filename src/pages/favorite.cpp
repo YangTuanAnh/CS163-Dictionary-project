@@ -9,17 +9,17 @@ Screen Favorite::update()
     {
         for (int i = 0; i < word.size(); i++)
         {
-            rec_result[i].y -= 20;
+            rec_result[i].y -= 40;
         }
     }
     else if (GetMouseWheelMove() == 1 && rec_result[0].y < 200)
     {
         for (int i = 0; i < word.size(); i++)
         {
-            rec_result[i].y += 20;
+            rec_result[i].y += 40;
         }
     }
-    if (IsMouseButtonPressed(0))
+    if (IsMouseButtonPressed(0) && !dropDowmBox)
     {
         for (int i = 0; i < word.size(); i++)
         {
@@ -33,48 +33,33 @@ Screen Favorite::update()
                 return DEFINITION;
             }
         }
-
-        for (int i = 0;i < 4;i++)
-            if (CheckCollisionPointRec(GetMousePosition(), rec_modes[i]))
-            {
-                modeChosen = i;
-                break;
-            }
     }
 
-    if (goToHome)
+    if (menuChosen != 2)
     {
-        goToHome ^= 1;
-        for (int i = 0; i < 20; i++)
-            rec_result[i] = { 350, (float)200 + 120 * i, 800, 115 };
-        return HOME;
+        short tmp = menuChosen;
+        menuChosen = 2;
+        return static_cast<Screen>(tmp);
     }
     return FAVORITE;
 }
 
 void Favorite::draw()
 {
+    
     Vector2 mousePos = GetMousePosition();
 
     for (int i = 0; i < 4; i++)
-    {
-        DrawRectangleRec(rec_modes[i], WHITE);
-        if (CheckCollisionPointRec(mousePos, rec_modes[i]))
-            DrawRectangleRec(rec_modes[i], LIGHTGRAY);
-
-        if (modeChosen == i)
-            DrawRectangleRec(rec_modes[i], LIGHTGRAY);
-        DrawTextEx(fnt, Modes[i].c_str(), { rec_modes[i].x + 8, rec_modes[i].y + 27 }, 30, 1.5, BLACK);
-        DrawRectangleLinesEx(rec_modes[i], 1.5, BLACK);
-    }
+        if (GuiButton(rec_modes[i], modes[i].c_str()))
+            menuChosen = i;
 
     for (int i = 0; i < word.size(); i++)
     {
         DrawRectangleRec(rec_result[i], DARKBLUE);
-        if (CheckCollisionPointRec(mousePos, rec_result[i]) && mousePos.y > 180)
+        if (CheckCollisionPointRec(mousePos, rec_result[i]) && mousePos.y > 180 && !dropDowmBox)
             DrawRectangleRec(rec_result[i], BLUE);
 
-        DrawTextEx(fnt, word[i]->data.c_str(), { rec_result[i].x + 10, rec_result[i].y + 8 }, 34, 2, WHITE);
+        DrawTextEx(fnt, word[i]->data.c_str(), { rec_result[i].x + 10, rec_result[i].y + 10 }, 34, 2, WHITE);
         for (int j = 0; j < std::min(2, int(word[i]->defs.size())); j++)
         {
             std::string s = word[i]->defs[j]->data;
@@ -84,14 +69,11 @@ void Favorite::draw()
                     s.insert(s.begin() + rec_result[i].width / 13 + k, '.');
                 s.insert(s.begin() + rec_result[i].width / 13 + 3, '\0');
             }
-            DrawTextEx(fnt, s.c_str(), { rec_result[i].x + 13, rec_result[i].y + 30 * j + 50 }, 25, 2, LIGHTGRAY);
+            DrawTextEx(fnt, s.c_str(), { rec_result[i].x + 15, rec_result[i].y + 35 * j + 50 }, 25, 2, LIGHTGRAY);
         }
     }
-    DrawRectangle(330, 100, 850, 90, RAYWHITE);
-    if (GuiButton(rec_reset, "HOME"))
-    {
-        std::cerr << "Go to Home\n";
-        goToHome = true;
-    }
+    DrawRectangle(310, 100, 850, 90, RAYWHITE);
+    if (GuiDropdownBox(rec_dictionary, (dictionary[0] + "\n" + dictionary[1] + "\n" + dictionary[2] + "\n" + dictionary[3]).c_str(), modeChosen, dropDowmBox))
+        dropDowmBox ^= 1;
 }
 

@@ -15,11 +15,8 @@ void Definitionmenu::draw()
     {
         selectedWord = NULL;
         fullDef = "\0";
-        GuiSetStyle(DEFAULT, TEXT_SIZE, 20);
         return;
     }
-    GuiSetStyle(DEFAULT, TEXT_SIZE, 18);
-    GuiSetStyle(TEXTBOX, COLOR_SELECTED_FG, 0xffffffff);
     GuiButton({ rec_box.x + rec_box.width - 15 - button_width, rec_box.y + rec_box.height - 60, button_width, 45 }, "Delete");
     if (!selectedWord->isFavorite)
     {
@@ -54,7 +51,7 @@ void Definitionmenu::draw()
                 extended++;
             }
         }
-        DrawTextEx(fnt, s.c_str(), { rec_box.x + 15, rec_box.y + 80 + 30 * cnt }, 20, 2, BLACK);
+        DrawTextEx(fnt, s.c_str(), { rec_def.x + 15, rec_def.y + 20 + 30 * cnt }, 22, 1.5, BLACK);
         cnt += extended;
     }
 }
