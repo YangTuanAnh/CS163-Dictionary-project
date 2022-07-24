@@ -1,10 +1,10 @@
-#include "favorite.h"
+#include "history.h"
 #include "../../include/raygui.h"
 #include "definition.h"
 
-Screen Favorite::update()
+Screen History::update()
 {
-    word = slang.getFavoriteList();
+    word = slang.getSearchHistory();
     if (GetMouseWheelMove() == -1 && rec_result[word.size() - 1].y > 475)
     {
         for (int i = 0; i < word.size(); i++)
@@ -35,16 +35,16 @@ Screen Favorite::update()
         }
     }
 
-    if (menuChosen != 2)
+    if (menuChosen != 3)
     {
         short tmp = menuChosen;
-        menuChosen = 2;
+        menuChosen = 3;
         return static_cast<Screen>(tmp);
     }
-    return FAVORITE;
+    return HISTORY;
 }
 
-void Favorite::draw()
+void History::draw()
 {
 
     Vector2 mousePos = GetMousePosition();

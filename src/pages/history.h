@@ -1,7 +1,7 @@
 #pragma once
 #include "home.h"
 
-class Favorite
+class History
 {
 private:
     std::vector<Word *> word;
@@ -12,11 +12,11 @@ private:
     std::vector<std::string> modes = {"Search Word", "Search Def", "Favorite", "History", "Game"};
     std::vector<std::string> dictionary = {"ENG-ENG", "ENG-VIE", "SLANG", "EMOTIONAL"};
     int *modeChosen = nullptr;
-    short menuChosen = 2;
+    short menuChosen = 3;
     bool dropDowmBox = false;
 
 public:
-    Favorite()
+    History()
     {
         modeChosen = new int(0);
         for (int i = 0; i < 20; i++)

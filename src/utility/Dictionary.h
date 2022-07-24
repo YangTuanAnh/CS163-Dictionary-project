@@ -33,7 +33,7 @@ class ResourceWord : public Word
 {
 public:
     std::vector<int> inDefOf;
-    ResourceWord(const std::string& s) : Word(s)
+    ResourceWord(const std::string &s) : Word(s)
     {
     }
 };
@@ -53,29 +53,28 @@ public:
     ~Dictionary();
     std::vector<Word *> SearchWord(const std::string &word);
     std::vector<Word *> SearchDef(const std::string &key);
-    std::vector<Word*> SearchDeftoWord(const std::string& key);
+    std::vector<Word *> SearchDeftoWord(const std::string &key);
     std::vector<std::string> getFullDefinition(const std::string &word);
     void updateFavorite(Word *word);
     void removeFavorite(Word *word);
     std::vector<Word *> getFavoriteList();
     std::vector<int> generateRandQuiz();
-    void updateHistory(Word* word, bool addOrDel);
+    std::vector<Word *> getSearchHistory();
+    void updateHistory(Word *word, bool addOrDel);
 
-
-    //std::vector<Definition*> allDefs;
-    //std::vector<Word*> allWords, history;
-    //Trie<ResourceWord*>* resource;
+    // std::vector<Definition*> allDefs;
+    // std::vector<Word*> allWords, history;
+    // Trie<ResourceWord*>* resource;
 private:
     std::string dir;
     std::vector<Definition *> allDefs;
     std::vector<Word *> allWords, history;
     Trie<Word *> *trie;
-    Trie<ResourceWord*> *resource;
+    Trie<ResourceWord *> *resource;
 
     void loadData();
     void loadHistory();
     void loadFavorite();
-    std::vector<Word *> getSearchHistory();
     void saveData();
     void saveHistory();
     void saveFavorite();
@@ -83,5 +82,5 @@ private:
 
 std::vector<std::string> Split(const std::string &s, char delim);
 bool IsPrefix(const std::string &p, const std::string &s);
-bool checkQuizValidation(int new_option, std::vector<int>& quiz);
-void quick_sort(std::vector<std::pair<int, int>>& a, int high, int low);
+bool checkQuizValidation(int new_option, std::vector<int> &quiz);
+void quick_sort(std::vector<std::pair<int, int>> &a, int high, int low);

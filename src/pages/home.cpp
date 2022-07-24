@@ -4,16 +4,16 @@
 #include "home.h"
 #include "definition.h"
 
-Word* selectedWord = NULL;
+Word *selectedWord = NULL;
 Home::Home()
 {
     modeChosen = new int(0);
-    char** icon = GuiLoadIcons("../data/icons.rgi", true);
+    char **icon = GuiLoadIcons("../data/icons.rgi", true);
     for (int i = 0; i < 20; i++)
-        rec_result[i] = { 320, (float)200 + 125 * i, 830, 120 };
-    for (int i = 0;i < 4;i++)
-        rec_modes[i] = { 30, (float)170 + 90 * i, 245, 60 };
-    rec_modes[menuChosen] = { 20, (float)160 + 90 * menuChosen, 265, 80 };
+        rec_result[i] = {320, (float)200 + 125 * i, 830, 120};
+    for (int i = 0; i < 5; i++)
+        rec_modes[i] = {30, (float)170 + 90 * i, 245, 60};
+    rec_modes[menuChosen] = {20, (float)160 + 90 * menuChosen, 265, 80};
 }
 
 Screen Home::update()
@@ -40,9 +40,10 @@ Screen Home::update()
             if (SearchInput[0] == '\0' && CheckCollisionPointRec(GetMousePosition(), {rec_result[i].x + 750, rec_result[i].y + 5, 32, 32}))
             {
                 slang.updateHistory(word[i], false);
-                break;;
+                break;
+                ;
             }
-            else if (CheckCollisionPointRec(GetMousePosition(), { rec_result[i].x + 790, rec_result[i].y + 5, 32, 32 }))
+            else if (CheckCollisionPointRec(GetMousePosition(), {rec_result[i].x + 790, rec_result[i].y + 5, 32, 32}))
             {
                 strncpy(SearchInput, word[i]->data.c_str(), sizeof(word[i]->data));
                 break;
@@ -53,18 +54,18 @@ Screen Home::update()
                 slang.getFullDefinition(selectedWord->data);
 
                 for (int i = 0; i < 20; i++)
-                    rec_result[i] = { 320, (float)200 + 125 * i, 830, 120 };
+                    rec_result[i] = {320, (float)200 + 125 * i, 830, 120};
                 return DEFINITION;
             }
         }
     }
-    
+
     if (SearchEdit)
     {
         if (GetKeyPressed())
         {
             for (int i = 0; i < 20; i++)
-                rec_result[i] = { 320, (float)200 + 125 * i, 830, 120 };
+                rec_result[i] = {320, (float)200 + 125 * i, 830, 120};
         }
     }
 
@@ -81,20 +82,19 @@ void Home::draw()
 {
     Vector2 mousePos = GetMousePosition();
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 5; i++)
     {
         if (GuiButton(rec_modes[i], modes[i].c_str()))
             menuChosen = i;
-        
     }
     for (int i = 0; i < word.size(); i++)
     {
         DrawRectangleRec(rec_result[i], DARKBLUE);
         if (SearchInput[0] == '\0' && CheckCollisionPointRec(mousePos, {rec_result[i].x + 750, rec_result[i].y + 5, 32, 32}))
             GuiDrawIcon(202, rec_result[i].x + 750, rec_result[i].y + 5, 2, RED);
-        else if (CheckCollisionPointRec(mousePos, { rec_result[i].x + 790, rec_result[i].y + 5, 32, 32 }))
+        else if (CheckCollisionPointRec(mousePos, {rec_result[i].x + 790, rec_result[i].y + 5, 32, 32}))
             GuiDrawIcon(201, rec_result[i].x + 790, rec_result[i].y + 5, 2, GREEN);
-        else 
+        else
         {
             if (CheckCollisionPointRec(mousePos, rec_result[i]) && mousePos.y > 180 && !dropDowmBox)
                 DrawRectangleRec(rec_result[i], BLUE);
@@ -102,8 +102,10 @@ void Home::draw()
                 GuiDrawIcon(202, rec_result[i].x + 750, rec_result[i].y + 5, 2, BLACK);
             GuiDrawIcon(201, rec_result[i].x + 790, rec_result[i].y + 5, 2, BLACK);
         }
-        if (word[i]->isFavorite) GuiDrawIcon(186, rec_result[i].x + 700, rec_result[i].y - 5, 3, RED);
-        else GuiDrawIcon(200, rec_result[i].x + 700, rec_result[i].y - 5, 3, BLACK);
+        if (word[i]->isFavorite)
+            GuiDrawIcon(186, rec_result[i].x + 700, rec_result[i].y - 5, 3, RED);
+        else
+            GuiDrawIcon(200, rec_result[i].x + 700, rec_result[i].y - 5, 3, BLACK);
         DrawTextEx(fnt, word[i]->data.c_str(), {rec_result[i].x + 10, rec_result[i].y + 10}, 34, 2, WHITE);
         for (int j = 0; j < std::min(2, int(word[i]->defs.size())); j++)
         {
@@ -122,7 +124,7 @@ void Home::draw()
     if (GuiTextBox(rec_search, SearchInput, 20, SearchEdit))
     {
         for (int i = 0; i < 20; i++)
-            rec_result[i] = { 320, (float)200 + 125 * i, 830, 120 };
+            rec_result[i] = {320, (float)200 + 125 * i, 830, 120};
         SearchEdit ^= 1;
     }
     if (GuiDropdownBox(rec_dictionary, (dictionary[0] + "\n" + dictionary[1] + "\n" + dictionary[2] + "\n" + dictionary[3]).c_str(), modeChosen, dropDowmBox))

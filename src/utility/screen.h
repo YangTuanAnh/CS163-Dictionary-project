@@ -5,8 +5,8 @@ typedef enum
     HOME = 0,
     SEARCH_DEF,
     FAVORITE,
-    GAME,
     HISTORY,
+    GAME,
     DEFINITION,
     RESET
 } Screen;

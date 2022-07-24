@@ -5,6 +5,7 @@
 #include "pages/home.h"
 #include "pages/favorite.h"
 #include "pages/definition.h"
+#include "pages/history.h"
 
 const int WIDTH = 1200, HEIGHT = 600;
 Font fnt;
@@ -15,7 +16,9 @@ private:
     Home Home;
     Favorite Favorite;
     Definitionmenu Definitionmenu;
-    Screen currScreen = HOME;
+    History History;
+    Screen currScreen = HISTORY;
+
 public:
     Program()
     {
@@ -39,6 +42,9 @@ public:
         case DEFINITION:
             currScreen = Definitionmenu.update();
             break;
+        case HISTORY:
+            currScreen = History.update();
+            break;
         default:
             break;
         }
@@ -54,6 +60,9 @@ public:
             break;
         case DEFINITION:
             Definitionmenu.draw();
+            break;
+        case HISTORY:
+            History.draw();
             break;
         default:
             break;
