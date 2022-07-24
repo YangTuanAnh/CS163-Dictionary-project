@@ -17,7 +17,7 @@ private:
     Favorite Favorite;
     Definitionmenu Definitionmenu;
     History History;
-    Screen currScreen = HISTORY;
+    Screen currScreen = HOME;
 
 public:
     Program()

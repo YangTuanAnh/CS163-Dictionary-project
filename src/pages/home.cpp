@@ -12,8 +12,8 @@ Home::Home()
     for (int i = 0; i < 20; i++)
         rec_result[i] = {320, (float)200 + 125 * i, 830, 120};
     for (int i = 0; i < 5; i++)
-        rec_modes[i] = {30, (float)170 + 90 * i, 245, 60};
-    rec_modes[menuChosen] = {20, (float)160 + 90 * menuChosen, 265, 80};
+        rec_modes[i] = {30, (float)125 + 90 * i, 245, 60};
+    rec_modes[menuChosen] = {20, (float)115 + 90 * menuChosen, 265, 80};
 }
 
 Screen Home::update()
@@ -131,4 +131,11 @@ void Home::draw()
         dropDowmBox ^= 1;
     if (SearchInput[0] == '\0')
         DrawText("Search bar", 365, 135, 30, LIGHTGRAY);
+    if (GuiButton(rec_random, "RANDOM"))
+    {
+        std::string random = slang.getRandomWord();
+        for (int i = 0; i < random.length(); i++)
+            SearchInput[i] = random[i];
+        SearchInput[random.length()] = '\0';
+    }
 }

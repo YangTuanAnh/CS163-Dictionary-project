@@ -60,6 +60,7 @@ public:
     std::vector<Word *> getFavoriteList();
     std::vector<int> generateRandQuiz();
     std::vector<Word *> getSearchHistory();
+    std::string getRandomWord();
     void updateHistory(Word *word, bool addOrDel);
 
     // std::vector<Definition*> allDefs;
