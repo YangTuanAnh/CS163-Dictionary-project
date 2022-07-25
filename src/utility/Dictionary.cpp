@@ -130,7 +130,7 @@ void Dictionary::loadData()
             tmp = Split(tmp[1], ' ');
             for (int i = 0; i < tmp.size(); i++)
             {
-                ResourceWord* resourceWord = new ResourceWord(tmp[i]);
+                ResourceWord *resourceWord = new ResourceWord(tmp[i]);
                 if (resource->find(tmp[i], resourceWord) != success)
                 {
                     resource->insert(tmp[i], resourceWord);
@@ -186,7 +186,7 @@ std::vector<Word *> Dictionary::SearchDef(const std::string &key)
     return results;
 }
 
-std::vector<Word*> Dictionary::SearchDeftoWord(const std::string& key)
+std::vector<Word *> Dictionary::SearchDeftoWord(const std::string &key)
 {
     auto DefResource = Split(key, ' ');
     std::vector<std::pair<int, int>> rank(allWords.size(), std::pair<int, int>(0, -1));
@@ -194,7 +194,7 @@ std::vector<Word*> Dictionary::SearchDeftoWord(const std::string& key)
         rank[i].second = i;
     for (int i = 0; i < DefResource.size(); i++)
     {
-        ResourceWord* tmp;
+        ResourceWord *tmp;
         if (resource->find(DefResource[i], tmp) == success)
         {
             for (int j = 0; j < tmp->inDefOf.size(); j++)
@@ -202,7 +202,7 @@ std::vector<Word*> Dictionary::SearchDeftoWord(const std::string& key)
         }
     }
     quick_sort(rank, 0, rank.size() - 1);
-    std::vector<Word*> result;
+    std::vector<Word *> result;
     for (int i = 0; i < rank.size(), result.size() < 50; i++)
     {
         if (rank[i].first > 0)
@@ -291,7 +291,7 @@ void Dictionary::saveFavorite()
 
 std::vector<int> Dictionary::generateRandQuiz()
 /* This functions returns a vector of 5 integers quiz[5], where quiz[0..3] are indices of random chosen Words,
-and quiz[4] is the Answer. 
+and quiz[4] is the Answer.
             quiz[0] -> response given by option A
             quiz[1] -> response given by option B
             quiz[2] -> response given by option C
@@ -305,7 +305,7 @@ and quiz[4] is the Answer.
     std::srand(seedValue);
     for (int i = 0; i < 4; i++)
     {
-        auto new_option = rand() % (allWords.size()); // generate an index from 0 to allWords.size()-1
+        auto new_option = rand() % (allWords.size());  // generate an index from 0 to allWords.size()-1
         while (!checkQuizValidation(new_option, quiz)) // Check to prevent options duplication
             new_option = rand() % (allWords.size());
         quiz.push_back(new_option);
@@ -314,7 +314,7 @@ and quiz[4] is the Answer.
     return quiz;
 }
 
-bool checkQuizValidation(int new_option, std::vector<int>& quiz)
+bool checkQuizValidation(int new_option, std::vector<int> &quiz)
 /* This function helps Dictionary::generateRandQuiz() with checking if a new generated option already exists.
 If it does, return false - invalid. Else, return true - valid. */
 {
@@ -381,4 +381,12 @@ void quick_sort(std::vector<std::pair<int, int>> &a, int high, int low)
     } while (h <= l);
     quick_sort(a, high, l);
     quick_sort(a, h, low);
+}
+
+std::string Dictionary::getRandomWord()
+{
+    using namespace std::chrono;
+    auto seedValue = duration_cast<seconds>(steady_clock::now().time_since_epoch()).count();
+    std::srand(seedValue);
+    return allWords[rand() % allWords.size()]->data;
 }

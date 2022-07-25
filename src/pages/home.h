@@ -4,7 +4,7 @@
 #include <raylib.h>
 #include "../utility/screen.h"
 
-extern Word* selectedWord;
+extern Word *selectedWord;
 extern Font fnt;
 class Home
 {
@@ -13,15 +13,16 @@ private:
     char SearchInput[101] = "";
     std::vector<Word *> word;
     Rectangle rec_result[20];
-    Rectangle rec_dictionary {985, 115, 165, 65};
-    Rectangle rec_search {340, 115, 630, 65};
-    Rectangle rec_favor { 20, 150, 200, 200 };
-    Rectangle rec_modes[4];
-    std::vector<std::string> modes = { "Search Word", "Search Def", "Favorite", "Game" };
+    Rectangle rec_dictionary{805, 115, 165, 65};
+    Rectangle rec_random{985, 115, 165, 65};
+    Rectangle rec_search{320, 115, 470, 65};
+    Rectangle rec_modes[5];
+    std::vector<std::string> modes = {"Search Word", "Search Def", "Favorite", "History", "Game"};
     std::vector<std::string> dictionary = {"ENG-ENG", "ENG-VIE", "SLANG", "EMOTIONAL"};
-    int* modeChosen = nullptr;
+    int *modeChosen = nullptr;
     short menuChosen = 0;
-    bool goToFavorites = false, dropDowmBox = false;
+    bool dropDowmBox = false;
+
 public:
     Home();
     Screen update();
