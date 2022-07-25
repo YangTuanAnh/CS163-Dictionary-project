@@ -35,6 +35,7 @@ public:
 	// Methods
 	Trie_error find(const std::string& target, Record& data);
 	Trie_error insert(const std::string& newData, const Record& data);
+	Trie_error trie_delete(const std::string& target);
 	std::vector<Record> search(const std::string& key);
 private:
 	char alphabeticId[256];
@@ -143,6 +144,33 @@ success. Otherwise, return duplicated_error */
 	}
 	else {
 		return duplicated_error;
+	}
+}
+
+template <class Record>
+Trie_error Trie<Record>::trie_delete(const std::string& target)
+{
+	Trie_Node<Record>* cur = root;
+	for (auto c : target) {
+		int brachId = alphabeticId[(int)c];
+		if (brachId == -1) {
+			return non_exist;
+		}
+		if (cur->branch[brachId] == nullptr) {
+			return non_exist;
+		}
+		cur = cur->branch[brachId];
+	}
+	if (cur->data == defaultValue) {
+		return non_exist;
+	}
+	else {
+		cur->data = defaultValue;
+		for (int i = 0; i < branchLimit; i++)
+			if (cur->branch[i] != nullptr)
+				return success;
+		Deallocate(cur);
+		return success;
 	}
 }
 
