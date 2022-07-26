@@ -4,14 +4,11 @@
 struct Definitionmenu
 {
 private:
-    Rectangle rec_box{ 100, 125, 1000, 455 };
-    Rectangle rec_def{ 100, 185, 800, 300 };
+    Rectangle rec_box{ 50, 120, 1100, 460 };
+    Rectangle rec_def{ 50, 210, 1100, 300 };
     std::string fullDef;
-    Vector2* scroll = nullptr;
 public:
-    Definitionmenu()
-    {
-    }
+    Definitionmenu();
     ~Definitionmenu()
     {
     }

@@ -186,7 +186,7 @@ std::vector<Word *> Dictionary::SearchDef(const std::string &key)
     return results;
 }
 
-std::vector<Word *> Dictionary::SearchDeftoWord(const std::string &key)
+std::vector<Word*> Dictionary::SearchDeftoWord(const std::string& key)
 {
     auto DefResource = Split(key, ' ');
     std::vector<std::pair<int, int>> rank(allWords.size(), std::pair<int, int>(0, -1));

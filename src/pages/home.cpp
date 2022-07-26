@@ -62,6 +62,7 @@ Screen Home::update()
 
     if (SearchEdit)
     {
+        word = slang.SearchWord(SearchInput);
         if (GetKeyPressed())
         {
             for (int i = 0; i < 20; i++)
@@ -99,8 +100,8 @@ void Home::draw()
             if (CheckCollisionPointRec(mousePos, rec_result[i]) && mousePos.y > 180 && !dropDowmBox)
                 DrawRectangleRec(rec_result[i], BLUE);
             if (SearchInput[0] == '\0')
-                GuiDrawIcon(202, rec_result[i].x + 750, rec_result[i].y + 5, 2, BLACK);
-            GuiDrawIcon(201, rec_result[i].x + 790, rec_result[i].y + 5, 2, BLACK);
+                GuiDrawIcon(202, rec_result[i].x + 750, rec_result[i].y + 5, 2, WHITE);
+            GuiDrawIcon(201, rec_result[i].x + 790, rec_result[i].y + 5, 2, WHITE);
         }
         if (word[i]->isFavorite)
             GuiDrawIcon(186, rec_result[i].x + 700, rec_result[i].y - 5, 3, RED);
@@ -130,7 +131,7 @@ void Home::draw()
     if (GuiDropdownBox(rec_dictionary, (dictionary[0] + "\n" + dictionary[1] + "\n" + dictionary[2] + "\n" + dictionary[3]).c_str(), modeChosen, dropDowmBox))
         dropDowmBox ^= 1;
     if (SearchInput[0] == '\0')
-        DrawText("Search bar", 365, 135, 30, LIGHTGRAY);
+        DrawText("Search bar", 333, 135, 30, LIGHTGRAY);
     if (GuiButton(rec_random, "RANDOM"))
     {
         std::string random = slang.getRandomWord();

@@ -2,6 +2,9 @@
 #include "definition.h"
 
 const int button_width = 100;
+Definitionmenu::Definitionmenu()
+{
+}
 Screen Definitionmenu::update()
 {
     fullDef = "\0";
@@ -34,11 +37,9 @@ void Definitionmenu::draw()
     GuiButton({ rec_box.x + rec_box.width - (15 + button_width) * 4, rec_box.y + rec_box.height - 60, button_width, 45 }, "Edit");
 
     DrawTextEx(fnt, selectedWord->data.c_str(), { rec_box.x + 15, rec_box.y + 40 }, 40, 2, BLACK);
-    int cnt = 1;
     for (int j = 0; j < selectedWord->defs.size(); j++)
     {
         std::string s = selectedWord->defs[j]->data;
-        int extended = 1;
         if (s.length() * 10 > rec_box.width - 15)
         {
             int len = (rec_box.width - 15) / 10, temp = len;
@@ -48,10 +49,10 @@ void Definitionmenu::draw()
                     temp--;
                 s.insert(s.begin() + temp, '\n');
                 temp += len;
-                extended++;
             }
         }
-        DrawTextEx(fnt, s.c_str(), { rec_def.x + 15, rec_def.y + 20 + 30 * cnt }, 22, 1.5, BLACK);
-        cnt += extended;
+        s.push_back('\n');
+        fullDef += s;
     }
+    DrawTextEx(fnt, fullDef.c_str(), { rec_def.x + 15, rec_def.y }, 22, 1.5, BLACK);
 }
