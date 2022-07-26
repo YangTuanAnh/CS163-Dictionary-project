@@ -289,6 +289,14 @@ void Dictionary::saveFavorite()
     fout.close();
 }
 
+std::string Dictionary::getRandomWord()
+{
+    using namespace std::chrono;
+    auto seedValue = duration_cast<seconds>(steady_clock::now().time_since_epoch()).count();
+    std::srand(seedValue);
+    return allWords[rand() % allWords.size()]->data;
+}
+
 std::vector<int> Dictionary::generateRandQuiz()
 /* This functions returns a vector of 5 integers quiz[5], where quiz[0..3] are indices of random chosen Words,
 and quiz[4] is the Answer.
@@ -381,12 +389,4 @@ void quick_sort(std::vector<std::pair<int, int>> &a, int high, int low)
     } while (h <= l);
     quick_sort(a, high, l);
     quick_sort(a, h, low);
-}
-
-std::string Dictionary::getRandomWord()
-{
-    using namespace std::chrono;
-    auto seedValue = duration_cast<seconds>(steady_clock::now().time_since_epoch()).count();
-    std::srand(seedValue);
-    return allWords[rand() % allWords.size()]->data;
 }
