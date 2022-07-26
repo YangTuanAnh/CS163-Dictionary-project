@@ -4,9 +4,12 @@
 struct Definitionmenu
 {
 private:
-    Rectangle rec_box{ 50, 120, 1100, 460 };
-    Rectangle rec_def{ 50, 210, 1100, 300 };
+    Rectangle rec_box{ 50, 100, 1100, 500 };
+    Rectangle rec_def{ 50, 205, 1100, 300 };
     std::string fullDef;
+    std::string tmp;
+    float propotion;
+    int position, pre;
 public:
     Definitionmenu();
     ~Definitionmenu()
