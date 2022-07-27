@@ -170,6 +170,7 @@ void Dictionary::removeFavorite(Word *word)
 
 std::vector<Word *> Dictionary::SearchWord(const std::string &key)
 {
+    std::cerr << "Seach" << std::endl;
     if (key != "")
         return trie->search(key);
     return getSearchHistory();
@@ -191,9 +192,12 @@ std::vector<Word *> Dictionary::SearchDef(const std::string &key)
 std::vector<Word*> Dictionary::SearchDeftoWord(const std::string& key)
 {
     auto DefResource = Split(key, ' ');
-    std::vector<std::pair<int, int>> rank(allWords.size(), std::pair<int, int>(0, -1)); // rank: first member is the rank of the Word indicated by its index which is the second member
+    std::vector<std::pair<int, int>> rank(allWords.size());
     for (int i = 0; i < rank.size(); i++)
+    {
+        rank[i].first = 0;
         rank[i].second = i;
+    }
     for (int i = 0; i < DefResource.size(); i++)
     {
         ResourceWord *tmp;

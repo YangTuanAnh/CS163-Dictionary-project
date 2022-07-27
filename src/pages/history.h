@@ -6,8 +6,7 @@ class History
 private:
     std::vector<Word *> word;
     Rectangle rec_result[20];
-    Rectangle rec_dictionary{985, 115, 165, 65};
-    Rectangle rec_search{340, 115, 630, 65};
+    Rectangle rec_dictionary{ 1030, 115, 155, 65 };
     Rectangle rec_modes[5];
     std::vector<std::string> modes = {"Search Word", "Search Def", "Favorite", "History", "Game"};
     std::vector<std::string> dictionary = {"ENG-ENG", "ENG-VIE", "SLANG", "EMOTIONAL"};
