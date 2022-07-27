@@ -24,6 +24,7 @@ class Word
 {
 public:
     bool isFavorite;
+    int index;
     std::string data;
     std::vector<Definition *> defs;
     Word(const std::string &s);

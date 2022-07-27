@@ -2,6 +2,7 @@
 
 Word::Word(const std::string &s)
 {
+    index = -1;
     isFavorite = false;
     data = s;
 }
@@ -121,12 +122,13 @@ void Dictionary::loadData()
                     continue;
                 }
                 allWords.push_back(word);
+                word->index = allWords.size() - 1;
             }
+            
             Definition *def = new Definition(tmp[1]);
             word->defs.push_back(def);
             def->word = word;
             allDefs.push_back(def);
-
             tmp = Split(tmp[1], ' ');
             for (int i = 0; i < tmp.size(); i++)
             {
@@ -135,7 +137,7 @@ void Dictionary::loadData()
                 {
                     resource->insert(tmp[i], resourceWord);
                 }
-                resourceWord->inDefOf.push_back(allWords.size() - 1);
+                resourceWord->inDefOf.push_back(word->index);
             }
         }
     }
@@ -189,7 +191,7 @@ std::vector<Word *> Dictionary::SearchDef(const std::string &key)
 std::vector<Word*> Dictionary::SearchDeftoWord(const std::string& key)
 {
     auto DefResource = Split(key, ' ');
-    std::vector<std::pair<int, int>> rank(allWords.size(), std::pair<int, int>(0, -1));
+    std::vector<std::pair<int, int>> rank(allWords.size(), std::pair<int, int>(0, -1)); // rank: first member is the rank of the Word indicated by its index which is the second member
     for (int i = 0; i < rank.size(); i++)
         rank[i].second = i;
     for (int i = 0; i < DefResource.size(); i++)
