@@ -6,6 +6,7 @@
 #include <fstream>
 #include <cassert>
 #include <chrono>
+#include <algorithm>
 #include <utility>
 #include "Trie.h"
 #include "limits.h"
@@ -15,7 +16,6 @@ const std::string lowercase = "abcdefghijklmnopqrstuvwxyz";
 const std::string uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const std::string symbols = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
 const std::string space = " ";
-const std::string ALLCHAR = digits + lowercase + uppercase + symbols + space;
 
 class Word;
 class Definition;
@@ -30,18 +30,18 @@ public:
     Word(const std::string &s);
 };
 
-class ResourceWord : public Word
+class ResourceWord
 {
 public:
-    std::vector<int> inDefOf;
-    ResourceWord(const std::string &s) : Word(s)
-    {
-    }
+    std::string data;
+    std::vector<Definition *> defs;
+    ResourceWord(const std::string &s);
 };
 
 class Definition
 {
 public:
+    int _cnt;
     std::string data;
     Word *word;
     Definition(const std::string &s);
@@ -50,7 +50,7 @@ public:
 class Dictionary
 {
 public:
-    Dictionary(const std::string &_dir, const std::string &chars);
+    Dictionary(const std::string &_dir, const std::string &chars, const std::string &resourceChars);
     ~Dictionary();
     std::vector<Word *> SearchWord(const std::string &word);
     std::vector<Word *> SearchDef(const std::string &key);
@@ -65,15 +65,14 @@ public:
     std::string getRandomWord();
     void updateHistory(Word *word, bool addOrDel);
 
-    // std::vector<Definition*> allDefs;
-    // std::vector<Word*> allWords, history;
-    // Trie<ResourceWord*>* resource;
 private:
     std::string dir;
     std::vector<Definition *> allDefs;
     std::vector<Word *> allWords, history;
     Trie<Word *> *trie;
     Trie<ResourceWord *> *resource;
+
+    void updateDefsLinks(Definition *def, int type); 
 
     void loadData();
     void loadHistory();
@@ -83,6 +82,7 @@ private:
     void saveFavorite();
 };
 
+std::string Normalize(const std::string &s);
 std::vector<std::string> Split(const std::string &s, char delim);
 bool IsPrefix(const std::string &p, const std::string &s);
 bool checkQuizValidation(int new_option, std::vector<int> &quiz);
