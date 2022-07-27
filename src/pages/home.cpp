@@ -18,7 +18,7 @@ Home::Home()
 
 Screen Home::update()
 {
-    word = slang.SearchWord(SearchInput);
+    
     if (GetMouseWheelMove() == -1 && rec_result[word.size() - 1].y > 475)
     {
         for (int i = 0; i < word.size(); i++)
@@ -41,7 +41,6 @@ Screen Home::update()
             {
                 slang.updateHistory(word[i], false);
                 break;
-                ;
             }
             else if (CheckCollisionPointRec(GetMousePosition(), {rec_result[i].x + 790, rec_result[i].y + 5, 32, 32}))
             {
@@ -60,15 +59,6 @@ Screen Home::update()
         }
     }
 
-    if (SearchEdit)
-    {
-        word = slang.SearchWord(SearchInput);
-        if (GetKeyPressed())
-        {
-            for (int i = 0; i < 20; i++)
-                rec_result[i] = {320, (float)200 + 125 * i, 830, 120};
-        }
-    }
 
     if (menuChosen)
     {
@@ -122,21 +112,29 @@ void Home::draw()
     }
     DrawRectangle(310, 100, 850, 90, RAYWHITE);
     DrawRectangleLinesEx(rec_search, 3, GREEN);
-    if (GuiTextBox(rec_search, SearchInput, 20, SearchEdit))
+    if (GuiTextBox(rec_search, SearchInput, 101, SearchEdit))
     {
-        for (int i = 0; i < 20; i++)
-            rec_result[i] = {320, (float)200 + 125 * i, 830, 120};
         SearchEdit ^= 1;
     }
     if (GuiDropdownBox(rec_dictionary, (dictionary[0] + "\n" + dictionary[1] + "\n" + dictionary[2] + "\n" + dictionary[3]).c_str(), modeChosen, dropDowmBox))
         dropDowmBox ^= 1;
     if (SearchInput[0] == '\0')
-        DrawText("Search bar", 333, 135, 30, LIGHTGRAY);
+        DrawText("Search bar", 325, 135, 30, LIGHTGRAY);
     if (GuiButton(rec_random, "RANDOM"))
     {
         std::string random = slang.getRandomWord();
         for (int i = 0; i < random.length(); i++)
             SearchInput[i] = random[i];
         SearchInput[random.length()] = '\0';
+        word = slang.SearchWord(SearchInput);
+    }
+    if (SearchEdit)
+    {
+        if (GetKeyPressed())
+        {
+            word = slang.SearchWord(SearchInput);
+            for (int i = 0; i < 20; i++)
+                rec_result[i] = { 320, (float)200 + 125 * i, 830, 120 };
+        }
     }
 }

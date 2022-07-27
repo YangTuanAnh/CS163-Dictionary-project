@@ -13,9 +13,9 @@ private:
     char SearchInput[101] = "";
     std::vector<Word *> word;
     Rectangle rec_result[20];
-    Rectangle rec_dictionary{805, 115, 165, 65};
-    Rectangle rec_random{985, 115, 165, 65};
-    Rectangle rec_search{320, 115, 470, 65};
+    Rectangle rec_dictionary {1030, 115, 155, 65};
+    Rectangle rec_random{ 885, 115, 135, 65 };
+    Rectangle rec_search{305, 115, 570, 65};
     Rectangle rec_modes[5];
     std::vector<std::string> modes = {"Search Word", "Search Def", "Favorite", "History", "Game"};
     std::vector<std::string> dictionary = {"ENG-ENG", "ENG-VIE", "SLANG", "EMOTIONAL"};

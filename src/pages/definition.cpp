@@ -71,4 +71,5 @@ void Definitionmenu::draw()
         return;
     }
     DrawRectangleLinesEx({ rec_box }, 2, BLACK);
+    DrawLine(50, 135, 1150, 135, BLACK);
 }
