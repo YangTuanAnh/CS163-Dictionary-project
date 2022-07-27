@@ -157,6 +157,18 @@ void Dictionary::updateHistory(Word *word, bool addOrDel)
         history.pop_back();
 }
 
+Trie_error Dictionary::deleteWord(const std::string& word)
+{
+    Word* toDelete = nullptr;
+    trie->find(word, toDelete);
+    if (toDelete == nullptr)
+        return non_exist;
+    allWords[toDelete->index] = nullptr;
+    trie->trie_delete(word);
+    toDelete = nullptr;
+    return success;
+}
+
 void Dictionary::updateFavorite(Word *word)
 {
     word->isFavorite = true;
@@ -170,7 +182,7 @@ void Dictionary::removeFavorite(Word *word)
 
 std::vector<Word *> Dictionary::SearchWord(const std::string &key)
 {
-    std::cerr << "Seach" << std::endl;
+    std::cerr << "Search" << std::endl;
     if (key != "")
         return trie->search(key);
     return getSearchHistory();
