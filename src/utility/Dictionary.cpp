@@ -183,20 +183,8 @@ std::vector<Word *> Dictionary::SearchWord(const std::string &key)
     return getSearchHistory();
 }
 
-std::vector<Word *> Dictionary::SearchDef(const std::string &key)
-{
-    std::vector<Word *> results;
-    for (auto def : allDefs)
-    {
-        if (IsPrefix(key, def->data) && results.size() < SEARCH_RESULTS_LIMIT)
-        {
-            results.push_back(def->word);
-        }
-    }
-    return results;
-}
 
-std::vector<Word*> Dictionary::SearchDeftoWord(const std::string& key)
+std::vector<Word*> Dictionary::SearchDef(const std::string& key)
 {
     for (auto def : allDefs) {
         def->_cnt = 0;
@@ -465,35 +453,5 @@ std::string Normalize(const std::string &s) {
         }
     }
     return norm;
-}
-
-void quick_sort(std::vector<std::pair<int, int>> &a, int high, int low)
-/*Sort by key in pair<key, data>. Descending order */
-{
-    if (high >= low)
-        return;
-    int Pivot = a[(low + high) / 2].first;
-    int h = high;
-    int l = low;
-    do
-    {
-        while (a[h].first > Pivot)
-            h++;
-        while (a[l].first < Pivot)
-            l--;
-        if (h <= l)
-        {
-            if (h < l)
-            {
-                std::pair<int, int> temp = a[h];
-                a[h] = a[l];
-                a[l] = temp;
-            }
-            h++;
-            l--;
-        }
-    } while (h <= l);
-    quick_sort(a, high, l);
-    quick_sort(a, h, low);
 }
 

@@ -97,7 +97,7 @@ void SearchDef::draw()
         if (GetKeyPressed())
         {
             if (SearchInput[0] != '\0')
-                word = slang.SearchDeftoWord(SearchInput);
+                word = slang.SearchDef(SearchInput);
             else word.clear();
             for (int i = 0; i < 50; i++)
                 rec_result[i] = { 320, (float)200 + 125 * i, 830, 120 };

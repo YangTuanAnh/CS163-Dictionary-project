@@ -54,7 +54,6 @@ public:
     ~Dictionary();
     std::vector<Word *> SearchWord(const std::string &word);
     std::vector<Word *> SearchDef(const std::string &key);
-    std::vector<Word *> SearchDeftoWord(const std::string &key);
     std::vector<std::string> getFullDefinition(const std::string &word);
     Trie_error deleteWord(const std::string& word);
     void updateFavorite(Word *word);
@@ -86,4 +85,3 @@ std::string Normalize(const std::string &s);
 std::vector<std::string> Split(const std::string &s, char delim);
 bool IsPrefix(const std::string &p, const std::string &s);
 bool checkQuizValidation(int new_option, std::vector<int> &quiz);
-void quick_sort(std::vector<std::pair<int, int>> &a, int high, int low);
