@@ -55,7 +55,14 @@ public:
     std::vector<Word *> SearchWord(const std::string &word);
     std::vector<Word *> SearchDef(const std::string &key);
     std::vector<std::string> getFullDefinition(const std::string &word);
-    Trie_error deleteWord(const std::string& word);
+    
+    Word* insertWord(std::string newWord);
+    void insertDef(Word* word, std::string newDef);
+    void editDef(Definition* def, std::string newData);
+    void deleteDef(Definition* def);
+    void deleteWord(Word* word);
+
+
     void updateFavorite(Word *word);
     void removeFavorite(Word *word);
     std::vector<Word *> getFavoriteList();

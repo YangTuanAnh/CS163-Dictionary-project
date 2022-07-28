@@ -153,16 +153,59 @@ void Dictionary::updateHistory(Word *word, bool addOrDel)
         history.pop_back();
 }
 
-Trie_error Dictionary::deleteWord(const std::string& word)
-{
-    Word* toDelete = nullptr;
-    trie->find(word, toDelete);
-    if (toDelete == nullptr)
-        return non_exist;
-    allWords[toDelete->index] = nullptr;
-    trie->trie_delete(word);
-    toDelete = nullptr;
-    return success;
+
+Word* Dictionary::insertWord(std::string newWord) {
+    Word* word;
+    if (trie->find(newWord, word) == success) {
+        std::cerr << newWord << " already exist" << std::endl;
+        return nullptr;
+    }
+    word = new Word(newWord);
+    allWords.push_back(word);
+    trie->insert(newWord, word);
+    return word;
+}
+
+void Dictionary::insertDef(Word* word, std::string newDef) {
+    Definition* def = new Definition(newDef);
+    allDefs.push_back(def);
+    word->defs.push_back(def);
+    updateDefsLinks(def, +1);
+}
+
+void Dictionary::editDef(Definition* def, std::string newData) {
+    updateDefsLinks(def, -1);
+    def->data = newData;
+    updateDefsLinks(def, +1);
+}
+
+void Dictionary::deleteDef(Definition* def) {
+    if (std::find(def->word->defs.begin(), def->word->defs.end(), def) == def->word->defs.end()) {
+        std::cerr << "Error: link from word not exist (deleteDef)" << std::endl;
+        return;
+    }
+    if (std::find(allDefs.begin(), allDefs.end(), def) == allDefs.end()) {
+        std::cerr << "Error: allDefs does not contain this def (deleteDef)" << std::endl;
+        return;
+    }
+    updateDefsLinks(def, -1);
+    def->word->defs.erase(std::find(def->word->defs.begin(), def->word->defs.end(), def));
+    allDefs.erase(std::find(allDefs.begin(), allDefs.end(), def));
+    delete def;
+}
+
+
+void Dictionary::deleteWord(Word* word) {
+    for (auto def : word->defs) {
+        deleteDef(def);
+    }
+    if (std::find(allWords.begin(), allWords.end(), word) == allWords.end()) {
+        std::cerr << "Error: allWords does not contain this word (deleteWord)" << std::endl;
+        return;
+    }
+    allWords.erase(std::find(allWords.begin(), allWords.end(), word));
+    assert(trie->trie_delete(word->data) == success);
+    delete word;
 }
 
 void Dictionary::updateFavorite(Word *word)
