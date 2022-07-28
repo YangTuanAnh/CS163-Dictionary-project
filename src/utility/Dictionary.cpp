@@ -1,22 +1,27 @@
 #include "Dictionary.h"
 
-Word::Word(const std::string &s)
+Word::Word(const std::string& s)
 {
     index = -1;
     isFavorite = false;
     data = s;
 }
 
-Definition::Definition(const std::string &s)
+ResourceWord::ResourceWord(const std::string& s)
 {
     data = s;
 }
 
-Dictionary::Dictionary(const std::string &_dir, const std::string &chars)
+Definition::Definition(const std::string& s)
+{
+    data = s;
+}
+
+Dictionary::Dictionary(const std::string& _dir, const std::string& chars, const std::string& resourceChars)
 {
     dir = _dir;
-    trie = new Trie<Word *>(chars, nullptr);
-    resource = new Trie<ResourceWord *>(ALLCHAR, nullptr);
+    trie = new Trie<Word*>(chars, nullptr);
+    resource = new Trie<ResourceWord*>(resourceChars, nullptr);
     loadData();
     loadHistory();
     loadFavorite();
@@ -53,7 +58,7 @@ void Dictionary::loadHistory()
     std::string line;
     while (getline(fin, line))
     {
-        Word *temp;
+        Word* temp;
         if (trie->find(line, temp) != success)
         {
             std::cerr << "Could not load history (" << line << ")" << std::endl;
@@ -76,7 +81,7 @@ void Dictionary::loadFavorite()
     std::string line;
     while (getline(fin, line))
     {
-        Word *temp;
+        Word* temp;
         if (trie->find(line, temp) != success)
         {
             std::cerr << "Could not load favorite (" << line << ")" << std::endl;
@@ -111,7 +116,7 @@ void Dictionary::loadData()
         }
         else
         {
-            Word *word;
+            Word* word;
             if (trie->find(tmp[0], word) != success)
             {
                 word = new Word(tmp[0]);
@@ -124,27 +129,18 @@ void Dictionary::loadData()
                 allWords.push_back(word);
                 word->index = allWords.size() - 1;
             }
-            
-            Definition *def = new Definition(tmp[1]);
+
+            Definition* def = new Definition(tmp[1]);
             word->defs.push_back(def);
             def->word = word;
             allDefs.push_back(def);
-            tmp = Split(tmp[1], ' ');
-            for (int i = 0; i < tmp.size(); i++)
-            {
-                ResourceWord *resourceWord = new ResourceWord(tmp[i]);
-                if (resource->find(tmp[i], resourceWord) != success)
-                {
-                    resource->insert(tmp[i], resourceWord);
-                }
-                resourceWord->inDefOf.push_back(word->index);
-            }
+            updateDefsLinks(def, +1);
         }
     }
     fin.close();
 }
 
-void Dictionary::updateHistory(Word *word, bool addOrDel)
+void Dictionary::updateHistory(Word* word, bool addOrDel)
 {
     for (int i = 0; i < (int)history.size(); i++)
         if (history[i] == word)
@@ -157,55 +153,145 @@ void Dictionary::updateHistory(Word *word, bool addOrDel)
         history.pop_back();
 }
 
-Trie_error Dictionary::deleteWord(const std::string& word)
+Word* Dictionary::insertWord(std::string newWord)
 {
-    Word* toDelete = nullptr;
-    trie->find(word, toDelete);
-    if (toDelete == nullptr)
-        return non_exist;
-    allWords[toDelete->index] = nullptr;
-    trie->trie_delete(word);
-    toDelete = nullptr;
-    return success;
+    Word* word;
+    if (trie->find(newWord, word) == success)
+    {
+        std::cerr << newWord << " already exist" << std::endl;
+        return nullptr;
+    }
+    word = new Word(newWord);
+    allWords.push_back(word);
+    trie->insert(newWord, word);
+    return word;
 }
 
-void Dictionary::updateFavorite(Word *word)
+void Dictionary::insertDef(Word* word, std::string newDef)
+{
+    Definition* def = new Definition(newDef);
+    allDefs.push_back(def);
+    word->defs.push_back(def);
+    updateDefsLinks(def, +1);
+}
+
+void Dictionary::editDef(Definition* def, std::string newData)
+{
+    updateDefsLinks(def, -1);
+    def->data = newData;
+    updateDefsLinks(def, +1);
+}
+
+void Dictionary::deleteDef(Definition* def)
+{
+    if (std::find(def->word->defs.begin(), def->word->defs.end(), def) == def->word->defs.end())
+    {
+        std::cerr << "Error: link from word not exist (deleteDef)" << std::endl;
+        return;
+    }
+    if (std::find(allDefs.begin(), allDefs.end(), def) == allDefs.end())
+    {
+        std::cerr << "Error: allDefs does not contain this def (deleteDef)" << std::endl;
+        return;
+    }
+    updateDefsLinks(def, -1);
+    def->word->defs.erase(std::find(def->word->defs.begin(), def->word->defs.end(), def));
+    allDefs.erase(std::find(allDefs.begin(), allDefs.end(), def));
+    delete def;
+}
+
+void Dictionary::deleteWord(Word* word)
+{
+    for (auto def : word->defs)
+    {
+        deleteDef(def);
+    }
+    if (std::find(allWords.begin(), allWords.end(), word) == allWords.end())
+    {
+        std::cerr << "Error: allWords does not contain this word (deleteWord)" << std::endl;
+        return;
+    }
+    allWords.erase(std::find(allWords.begin(), allWords.end(), word));
+    assert(trie->trie_delete(word->data) == success);
+    delete word;
+}
+
+void Dictionary::updateFavorite(Word* word)
 {
     word->isFavorite = true;
     std::cerr << "set " << word->data << "->isFavorite = " << std::boolalpha << word->isFavorite << std::endl;
 }
-void Dictionary::removeFavorite(Word *word)
+void Dictionary::removeFavorite(Word* word)
 {
     word->isFavorite = false;
     std::cerr << "set " << word->data << "->isFavorite = " << std::boolalpha << word->isFavorite << std::endl;
 }
 
-std::vector<Word *> Dictionary::SearchWord(const std::string &key)
+std::vector<Word*> Dictionary::SearchWord(const std::string& key)
 {
-    std::cerr << "Seach" << std::endl;
     if (key != "")
         return trie->search(key);
     return getSearchHistory();
 }
 
-std::vector<Word *> Dictionary::SearchDef(const std::string &key)
+std::vector<Word*> Dictionary::SearchDef(const std::string& key)
 {
-    std::vector<Word *> results;
     for (auto def : allDefs)
     {
-        if (IsPrefix(key, def->data) && results.size() < SEARCH_RESULTS_LIMIT)
+        def->_cnt = 0;
+    }
+
+    for (auto s : Split(key, ' '))
+    {
+        s = Normalize(s);
+        if (s.size() < 3)
         {
-            results.push_back(def->word);
+            continue;
+        }
+        ResourceWord* tmp;
+        if (resource->find(s, tmp) == Trie_error::success)
+        {
+            for (auto def : tmp->defs)
+            {
+                ++def->_cnt;
+            }
         }
     }
-    return results;
-}
 
-std::vector<Word*> Dictionary::SearchDeftoWord(const std::string& key)
-{
-    auto DefResource = Split(key, ' ');
+    std::sort(allDefs.begin(), allDefs.end(), [](auto a, auto b)
+        { return a->_cnt > b->_cnt; });
+
+    std::vector<Word*> result;
+    for (auto def : allDefs)
+    {
+        if (def->_cnt > 0)
+        {
+            bool exist = false;
+            for (auto w : result)
+            {
+                if (w == def->word)
+                {
+                    exist = true;
+                    break;
+                }
+            }
+            if (!exist)
+            {
+                result.push_back(def->word);
+            }
+        }
+        if ((int)result.size() == SEARCH_RESULTS_LIMIT)
+        {
+            break;
+        }
+    }
+
+    return result;
+
+    /*
+
     std::vector<std::pair<int, int>> rank(allWords.size());
-    for (int i = 0; i < rank.size(); i++)
+    for (int i = 0; i < (int)rank.size(); i++)
     {
         rank[i].first = 0;
         rank[i].second = i;
@@ -229,11 +315,12 @@ std::vector<Word*> Dictionary::SearchDeftoWord(const std::string& key)
             break;
     }
     return result;
+    */
 }
 
-std::vector<std::string> Dictionary::getFullDefinition(const std::string &word)
+std::vector<std::string> Dictionary::getFullDefinition(const std::string& word)
 {
-    Word *ptr;
+    Word* ptr;
     if (trie->find(word, ptr) != success)
     {
         std::cerr << "Word " << word << " not exist.";
@@ -249,20 +336,20 @@ std::vector<std::string> Dictionary::getFullDefinition(const std::string &word)
     return defs;
 }
 
-std::vector<Word *> Dictionary::getSearchHistory()
+std::vector<Word*> Dictionary::getSearchHistory()
 /* Returns the latest searched words, up to 20 records
  */
 {
-    std::vector<Word *> result = history;
+    std::vector<Word*> result = history;
     return result;
 }
 
-std::vector<Word *> Dictionary::getFavoriteList()
+std::vector<Word*> Dictionary::getFavoriteList()
 {
-    std::vector<Word *> result;
+    std::vector<Word*> result;
     for (auto word : allWords)
     {
-        if (word && word->isFavorite)
+        if (word->isFavorite)
         {
             result.push_back(word);
         }
@@ -315,7 +402,7 @@ std::string Dictionary::getRandomWord()
     return allWords[rand() % allWords.size()]->data;
 }
 
-std::vector<int> Dictionary::generateRandQuiz()
+std::vector<Word*> Dictionary::generateRandQuiz()
 /* This functions returns a vector of 5 integers quiz[5], where quiz[0..3] are indices of random chosen Words,
 and quiz[4] is the Answer.
             quiz[0] -> response given by option A
@@ -327,6 +414,7 @@ and quiz[4] is the Answer.
 {
     using namespace std::chrono;
     std::vector<int> quiz;
+    std::vector<Word*> ans;
     auto seedValue = duration_cast<seconds>(steady_clock::now().time_since_epoch()).count();
     std::srand(seedValue);
     for (int i = 0; i < 4; i++)
@@ -335,12 +423,58 @@ and quiz[4] is the Answer.
         while (!checkQuizValidation(new_option, quiz)) // Check to prevent options duplication
             new_option = rand() % (allWords.size());
         quiz.push_back(new_option);
+        ans.push_back(allWords[new_option]);
     }
-    quiz.push_back(rand() % 4); // generate the Answer
-    return quiz;
+    ans.push_back(ans[rand() % 4]); // generate the Answer
+    return ans;
 }
 
-bool checkQuizValidation(int new_option, std::vector<int> &quiz)
+/*
+type = +1: create links form resourceWord to Def
+type = -1: delete above links
+*/
+void Dictionary::updateDefsLinks(Definition* def, int type)
+{
+    for (auto rw : Split(def->data, ' '))
+    {
+        rw = Normalize(rw);
+        if (rw.size() < 3)
+        {
+            continue;
+        }
+        if (type == +1)
+        {
+            ResourceWord* tmp;
+            if (resource->find(rw, tmp) == Trie_error::non_exist)
+            {
+                tmp = new ResourceWord(rw);
+                assert(resource->insert(rw, tmp) == Trie_error::success);
+            }
+            tmp->defs.push_back(def);
+        }
+        else if (type == -1)
+        {
+            ResourceWord* tmp;
+            if (resource->find(rw, tmp) == Trie_error::non_exist)
+            {
+                std::cerr << "Error: ResourceWord not found (updateDefsLinks)" << std::endl;
+                return;
+            }
+            if (std::find(tmp->defs.begin(), tmp->defs.end(), def) == tmp->defs.end())
+            {
+                std::cerr << "Error: corresponding definition not found (updateDefsLinks)" << std::endl;
+                return;
+            }
+            tmp->defs.erase(std::find(tmp->defs.begin(), tmp->defs.end(), def));
+        }
+        else
+        {
+            std::cerr << "Error: invalid argument (updateDefsLinks)" << std::endl;
+        }
+    }
+}
+
+bool checkQuizValidation(int new_option, std::vector<int>& quiz)
 /* This function helps Dictionary::generateRandQuiz() with checking if a new generated option already exists.
 If it does, return false - invalid. Else, return true - valid. */
 {
@@ -350,7 +484,7 @@ If it does, return false - invalid. Else, return true - valid. */
     return true;
 }
 
-std::vector<std::string> Split(const std::string &s, char delim)
+std::vector<std::string> Split(const std::string& s, char delim)
 {
     std::string tmp;
     std::vector<std::string> res;
@@ -370,7 +504,7 @@ std::vector<std::string> Split(const std::string &s, char delim)
     return res;
 }
 
-bool IsPrefix(const std::string &p, const std::string &s)
+bool IsPrefix(const std::string& p, const std::string& s)
 {
     if (p.size() > s.size())
     {
@@ -379,32 +513,24 @@ bool IsPrefix(const std::string &p, const std::string &s)
     return (p == s.substr(0, p.size()));
 }
 
-void quick_sort(std::vector<std::pair<int, int>> &a, int high, int low)
-/*Sort by key in pair<key, data>. Descending order */
+// keeps letters and digits only
+std::string Normalize(const std::string& s)
 {
-    if (high >= low)
-        return;
-    int Pivot = a[(low + high) / 2].first;
-    int h = high;
-    int l = low;
-    do
+    std::string norm;
+    for (auto c : s)
     {
-        while (a[h].first > Pivot)
-            h++;
-        while (a[l].first < Pivot)
-            l--;
-        if (h <= l)
+        if ('a' <= c && c <= 'z')
         {
-            if (h < l)
-            {
-                std::pair<int, int> temp = a[h];
-                a[h] = a[l];
-                a[l] = temp;
-            }
-            h++;
-            l--;
+            norm.push_back(c);
         }
-    } while (h <= l);
-    quick_sort(a, high, l);
-    quick_sort(a, h, low);
+        else if ('A' <= c && c <= 'Z')
+        {
+            norm.push_back(c + ' '); // to lowercase
+        }
+        else if ('0' <= c && c <= '9')
+        {
+            norm.push_back(c);
+        }
+    }
+    return norm;
 }
