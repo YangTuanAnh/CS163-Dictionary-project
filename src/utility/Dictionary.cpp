@@ -129,7 +129,7 @@ void Dictionary::loadData()
                 allWords.push_back(word);
                 word->index = allWords.size() - 1;
             }
-            
+
             Definition *def = new Definition(tmp[1]);
             word->defs.push_back(def);
             def->word = word;
@@ -153,10 +153,11 @@ void Dictionary::updateHistory(Word *word, bool addOrDel)
         history.pop_back();
 }
 
-
-Word* Dictionary::insertWord(std::string newWord) {
-    Word* word;
-    if (trie->find(newWord, word) == success) {
+Word *Dictionary::insertWord(std::string newWord)
+{
+    Word *word;
+    if (trie->find(newWord, word) == success)
+    {
         std::cerr << newWord << " already exist" << std::endl;
         return nullptr;
     }
@@ -166,25 +167,30 @@ Word* Dictionary::insertWord(std::string newWord) {
     return word;
 }
 
-void Dictionary::insertDef(Word* word, std::string newDef) {
-    Definition* def = new Definition(newDef);
+void Dictionary::insertDef(Word *word, std::string newDef)
+{
+    Definition *def = new Definition(newDef);
     allDefs.push_back(def);
     word->defs.push_back(def);
     updateDefsLinks(def, +1);
 }
 
-void Dictionary::editDef(Definition* def, std::string newData) {
+void Dictionary::editDef(Definition *def, std::string newData)
+{
     updateDefsLinks(def, -1);
     def->data = newData;
     updateDefsLinks(def, +1);
 }
 
-void Dictionary::deleteDef(Definition* def) {
-    if (std::find(def->word->defs.begin(), def->word->defs.end(), def) == def->word->defs.end()) {
+void Dictionary::deleteDef(Definition *def)
+{
+    if (std::find(def->word->defs.begin(), def->word->defs.end(), def) == def->word->defs.end())
+    {
         std::cerr << "Error: link from word not exist (deleteDef)" << std::endl;
         return;
     }
-    if (std::find(allDefs.begin(), allDefs.end(), def) == allDefs.end()) {
+    if (std::find(allDefs.begin(), allDefs.end(), def) == allDefs.end())
+    {
         std::cerr << "Error: allDefs does not contain this def (deleteDef)" << std::endl;
         return;
     }
@@ -194,12 +200,14 @@ void Dictionary::deleteDef(Definition* def) {
     delete def;
 }
 
-
-void Dictionary::deleteWord(Word* word) {
-    for (auto def : word->defs) {
+void Dictionary::deleteWord(Word *word)
+{
+    for (auto def : word->defs)
+    {
         deleteDef(def);
     }
-    if (std::find(allWords.begin(), allWords.end(), word) == allWords.end()) {
+    if (std::find(allWords.begin(), allWords.end(), word) == allWords.end())
+    {
         std::cerr << "Error: allWords does not contain this word (deleteWord)" << std::endl;
         return;
     }
@@ -226,45 +234,54 @@ std::vector<Word *> Dictionary::SearchWord(const std::string &key)
     return getSearchHistory();
 }
 
-
-std::vector<Word*> Dictionary::SearchDef(const std::string& key)
+std::vector<Word *> Dictionary::SearchDef(const std::string &key)
 {
-    for (auto def : allDefs) {
+    for (auto def : allDefs)
+    {
         def->_cnt = 0;
     }
-    
-    for (auto s : Split(key, ' ')) {
+
+    for (auto s : Split(key, ' '))
+    {
         s = Normalize(s);
-        if (s.size() < 3) {
+        if (s.size() < 3)
+        {
             continue;
         }
         ResourceWord *tmp;
-        if (resource->find(s, tmp) == Trie_error::success) {
-            for (auto def : tmp->defs) {
+        if (resource->find(s, tmp) == Trie_error::success)
+        {
+            for (auto def : tmp->defs)
+            {
                 ++def->_cnt;
             }
         }
     }
 
-    std::sort(allDefs.begin(), allDefs.end(), [](auto a, auto b) {
-        return a->_cnt > b->_cnt;
-    });
+    std::sort(allDefs.begin(), allDefs.end(), [](auto a, auto b)
+              { return a->_cnt > b->_cnt; });
 
     std::vector<Word *> result;
-    for (auto def : allDefs) {
-        if (def->_cnt > 0) {
+    for (auto def : allDefs)
+    {
+        if (def->_cnt > 0)
+        {
             bool exist = false;
-            for (auto w : result) {
-                if (w == def->word) {
+            for (auto w : result)
+            {
+                if (w == def->word)
+                {
                     exist = true;
                     break;
                 }
             }
-            if (!exist) {
+            if (!exist)
+            {
                 result.push_back(def->word);
             }
         }
-        if ((int)result.size() == SEARCH_RESULTS_LIMIT) {
+        if ((int)result.size() == SEARCH_RESULTS_LIMIT)
+        {
             break;
         }
     }
@@ -385,7 +402,7 @@ std::string Dictionary::getRandomWord()
     return allWords[rand() % allWords.size()]->data;
 }
 
-std::vector<int> Dictionary::generateRandQuiz()
+std::vector<Word *> Dictionary::generateRandQuiz()
 /* This functions returns a vector of 5 integers quiz[5], where quiz[0..3] are indices of random chosen Words,
 and quiz[4] is the Answer.
             quiz[0] -> response given by option A
@@ -397,6 +414,7 @@ and quiz[4] is the Answer.
 {
     using namespace std::chrono;
     std::vector<int> quiz;
+    std::vector<Word *> ans;
     auto seedValue = duration_cast<seconds>(steady_clock::now().time_since_epoch()).count();
     std::srand(seedValue);
     for (int i = 0; i < 4; i++)
@@ -405,40 +423,52 @@ and quiz[4] is the Answer.
         while (!checkQuizValidation(new_option, quiz)) // Check to prevent options duplication
             new_option = rand() % (allWords.size());
         quiz.push_back(new_option);
+        ans.push_back(allWords[new_option]);
     }
-    quiz.push_back(rand() % 4); // generate the Answer
-    return quiz;
+    ans.push_back(ans[rand() % 4]); // generate the Answer
+    return ans;
 }
 
 /*
 type = +1: create links form resourceWord to Def
-type = -1: delete above links 
+type = -1: delete above links
 */
-void Dictionary::updateDefsLinks(Definition *def, int type) {
-    for (auto rw : Split(def->data, ' ')) {
+void Dictionary::updateDefsLinks(Definition *def, int type)
+{
+    for (auto rw : Split(def->data, ' '))
+    {
         rw = Normalize(rw);
-        if (rw.size() < 3) {
+        if (rw.size() < 3)
+        {
             continue;
         }
-        if (type == +1) {
-            ResourceWord* tmp;
-            if (resource->find(rw, tmp) == Trie_error::non_exist) {
+        if (type == +1)
+        {
+            ResourceWord *tmp;
+            if (resource->find(rw, tmp) == Trie_error::non_exist)
+            {
                 tmp = new ResourceWord(rw);
                 assert(resource->insert(rw, tmp) == Trie_error::success);
             }
             tmp->defs.push_back(def);
-        } else if (type == -1) {
-            ResourceWord* tmp;
-            if (resource->find(rw, tmp) == Trie_error::non_exist) {
+        }
+        else if (type == -1)
+        {
+            ResourceWord *tmp;
+            if (resource->find(rw, tmp) == Trie_error::non_exist)
+            {
                 std::cerr << "Error: ResourceWord not found (updateDefsLinks)" << std::endl;
                 return;
             }
-            if (std::find(tmp->defs.begin(), tmp->defs.end(), def) == tmp->defs.end()) {
+            if (std::find(tmp->defs.begin(), tmp->defs.end(), def) == tmp->defs.end())
+            {
                 std::cerr << "Error: corresponding definition not found (updateDefsLinks)" << std::endl;
                 return;
             }
             tmp->defs.erase(std::find(tmp->defs.begin(), tmp->defs.end(), def));
-        } else {
+        }
+        else
+        {
             std::cerr << "Error: invalid argument (updateDefsLinks)" << std::endl;
         }
     }
@@ -483,18 +513,24 @@ bool IsPrefix(const std::string &p, const std::string &s)
     return (p == s.substr(0, p.size()));
 }
 
-// keeps letters and digits only 
-std::string Normalize(const std::string &s) {
+// keeps letters and digits only
+std::string Normalize(const std::string &s)
+{
     std::string norm;
-    for (auto c : s) {
-        if ('a' <= c && c <= 'z') {
+    for (auto c : s)
+    {
+        if ('a' <= c && c <= 'z')
+        {
             norm.push_back(c);
-        } else if ('A' <= c && c <= 'Z') {
-            norm.push_back(c + ' '); // to lowercase 
-        } else if ('0' <= c && c <= '9') {
+        }
+        else if ('A' <= c && c <= 'Z')
+        {
+            norm.push_back(c + ' '); // to lowercase
+        }
+        else if ('0' <= c && c <= '9')
+        {
             norm.push_back(c);
         }
     }
     return norm;
 }
-

@@ -66,7 +66,7 @@ public:
     void updateFavorite(Word *word);
     void removeFavorite(Word *word);
     std::vector<Word *> getFavoriteList();
-    std::vector<int> generateRandQuiz();
+    std::vector<Word *> generateRandQuiz();
     std::vector<Word *> getSearchHistory();
     std::string getRandomWord();
     void updateHistory(Word *word, bool addOrDel);
@@ -78,7 +78,7 @@ private:
     Trie<Word *> *trie;
     Trie<ResourceWord *> *resource;
 
-    void updateDefsLinks(Definition *def, int type); 
+    void updateDefsLinks(Definition *def, int type);
 
     void loadData();
     void loadHistory();

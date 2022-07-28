@@ -7,6 +7,7 @@
 #include "pages/definition.h"
 #include "pages/history.h"
 #include "pages/searchDef.h"
+#include "pages/game.h"
 
 const int WIDTH = 1200, HEIGHT = 600;
 Font fnt;
@@ -19,6 +20,7 @@ private:
     Definitionmenu Definitionmenu;
     History History;
     SearchDef SearchDef;
+    Game Game;
     Screen currScreen = HOME;
 
 public:
@@ -50,6 +52,9 @@ public:
         case HISTORY:
             currScreen = History.update();
             break;
+        case GAME:
+            currScreen = Game.update();
+            break;
         default:
             break;
         }
@@ -71,6 +76,9 @@ public:
             break;
         case HISTORY:
             History.draw();
+            break;
+        case GAME:
+            Game.draw();
             break;
         default:
             break;
