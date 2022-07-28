@@ -50,7 +50,7 @@ Screen Home::update()
             else if (GetMousePosition().y > 180 && CheckCollisionPointRec(GetMousePosition(), rec_result[i]))
             {
                 selectedWord = word[i];
-                slang.getFullDefinition(selectedWord->data);
+                slang.updateHistory(selectedWord, true);
 
                 for (int i = 0; i < 20; i++)
                     rec_result[i] = {320, (float)200 + 125 * i, 830, 120};
