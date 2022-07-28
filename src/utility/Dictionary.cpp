@@ -182,7 +182,7 @@ void Dictionary::removeFavorite(Word *word)
 
 std::vector<Word *> Dictionary::SearchWord(const std::string &key)
 {
-    std::cerr << "Search" << std::endl;
+    std::cerr << "Seach" << std::endl;
     if (key != "")
         return trie->search(key);
     return getSearchHistory();
@@ -262,7 +262,7 @@ std::vector<Word *> Dictionary::getFavoriteList()
     std::vector<Word *> result;
     for (auto word : allWords)
     {
-        if (word->isFavorite)
+        if (word && word->isFavorite)
         {
             result.push_back(word);
         }
