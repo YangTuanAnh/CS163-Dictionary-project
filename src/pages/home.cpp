@@ -45,6 +45,7 @@ Screen Home::update()
             else if (CheckCollisionPointRec(GetMousePosition(), {rec_result[i].x + 790, rec_result[i].y + 5, 32, 32}))
             {
                 strncpy(SearchInput, word[i]->data.c_str(), sizeof(word[i]->data));
+                word = slang.SearchWord(SearchInput);
                 break;
             }
             else if (GetMousePosition().y > 180 && CheckCollisionPointRec(GetMousePosition(), rec_result[i]))
@@ -62,6 +63,8 @@ Screen Home::update()
 
     if (menuChosen)
     {
+        if (SearchInput[0] == '\0')
+            word.clear();
         short tmp = menuChosen;
         menuChosen = 0;
         return static_cast<Screen>(tmp);
@@ -128,11 +131,16 @@ void Home::draw()
         SearchInput[random.length()] = '\0';
         word = slang.SearchWord(SearchInput);
     }
+
+    if (SearchInput[0] == '\0' && !word.size())
+        word = slang.getSearchHistory();
     if (SearchEdit)
     {
         if (GetKeyPressed())
         {
-            word = slang.SearchWord(SearchInput);
+            if (SearchInput[0] != '\0')
+                word = slang.SearchWord(SearchInput);
+            else word = slang.getSearchHistory();
             for (int i = 0; i < 20; i++)
                 rec_result[i] = { 320, (float)200 + 125 * i, 830, 120 };
         }

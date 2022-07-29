@@ -229,13 +229,14 @@ void Dictionary::removeFavorite(Word* word)
 
 std::vector<Word*> Dictionary::SearchWord(const std::string& key)
 {
+    std::cerr << "Search" << std::endl;
     if (key != "")
         return trie->search(key);
-    return getSearchHistory();
 }
 
 std::vector<Word*> Dictionary::SearchDef(const std::string& key)
 {
+    std::cerr << "Search Definition" << std::endl;
     for (auto def : allDefs)
     {
         def->_cnt = 0;
@@ -340,12 +341,14 @@ std::vector<Word*> Dictionary::getSearchHistory()
 /* Returns the latest searched words, up to 20 records
  */
 {
+    std::cerr << "History" << std::endl;
     std::vector<Word*> result = history;
     return result;
 }
 
 std::vector<Word*> Dictionary::getFavoriteList()
 {
+    std::cerr << "Favorite" << std::endl;
     std::vector<Word*> result;
     for (auto word : allWords)
     {

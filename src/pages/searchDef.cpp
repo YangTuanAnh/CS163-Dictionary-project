@@ -46,6 +46,7 @@ Screen SearchDef::update()
 
     if (menuChosen != 1)
     {
+        word.clear();
         short tmp = menuChosen;
         menuChosen = 1;
         return static_cast<Screen>(tmp);

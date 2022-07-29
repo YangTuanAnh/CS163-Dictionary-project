@@ -7,7 +7,6 @@ Screen Favorite::update()
     if (!word.size())
     {
         word = slang.getFavoriteList();
-        std::cerr << "Favor" << std::endl;
     }
     if (GetMouseWheelMove() == -1 && rec_result[word.size() - 1].y > 475)
     {

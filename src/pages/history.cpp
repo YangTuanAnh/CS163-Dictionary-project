@@ -4,7 +4,8 @@
 
 Screen History::update()
 {
-    word = slang.getSearchHistory();
+    if (!word.size())
+        word = slang.getSearchHistory();
     if (GetMouseWheelMove() == -1 && rec_result[word.size() - 1].y > 475)
     {
         for (int i = 0; i < word.size(); i++)
@@ -27,9 +28,9 @@ Screen History::update()
             {
                 selectedWord = word[i];
                 slang.getFullDefinition(selectedWord->data);
-
                 for (int i = 0; i < 20; i++)
                     rec_result[i] = {350, (float)200 + 120 * i, 800, 115};
+                word.clear();
                 return DEFINITION;
             }
         }
@@ -37,6 +38,7 @@ Screen History::update()
 
     if (menuChosen != 3)
     {
+        word.clear();
         short tmp = menuChosen;
         menuChosen = 3;
         return static_cast<Screen>(tmp);
