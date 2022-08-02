@@ -51,13 +51,13 @@ void Definitionmenu::draw()
     {
         GuiDrawIcon(200, 1000, 123, 5, GRAY);
         if (GuiButton({ rec_box.x + rec_box.width - (15 + button_width) * 3, rec_box.y + rec_box.height - 60, button_width * 2 + 15, 45 }, "Add Favorite"))
-            slang.updateFavorite(selectedWord);
+            data[*modeChosen].updateFavorite(selectedWord);
     }
     else
     {
         GuiDrawIcon(186, 1000, 123, 5, RED);
         if (GuiButton({ rec_box.x + rec_box.width - (15 + button_width) * 3, rec_box.y + rec_box.height - 60, button_width * 2 + 15, 45 }, "Remove Favorite"))
-            slang.removeFavorite(selectedWord);
+            data[*modeChosen].removeFavorite(selectedWord);
     }
 
     GuiButton({ rec_box.x + rec_box.width - (15 + button_width) * 4, rec_box.y + rec_box.height - 60, button_width, 45 }, "Edit");

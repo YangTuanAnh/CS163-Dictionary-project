@@ -1,4 +1,4 @@
 #pragma once
 #include "Dictionary.h"
 
-extern Dictionary slang;
+extern Dictionary data[];

@@ -11,6 +11,7 @@
 
 const int WIDTH = 1200, HEIGHT = 600;
 Font fnt;
+int* modeChosen = new int(0);
 class Program
 {
 private:
@@ -32,6 +33,10 @@ public:
         GuiSetFont(font);
         GuiSetStyle(TEXTBOX, BASE_COLOR_PRESSED, 0xffffffff);
         GuiSetStyle(DEFAULT, TEXT_SIZE, 20);
+    }
+    ~Program()
+    {
+        delete modeChosen;
     }
     void run()
     {

@@ -5,7 +5,7 @@
 Screen History::update()
 {
     if (!word.size())
-        word = slang.getSearchHistory();
+        word = data[*modeChosen].getSearchHistory();
     if (GetMouseWheelMove() == -1 && rec_result[word.size() - 1].y > 475)
     {
         for (int i = 0; i < word.size(); i++)
@@ -27,7 +27,7 @@ Screen History::update()
             if (GetMousePosition().y > 180 && CheckCollisionPointRec(GetMousePosition(), rec_result[i]) && !selectedWord)
             {
                 selectedWord = word[i];
-                slang.getFullDefinition(selectedWord->data);
+                data[*modeChosen].getFullDefinition(selectedWord->data);
                 for (int i = 0; i < 20; i++)
                     rec_result[i] = {350, (float)200 + 120 * i, 800, 115};
                 word.clear();
@@ -76,5 +76,8 @@ void History::draw()
     }
     DrawRectangle(310, 100, 850, 90, RAYWHITE);
     if (GuiDropdownBox(rec_dictionary, (dictionary[0] + "\n" + dictionary[1] + "\n" + dictionary[2] + "\n" + dictionary[3]).c_str(), modeChosen, dropDowmBox))
+    {
         dropDowmBox ^= 1;
+        word = data[*modeChosen].getSearchHistory();
+    }
 }

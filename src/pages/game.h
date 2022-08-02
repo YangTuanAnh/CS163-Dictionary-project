@@ -11,7 +11,6 @@ private:
     bool isWordGame = true;
     Rectangle rec_gamemode{880, 115, 135, 65};
     Rectangle rec_next{1030, 115, 135, 65};
-    int *modeChosen = nullptr;
     short menuChosen = 4;
     bool dropDowmBox = false;
     bool correctAns = false;
@@ -21,8 +20,7 @@ private:
 public:
     Game()
     {
-        quiz = slang.generateRandQuiz();
-        modeChosen = new int(0);
+        quiz = data[*modeChosen].generateRandQuiz();
         for (int i = 0; i < 5; i++)
             rec_modes[i] = {30, (float)125 + 90 * i, 245, 60};
         rec_modes[menuChosen] = {20, (float)115 + 90 * menuChosen, 265, 80};

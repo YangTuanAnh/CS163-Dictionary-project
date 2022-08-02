@@ -4,7 +4,6 @@
 
 SearchDef::SearchDef()
 {
-    modeChosen = new int(0);
     for (int i = 0; i < 50; i++)
         rec_result[i] = { 320, (float)200 + 125 * i, 830, 120 };
     for (int i = 0; i < 5; i++)
@@ -35,7 +34,7 @@ Screen SearchDef::update()
             if (GetMousePosition().y > 180 && CheckCollisionPointRec(GetMousePosition(), rec_result[i]))
             {
                 selectedWord = word[i];
-                slang.getFullDefinition(selectedWord->data);
+                data[*modeChosen].getFullDefinition(selectedWord->data);
 
                 for (int i = 0; i < 50; i++)
                     rec_result[i] = { 320, (float)200 + 125 * i, 830, 120 };
@@ -89,7 +88,11 @@ void SearchDef::draw()
         SearchEdit ^= 1;
     }
     if (GuiDropdownBox(rec_dictionary, (dictionary[0] + "\n" + dictionary[1] + "\n" + dictionary[2] + "\n" + dictionary[3]).c_str(), modeChosen, dropDowmBox))
+    {
         dropDowmBox ^= 1;
+        if (SearchInput[0] != '\0')
+            word = data[*modeChosen].SearchDef(SearchInput);
+    }
     if (SearchInput[0] == '\0')
         DrawText("Search bar", 325, 135, 30, LIGHTGRAY);
 
@@ -98,7 +101,7 @@ void SearchDef::draw()
         if (GetKeyPressed())
         {
             if (SearchInput[0] != '\0')
-                word = slang.SearchDef(SearchInput);
+                word = data[*modeChosen].SearchDef(SearchInput);
             else word.clear();
             for (int i = 0; i < 50; i++)
                 rec_result[i] = { 320, (float)200 + 125 * i, 830, 120 };

@@ -7,7 +7,6 @@
 Word *selectedWord = NULL;
 Home::Home()
 {
-    modeChosen = new int(0);
     char **icon = GuiLoadIcons("../data/icons.rgi", true);
     for (int i = 0; i < 20; i++)
         rec_result[i] = {320, (float)200 + 125 * i, 830, 120};
@@ -39,20 +38,20 @@ Screen Home::update()
         {
             if (SearchInput[0] == '\0' && CheckCollisionPointRec(GetMousePosition(), {rec_result[i].x + 750, rec_result[i].y + 5, 32, 32}))
             {
-                slang.updateHistory(word[i], false);
+                data[*modeChosen].updateHistory(word[i], false);
                 break;
             }
             else if (CheckCollisionPointRec(GetMousePosition(), {rec_result[i].x + 790, rec_result[i].y + 5, 32, 32}))
             {
                 strncpy(SearchInput, word[i]->data.c_str(), sizeof(word[i]->data));
-                word = slang.SearchWord(SearchInput);
+                word = data[*modeChosen].SearchWord(SearchInput);
                 break;
             }
             else if (GetMousePosition().y > 180 && CheckCollisionPointRec(GetMousePosition(), rec_result[i]))
             {
                 selectedWord = word[i];
-                slang.updateHistory(selectedWord, true);
-
+                data[*modeChosen].updateHistory(selectedWord, true);
+                word.clear();
                 for (int i = 0; i < 20; i++)
                     rec_result[i] = {320, (float)200 + 125 * i, 830, 120};
                 return DEFINITION;
@@ -120,27 +119,34 @@ void Home::draw()
         SearchEdit ^= 1;
     }
     if (GuiDropdownBox(rec_dictionary, (dictionary[0] + "\n" + dictionary[1] + "\n" + dictionary[2] + "\n" + dictionary[3]).c_str(), modeChosen, dropDowmBox))
+    {
         dropDowmBox ^= 1;
+        if (SearchInput[0] == '\0') word = data[*modeChosen].getSearchHistory();
+        else word = data[*modeChosen].SearchWord(SearchInput);
+    }
     if (SearchInput[0] == '\0')
         DrawText("Search bar", 325, 135, 30, LIGHTGRAY);
     if (GuiButton(rec_random, "RANDOM"))
     {
-        std::string random = slang.getRandomWord();
+        std::string random = data[*modeChosen].getRandomWord();
         for (int i = 0; i < random.length(); i++)
             SearchInput[i] = random[i];
         SearchInput[random.length()] = '\0';
-        word = slang.SearchWord(SearchInput);
+        word = data[*modeChosen].SearchWord(SearchInput);
     }
 
-    if (SearchInput[0] == '\0' && !word.size())
-        word = slang.getSearchHistory();
+    if (!word.size())
+    {
+        if (SearchInput[0] == '\0') word = data[*modeChosen].getSearchHistory();
+        else word = data[*modeChosen].SearchWord(SearchInput);
+    }
     if (SearchEdit)
     {
         if (GetKeyPressed())
         {
             if (SearchInput[0] != '\0')
-                word = slang.SearchWord(SearchInput);
-            else word = slang.getSearchHistory();
+                word = data[*modeChosen].SearchWord(SearchInput);
+            else word = data[*modeChosen].getSearchHistory();
             for (int i = 0; i < 20; i++)
                 rec_result[i] = { 320, (float)200 + 125 * i, 830, 120 };
         }

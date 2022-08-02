@@ -14,7 +14,6 @@ private:
     Rectangle rec_modes[5];
     std::vector<std::string> modes = { "Search Word", "Search Def", "Favorite", "History", "Game" };
     std::vector<std::string> dictionary = { "ENG-ENG", "ENG-VIE", "SLANG", "EMOTIONAL" };
-    int* modeChosen = nullptr;
     short menuChosen = 1;
     bool dropDowmBox = false;
 
@@ -24,6 +23,5 @@ public:
     void draw();
     ~SearchDef()
     {
-        delete modeChosen;
     }
 };

@@ -55,7 +55,7 @@ void Game::draw()
         if (GuiButton(rec_gamemode, "Definitions"))
         {
             isWordGame ^= 1;
-            quiz = slang.generateRandQuiz();
+            quiz = data[*modeChosen].generateRandQuiz();
             pressed = false;
         }
     }
@@ -89,13 +89,13 @@ void Game::draw()
         if (GuiButton(rec_gamemode, "Words"))
         {
             isWordGame ^= 1;
-            quiz = slang.generateRandQuiz();
+            quiz = data[*modeChosen].generateRandQuiz();
             pressed = false;
         }
     }
     if (GuiButton(rec_next, "Next"))
     {
-        quiz = slang.generateRandQuiz();
+        quiz = data[*modeChosen].generateRandQuiz();
         pressed = false;
     }
 
