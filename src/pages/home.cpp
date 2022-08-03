@@ -169,6 +169,8 @@ void Home::draw()
         DrawTextEx(fnt, ("Reset " + dictionary[*modeChosen]).c_str(), {600 - MeasureTextEx(fnt, text.c_str(), 20, 1).x / 2, 250}, 20, 1, BLACK);
         if (GuiButton({500, 300, 200, 50}, "RESET"))
         {
+            word.clear();
+            data[*modeChosen].resetData();
             confirmResetBox = false;
         }
     }
