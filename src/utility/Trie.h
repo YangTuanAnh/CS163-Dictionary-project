@@ -37,11 +37,13 @@ public:
 	Trie_error insert(const std::string& newData, const Record& data);
 	Trie_error trie_delete(const std::string& target);
 	std::vector<Record> search(const std::string& key);
+	void clear();
 private:
 	char alphabeticId[256];
 	int branchLimit;
 	Record defaultValue;
 	Trie_Node<Record>* root;
+	void clear(Trie_Node<Record>* root);
 	void getSearchResults(Trie_Node<Record>* cur, std::vector<Record>& results);
 	void Deallocate(Trie_Node<Record>* cur);
 };
@@ -190,6 +192,23 @@ std::vector<Record> Trie<Record>::search(const std::string& key) {
 	std::vector<Record> results;
 	Trie<Record>::getSearchResults(cur, results);
 	return results;
+}
+
+template <class Record>
+void Trie<Record>::clear() {
+	clear(root);
+	root = new Trie_Node<Record>(branchLimit, defaultValue);
+}
+
+template <class Record>
+void Trie<Record>::clear(Trie_Node<Record>* root) {
+	if (root == nullptr) {
+		return;
+	}
+	for (int i = 0; i < branchLimit; ++i) {
+		clear(root->branch[i]);
+	}
+	delete root;
 }
 
 template <class Record>
