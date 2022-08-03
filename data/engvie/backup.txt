@@ -1,0 +1,7 @@
+a	Tu dau tien trong bang chu cai
+a	Mot (so luong)
+a	La tien to cua cac tu tieng Anh
+action	Hanh dong
+agree	Dong y
+dictionary	Tu dien
+license	Giay phep

@@ -1,8 +1,6 @@
 %-)	User has been staring at a green screen for 15 hours straight.
 (-:	User is left handed.
-(8-o	It's Mr. Bill!
 (:I	User is an egghead.
-*:o)	And Bozo the Clown!
 *<:-)	User is wearing a Santa Claus Hat.
 +-:-)	User is the Pope or holds some other religious office.
 ,-)	Ditto...but he's winking.
@@ -58,7 +56,6 @@
 :-X	User's lips are sealed.
 :-[	User is a vampire.
 :-`	User spitting out its chewing tobacco.
-:-o	Uh oh!
 :-{)	User has a mustache.
 :-{}	User wears lipstick.
 :-~)	User has a cold.
@@ -77,7 +74,6 @@
 :]	Gleep...a friendly midget smiley who will gladly be your friend.
 :^)	User has a broken nose.
 :_)	User's nose is sliding off of his face.
-:v)	User has a broken nose, but it's the other way.
 :{	What?
 :}	What should we call these? (what?)
 ;-)	Winky smiley. User just made a flirtatious and/or sarcastic remark.More of a "don't hit me for what I just said" smiley.
@@ -195,7 +191,7 @@ CMIIW	Correct me if I'm wrong
 CNP	Continue in next post
 CO	Conference
 CRAFT	Can't remember a frighten thing
-CRS	Can’t remember shit
+CRS	Can�t remember shit
 CSG	Chuckle snicker grin
 CTS	Changing the subject
 CU	See you
@@ -341,11 +337,11 @@ HHOJ	Ha ha, only joking
 HHOK	Ha ha, only kidding
 HHOS	Ha ha, only seriously
 HIH	Hope it helps
-HILIACACLO	Help I lapsed into a coma and can’t log off
+HILIACACLO	Help I lapsed into a coma and can�t log off
 HIWTH	Hate it when that happens
 HLM	He loves me
 HMS	Home made smiley
-HMT	Here’s my try
+HMT	Here�s my try
 HMWK	Homework
 HOAS	Hold on a second
 HSIK	How should i know
@@ -376,10 +372,10 @@ IGTP	I get the point
 IHTFP	I hate this fountain place
 IHU	I hate you
 IHY	I hate you
-II	I’m impressed
+II	I�m impressed
 IIR	If I recall
 IIRC	If I recall correctly
-IIT	I’m impressed too
+IIT	I�m impressed too
 IJWTK	I just want to know
 IJWTS	I just want to say
 IK	I know
@@ -670,10 +666,7 @@ YY4U	Two wise for you
 ^-~	Wink
 ^_-	Wink
 ^_^	Smile
-^o	Snoring.
 `:-)	User shaved one of his eyebrows off this morning.
-d8=	Your pet beaver is wearing goggles and a hard hat.
-n00b	Leetspeak for beginner
 {:-)	User wears a toupee.
 |-)	hee hee
 |-D	ho ho
