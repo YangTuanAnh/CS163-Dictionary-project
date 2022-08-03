@@ -17,7 +17,7 @@ Home::Home()
 
 Screen Home::update()
 {
-    
+
     if (GetMouseWheelMove() == -1 && rec_result[word.size() - 1].y > 475)
     {
         for (int i = 0; i < word.size(); i++)
@@ -32,7 +32,7 @@ Screen Home::update()
             rec_result[i].y += 40;
         }
     }
-    if (IsMouseButtonPressed(0) && !dropDowmBox)
+    if (IsMouseButtonPressed(0) && !dropDowmBox && !confirmResetBox)
     {
         for (int i = 0; i < word.size(); i++)
         {
@@ -59,7 +59,6 @@ Screen Home::update()
         }
     }
 
-
     if (menuChosen)
     {
         if (SearchInput[0] == '\0')
@@ -80,6 +79,7 @@ void Home::draw()
         if (GuiButton(rec_modes[i], modes[i].c_str()))
             menuChosen = i;
     }
+
     for (int i = 0; i < word.size(); i++)
     {
         DrawRectangleRec(rec_result[i], DARKBLUE);
@@ -121,8 +121,11 @@ void Home::draw()
     if (GuiDropdownBox(rec_dictionary, (dictionary[0] + "\n" + dictionary[1] + "\n" + dictionary[2] + "\n" + dictionary[3]).c_str(), modeChosen, dropDowmBox))
     {
         dropDowmBox ^= 1;
-        if (SearchInput[0] == '\0') word = data[*modeChosen].getSearchHistory();
-        else word = data[*modeChosen].SearchWord(SearchInput);
+        if (SearchInput[0] == '\0')
+            word = data[*modeChosen].getSearchHistory();
+        else
+            word = data[*modeChosen].SearchWord(SearchInput);
+        confirmResetBox = false;
     }
     if (SearchInput[0] == '\0')
         DrawText("Search bar", 325, 135, 30, LIGHTGRAY);
@@ -137,8 +140,10 @@ void Home::draw()
 
     if (!word.size())
     {
-        if (SearchInput[0] == '\0') word = data[*modeChosen].getSearchHistory();
-        else word = data[*modeChosen].SearchWord(SearchInput);
+        if (SearchInput[0] == '\0')
+            word = data[*modeChosen].getSearchHistory();
+        else
+            word = data[*modeChosen].SearchWord(SearchInput);
     }
     if (SearchEdit)
     {
@@ -146,9 +151,25 @@ void Home::draw()
         {
             if (SearchInput[0] != '\0')
                 word = data[*modeChosen].SearchWord(SearchInput);
-            else word = data[*modeChosen].getSearchHistory();
+            else
+                word = data[*modeChosen].getSearchHistory();
             for (int i = 0; i < 20; i++)
-                rec_result[i] = { 320, (float)200 + 125 * i, 830, 120 };
+                rec_result[i] = {320, (float)200 + 125 * i, 830, 120};
+        }
+    }
+
+    if (GuiButton(rec_reset, "RESET"))
+        confirmResetBox = true;
+
+    if (confirmResetBox)
+    {
+        if (GuiWindowBox({400, 200, 400, 200}, ""))
+            confirmResetBox = false;
+        std::string text = "Reset " + dictionary[*modeChosen] + "?";
+        DrawTextEx(fnt, ("Reset " + dictionary[*modeChosen]).c_str(), {600 - MeasureTextEx(fnt, text.c_str(), 20, 1).x / 2, 250}, 20, 1, BLACK);
+        if (GuiButton({500, 300, 200, 50}, "RESET"))
+        {
+            confirmResetBox = false;
         }
     }
 }

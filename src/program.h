@@ -11,7 +11,7 @@
 
 const int WIDTH = 1200, HEIGHT = 600;
 Font fnt;
-int* modeChosen = new int(0);
+int *modeChosen = new int(0);
 class Program
 {
 private:
