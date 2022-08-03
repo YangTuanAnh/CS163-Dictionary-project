@@ -22,7 +22,7 @@ Dictionary::Dictionary(const std::string& _dir, const std::string& chars, const 
     dir = _dir;
     trie = new Trie<Word*>(chars, nullptr);
     resource = new Trie<ResourceWord*>(resourceChars, nullptr);
-    loadData();
+    loadData("/data.txt");
     loadHistory();
     loadFavorite();
 }
@@ -92,9 +92,9 @@ void Dictionary::loadFavorite()
     fin.close();
 }
 
-void Dictionary::loadData()
+void Dictionary::loadData(std::string dataFile)
 {
-    std::string filePath = dir + "/data.txt";
+    std::string filePath = dir + dataFile;
     std::ifstream fin(filePath);
     if (!fin.is_open())
     {
@@ -288,35 +288,6 @@ std::vector<Word*> Dictionary::SearchDef(const std::string& key)
     }
 
     return result;
-
-    /*
-
-    std::vector<std::pair<int, int>> rank(allWords.size());
-    for (int i = 0; i < (int)rank.size(); i++)
-    {
-        rank[i].first = 0;
-        rank[i].second = i;
-    }
-    for (int i = 0; i < DefResource.size(); i++)
-    {
-        ResourceWord *tmp;
-        if (resource->find(DefResource[i], tmp) == success)
-        {
-            for (int j = 0; j < tmp->inDefOf.size(); j++)
-                rank[tmp->inDefOf[j]].first++;
-        }
-    }
-    quick_sort(rank, 0, rank.size() - 1);
-    std::vector<Word *> result;
-    for (int i = 0; i < rank.size(), result.size() < 50; i++)
-    {
-        if (rank[i].first > 0)
-            result.push_back(allWords[rank[i].second]);
-        else if (rank[i].first == 0)
-            break;
-    }
-    return result;
-    */
 }
 
 std::vector<std::string> Dictionary::getFullDefinition(const std::string& word)
@@ -341,14 +312,14 @@ std::vector<Word*> Dictionary::getSearchHistory()
 /* Returns the latest searched words, up to 20 records
  */
 {
-    std::cerr << "History" << std::endl;
+    //std::cerr << "History" << std::endl;
     std::vector<Word*> result = history;
     return result;
 }
 
 std::vector<Word*> Dictionary::getFavoriteList()
 {
-    std::cerr << "Favorite" << std::endl;
+    //std::cerr << "Favorite" << std::endl;
     std::vector<Word*> result;
     for (auto word : allWords)
     {
@@ -362,7 +333,24 @@ std::vector<Word*> Dictionary::getFavoriteList()
 
 void Dictionary::saveData()
 {
-    // implement later
+    std::ofstream fout(dir + "/data.txt");
+    if (!fout.is_open())
+    {
+        std::cerr << "could not save file" + dir + "/data.txt" << std::endl;
+        return;
+    }
+    
+    sort(allWords.begin(), allWords.end(), [](auto a, auto b){
+        return a->data < b->data;
+    });
+
+    for (auto word : allWords) {
+        for (auto def : word->defs) {
+            fout << word->data << '\t' << def->data << '\n';
+        }
+    }
+
+    fout.close();
 }
 
 void Dictionary::saveHistory()
@@ -475,6 +463,26 @@ void Dictionary::updateDefsLinks(Definition* def, int type)
             std::cerr << "Error: invalid argument (updateDefsLinks)" << std::endl;
         }
     }
+}
+
+void Dictionary::resetData()
+{
+    // clear data
+    history.clear();
+    for (auto word : allWords) {
+        delete word;
+    }
+    allWords.clear();
+
+    for (auto def : allDefs) {
+        delete def;
+    }
+    allDefs.clear();
+
+    trie->clear();
+    resource->clear();
+
+    loadData("/backup.txt");
 }
 
 bool checkQuizValidation(int new_option, std::vector<int>& quiz)

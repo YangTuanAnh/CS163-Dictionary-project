@@ -62,7 +62,6 @@ public:
     void deleteDef(Definition* def);
     void deleteWord(Word* word);
 
-
     void updateFavorite(Word *word);
     void removeFavorite(Word *word);
     std::vector<Word *> getFavoriteList();
@@ -70,6 +69,7 @@ public:
     std::vector<Word *> getSearchHistory();
     std::string getRandomWord();
     void updateHistory(Word *word, bool addOrDel);
+    void resetData();
 
 private:
     std::string dir;
@@ -80,7 +80,7 @@ private:
 
     void updateDefsLinks(Definition *def, int type);
 
-    void loadData();
+    void loadData(std::string dataFile);
     void loadHistory();
     void loadFavorite();
     void saveData();
