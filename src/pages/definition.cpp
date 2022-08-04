@@ -46,7 +46,10 @@ void Definitionmenu::draw()
     DrawTextEx(fnt, fullDef.c_str(), { rec_def.x + 15, rec_def.y }, 25, 1, BLACK);
     DrawRectangleRec({ 52, 124, rec_box.width - 4, 78 }, RAYWHITE);
     DrawRectangleRec({ 52, 520, rec_box.width - 4, 78 }, RAYWHITE);
-    GuiButton({ rec_box.x + rec_box.width - 15 - button_width, rec_box.y + rec_box.height - 60, button_width, 45 }, "Delete");
+    if (GuiButton({ rec_box.x + rec_box.width - 15 - button_width, rec_box.y + rec_box.height - 60, button_width, 45 }, "Delete"))
+    {
+        
+    }
     if (!selectedWord->isFavorite)
     {
         GuiDrawIcon(200, 1000, 123, 5, GRAY);

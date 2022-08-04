@@ -17,7 +17,8 @@ Home::Home()
 
 Screen Home::update()
 {
-
+    if (confirmResetBox)
+        return HOME;
     if (GetMouseWheelMove() == -1 && rec_result[word.size() - 1].y > 475)
     {
         for (int i = 0; i < word.size(); i++)
@@ -32,7 +33,7 @@ Screen Home::update()
             rec_result[i].y += 40;
         }
     }
-    if (IsMouseButtonPressed(0) && !dropDowmBox && !confirmResetBox)
+    if (IsMouseButtonPressed(0) && !dropDowmBox)
     {
         for (int i = 0; i < word.size(); i++)
         {
@@ -63,6 +64,8 @@ Screen Home::update()
     {
         if (SearchInput[0] == '\0')
             word.clear();
+        for (int i = 0; i < 20; i++)
+            rec_result[i] = { 320, (float)200 + 125 * i, 830, 120 };
         short tmp = menuChosen;
         menuChosen = 0;
         return static_cast<Screen>(tmp);
@@ -72,6 +75,20 @@ Screen Home::update()
 
 void Home::draw()
 {
+    if (confirmResetBox)
+    {
+        if (GuiWindowBox({ 400, 200, 400, 200 }, ""))
+            confirmResetBox = false;
+        std::string text = "Reset " + dictionary[*modeChosen] + "?";
+        DrawTextEx(fnt, ("Reset " + dictionary[*modeChosen]).c_str(), { 600 - MeasureTextEx(fnt, text.c_str(), 20, 1).x / 2, 250 }, 20, 1, BLACK);
+        if (GuiButton({ 500, 300, 200, 50 }, "RESET"))
+        {
+            word.clear();
+            data[*modeChosen].resetData();
+            confirmResetBox = false;
+        }
+        return;
+    }
     Vector2 mousePos = GetMousePosition();
 
     for (int i = 0; i < 5; i++)
@@ -161,17 +178,5 @@ void Home::draw()
     if (GuiButton(rec_reset, "RESET"))
         confirmResetBox = true;
 
-    if (confirmResetBox)
-    {
-        if (GuiWindowBox({400, 200, 400, 200}, ""))
-            confirmResetBox = false;
-        std::string text = "Reset " + dictionary[*modeChosen] + "?";
-        DrawTextEx(fnt, ("Reset " + dictionary[*modeChosen]).c_str(), {600 - MeasureTextEx(fnt, text.c_str(), 20, 1).x / 2, 250}, 20, 1, BLACK);
-        if (GuiButton({500, 300, 200, 50}, "RESET"))
-        {
-            word.clear();
-            data[*modeChosen].resetData();
-            confirmResetBox = false;
-        }
-    }
+    
 }
