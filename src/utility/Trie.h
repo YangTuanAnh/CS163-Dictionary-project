@@ -233,6 +233,9 @@ void Trie<Record>::clear(Trie_Node<Record>* root) {
 	if (root == nullptr) {
 		return;
 	}
+	if (root->data != defaultValue) {
+		delete root->data;
+	}
 	for (int i = 0; i < branchLimit; ++i) {
 		clear(root->branch[i]);
 	}

@@ -32,10 +32,8 @@ Dictionary::~Dictionary()
     saveData();
     saveHistory();
     saveFavorite();
-    for (auto word : allWords)
-    {
-        delete word;
-    }
+    trie->clear();
+    resource->clear();
     for (auto def : allDefs)
     {
         delete def;
@@ -44,6 +42,7 @@ Dictionary::~Dictionary()
     allDefs.clear();
     history.clear();
     delete trie;
+    delete resource;
 }
 
 void Dictionary::loadHistory()
@@ -478,16 +477,13 @@ void Dictionary::resetData()
 {
     // clear data
     history.clear();
-    for (auto word : allWords) {
-        delete word;
-    }
-    allWords.clear();
-
     for (auto def : allDefs) {
         delete def;
     }
     allDefs.clear();
+    allWords.clear();
 
+    // Word and ResoureWord is deleted in trie::clear()
     trie->clear();
     resource->clear();
 
