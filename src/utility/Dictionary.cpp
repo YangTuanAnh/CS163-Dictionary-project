@@ -236,53 +236,62 @@ std::vector<Word*> Dictionary::SearchWord(const std::string& key)
 
 std::vector<Word*> Dictionary::SearchDef(const std::string& key)
 {
-    std::cerr << "Search Definition" << std::endl;
+    std::cerr << "Search Definition: " << key << std::endl;
     for (auto def : allDefs)
     {
-        def->_cnt = 0;
+        def->_value = 0;
     }
+    resource->resetValues();
 
     for (auto s : Split(key, ' '))
     {
         s = Normalize(s);
-        if (s.size() < 3)
+        if (s.empty())
         {
             continue;
         }
         ResourceWord* tmp;
         if (resource->find(s, tmp) == Trie_error::success)
         {
-            for (auto def : tmp->defs)
-            {
-                ++def->_cnt;
-            }
+            tmp->_value += 1.0;
+        } else {
+            tmp = new ResourceWord(s);
+            tmp->_value = 1;
+            resource->insert(s, tmp);
+        }
+    }
+    
+    resource->calcValues();
+    std::sort(allDefs.begin(), allDefs.end(), [](auto a, auto b)
+        { return a->_value > b->_value; });
+
+    std::vector<Definition*> candidates;
+    for (auto def : allDefs)
+    {
+        if (def->_value > 0)
+        {
+            candidates.push_back(def);
+            def->_value *= (double)1.0 - editDistance(key, def->data) / (double)def->data.size() ;
+        }
+        if ((int)candidates.size() == 50 * SEARCH_RESULTS_LIMIT)
+        {
+            break;
         }
     }
 
-    std::sort(allDefs.begin(), allDefs.end(), [](auto a, auto b)
-        { return a->_cnt > b->_cnt; });
-
+    std::sort(candidates.begin(), candidates.end(), [](auto a, auto b)
+        { return a->_value > b->_value; });
     std::vector<Word*> result;
-    for (auto def : allDefs)
-    {
-        if (def->_cnt > 0)
-        {
-            bool exist = false;
-            for (auto w : result)
-            {
-                if (w == def->word)
-                {
-                    exist = true;
-                    break;
-                }
-            }
-            if (!exist)
-            {
-                result.push_back(def->word);
-            }
+    for (auto def : candidates) {
+        bool found = false;
+        for (auto word : result) {
+            found |= (word == def->word);
         }
-        if ((int)result.size() == SEARCH_RESULTS_LIMIT)
-        {
+        if (!found) {
+            //std::cerr << def->word->data << ' ' << def->_value << std::endl;
+            result.push_back(def->word);
+        }
+        if ((int) result.size() == SEARCH_RESULTS_LIMIT) {
             break;
         }
     }
@@ -544,4 +553,26 @@ std::string Normalize(const std::string& s)
         }
     }
     return norm;
+}
+
+// calcutate edit distance using dynamic programing 
+int editDistance(const std::string &s, const std::string &t) {
+    int m = s.size();
+    int n = t.size();
+    std::vector<std::vector<int>> dp(m + 1, std::vector<int>(n + 1, 1e9));
+    dp[0][0] = 0;
+    for (int i = 0; i <= m; ++i) {
+        for (int j = 0; j <= n; ++j) {
+            if (i < m) {
+                dp[i + 1][j] = std::min(dp[i + 1][j], dp[i][j] + 1);
+            }
+            if (j < n) {
+                dp[i][j + 1] = std::min(dp[i][j + 1], dp[i][j] + 1);
+            }
+            if (i < m && j < n) {
+                dp[i + 1][j + 1] = std::min(dp[i + 1][j + 1], dp[i][j] + (tolower(s[i]) != tolower(t[j])));
+            }
+        }
+    }
+    return dp[m][n];
 }

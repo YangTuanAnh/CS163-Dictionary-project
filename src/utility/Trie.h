@@ -38,6 +38,8 @@ public:
 	Trie_error insert(const std::string& newData, const Record& data);
 	Trie_error trie_delete(const std::string& target);
 	std::vector<Record> search(const std::string& key);
+	void resetValues();
+	void calcValues();
 	void clear();
 private:
 	char alphabeticId[256];
@@ -46,6 +48,8 @@ private:
 	Trie_Node<Record>* root;
 	void clear(Trie_Node<Record>* root);
 	void getSearchResults(Trie_Node<Record>* cur, std::vector<Record>& results);
+	void resetValues(Trie_Node<Record>* cur);
+	void calcValues(Trie_Node<Record>* cur, double sum);
 	void Deallocate(Trie_Node<Record>* cur);
 };
 
@@ -202,6 +206,16 @@ void Trie<Record>::clear() {
 }
 
 template <class Record>
+void Trie<Record>::resetValues() {
+	resetValues(root);
+}
+
+template <class Record>
+void Trie<Record>::calcValues() {
+	calcValues(root, 0);
+}
+
+template <class Record>
 void Trie<Record>::getSearchResults(Trie_Node<Record>* cur, std::vector<Record>& results) {
 	if (cur == nullptr || results.size() >= SEARCH_RESULTS_LIMIT) {
 		return;
@@ -211,6 +225,52 @@ void Trie<Record>::getSearchResults(Trie_Node<Record>* cur, std::vector<Record>&
 	}
 	for (int i = 0; i < branchLimit; ++i) {
 		Trie<Record>::getSearchResults(cur->branch[i], results);
+	}
+}
+
+template <class Record>
+void Trie<Record>::clear(Trie_Node<Record>* root) {
+	if (root == nullptr) {
+		return;
+	}
+	for (int i = 0; i < branchLimit; ++i) {
+		clear(root->branch[i]);
+	}
+	delete root;
+}
+
+template <class Record>
+void Trie<Record>::resetValues(Trie_Node<Record>* cur) {
+	if (cur == nullptr) {
+		return;
+	}
+	if (cur->data != defaultValue) {
+		cur->data->_value = 0;
+	}
+
+	for (int i = 0; i < branchLimit; ++i) {
+		resetValues(cur->branch[i]);
+	}
+}
+
+template <class Record>
+void Trie<Record>::calcValues(Trie_Node<Record>* cur, double sum) {
+	if (cur == nullptr) {
+		return;
+	}
+	if (cur->data != defaultValue) {
+		sum += cur->data->_value;
+		if (sum >= 1e-2) {
+			for (auto def : cur->data->defs) {
+				def->_value += sum;
+			}
+		}
+	}
+
+	for (int i = 0; i < branchLimit; ++i) {
+		if (cur->branch[i] != nullptr) {
+			Trie<Record>::calcValues(cur->branch[i], sum / 2.0);
+		}
 	}
 }
 
