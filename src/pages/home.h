@@ -24,12 +24,13 @@ private:
     short menuChosen = 0;
     bool dropDowmBox = false;
     bool confirmResetBox = false;
-
 public:
     Home();
     Screen update();
     void draw();
+    void resetBox();
     ~Home()
     {
+
     }
 };

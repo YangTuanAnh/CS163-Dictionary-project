@@ -5,3 +5,4 @@ action	Hanh dong
 agree	Dong y
 dictionary	Tu dien
 license	Giay phep
+why	cau hoi (vi sao)

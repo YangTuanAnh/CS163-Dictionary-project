@@ -10,6 +10,8 @@ private:
     std::string tmp;
     float propotion;
     int position, pre;
+    bool confirmDeleteBox = false;
+    bool confirmEditBox = false;
 public:
     Definitionmenu();
     ~Definitionmenu()
@@ -17,4 +19,5 @@ public:
     }
     Screen update();
     void draw();
+    void deleteBox();
 };

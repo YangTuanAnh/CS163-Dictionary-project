@@ -17,7 +17,7 @@ Home::Home()
 
 Screen Home::update()
 {
-
+    if (confirmResetBox) return HOME;
     if (GetMouseWheelMove() == -1 && rec_result[word.size() - 1].y > 475)
     {
         for (int i = 0; i < word.size(); i++)
@@ -32,7 +32,7 @@ Screen Home::update()
             rec_result[i].y += 40;
         }
     }
-    if (IsMouseButtonPressed(0) && !dropDowmBox && !confirmResetBox)
+    if (IsMouseButtonPressed(0) && !dropDowmBox)
     {
         for (int i = 0; i < word.size(); i++)
         {
@@ -72,6 +72,11 @@ Screen Home::update()
 
 void Home::draw()
 {
+    if (confirmResetBox)
+    {
+        resetBox();
+        return;
+    }
     Vector2 mousePos = GetMousePosition();
 
     for (int i = 0; i < 5; i++)
@@ -160,18 +165,20 @@ void Home::draw()
 
     if (GuiButton(rec_reset, "RESET"))
         confirmResetBox = true;
+}
 
-    if (confirmResetBox)
+void Home::resetBox()
+{
+    if (GuiWindowBox({ 300, 170, 600, 250 }, ""))
+        confirmResetBox = false;
+    std::string text = "Are you sure to reset " + dictionary[*modeChosen] + "?";
+    DrawTextEx(fnt, text.c_str(), {600 - MeasureTextEx(fnt, text.c_str(), 27, 1).x / 2, 220}, 27, 1, BLACK);
+    if (GuiButton({ 400, 330, 100, 50 }, "NO"))
+        confirmResetBox = false;
+    if (GuiButton({ 700, 330, 100, 50 }, "YES"))
     {
-        if (GuiWindowBox({400, 200, 400, 200}, ""))
-            confirmResetBox = false;
-        std::string text = "Reset " + dictionary[*modeChosen] + "?";
-        DrawTextEx(fnt, ("Reset " + dictionary[*modeChosen]).c_str(), {600 - MeasureTextEx(fnt, text.c_str(), 20, 1).x / 2, 250}, 20, 1, BLACK);
-        if (GuiButton({500, 300, 200, 50}, "RESET"))
-        {
-            word.clear();
-            data[*modeChosen].resetData();
-            confirmResetBox = false;
-        }
+        word.clear();
+        data[*modeChosen].resetData();
+        confirmResetBox = false;
     }
 }

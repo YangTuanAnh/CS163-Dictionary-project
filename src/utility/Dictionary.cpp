@@ -320,14 +320,14 @@ std::vector<Word*> Dictionary::getSearchHistory()
 /* Returns the latest searched words, up to 20 records
  */
 {
-    //std::cerr << "History" << std::endl;
+    std::cerr << "History" << std::endl;
     std::vector<Word*> result = history;
     return result;
 }
 
 std::vector<Word*> Dictionary::getFavoriteList()
 {
-    //std::cerr << "Favorite" << std::endl;
+    std::cerr << "Favorite" << std::endl;
     std::vector<Word*> result;
     for (auto word : allWords)
     {
