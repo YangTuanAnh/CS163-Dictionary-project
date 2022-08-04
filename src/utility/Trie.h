@@ -33,6 +33,7 @@ public:
 	// Destructor
 	~Trie();
 	// Methods
+	Trie_Node<Record>* getRoot();
 	Trie_error find(const std::string& target, Record& data);
 	Trie_error insert(const std::string& newData, const Record& data);
 	Trie_error trie_delete(const std::string& target);
@@ -201,17 +202,6 @@ void Trie<Record>::clear() {
 }
 
 template <class Record>
-void Trie<Record>::clear(Trie_Node<Record>* root) {
-	if (root == nullptr) {
-		return;
-	}
-	for (int i = 0; i < branchLimit; ++i) {
-		clear(root->branch[i]);
-	}
-	delete root;
-}
-
-template <class Record>
 void Trie<Record>::getSearchResults(Trie_Node<Record>* cur, std::vector<Record>& results) {
 	if (cur == nullptr || results.size() >= SEARCH_RESULTS_LIMIT) {
 		return;
@@ -222,4 +212,9 @@ void Trie<Record>::getSearchResults(Trie_Node<Record>* cur, std::vector<Record>&
 	for (int i = 0; i < branchLimit; ++i) {
 		Trie<Record>::getSearchResults(cur->branch[i], results);
 	}
+}
+
+template <class Record>
+Trie_Node<Record>* Trie<Record>::getRoot() {
+	return root;
 }
