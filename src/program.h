@@ -27,7 +27,7 @@ private:
 public:
     Program()
     {
-        fnt = LoadFont("../data/Font.ttf");
+        fnt = LoadFont("CS163_github/data/Font.ttf");
         Font font = fnt;
         font.baseSize /= 1.4;
         GuiSetFont(font);

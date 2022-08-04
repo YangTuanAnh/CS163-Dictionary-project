@@ -7,7 +7,7 @@
 Word *selectedWord = NULL;
 Home::Home()
 {
-    char **icon = GuiLoadIcons("../data/icons.rgi", true);
+    char **icon = GuiLoadIcons("CS163_github/data/icons.rgi", true);
     for (int i = 0; i < 20; i++)
         rec_result[i] = {320, (float)200 + 125 * i, 830, 120};
     for (int i = 0; i < 5; i++)
@@ -17,8 +17,7 @@ Home::Home()
 
 Screen Home::update()
 {
-    if (confirmResetBox)
-        return HOME;
+    if (confirmResetBox) return HOME;
     if (GetMouseWheelMove() == -1 && rec_result[word.size() - 1].y > 475)
     {
         for (int i = 0; i < word.size(); i++)
@@ -64,8 +63,6 @@ Screen Home::update()
     {
         if (SearchInput[0] == '\0')
             word.clear();
-        for (int i = 0; i < 20; i++)
-            rec_result[i] = { 320, (float)200 + 125 * i, 830, 120 };
         short tmp = menuChosen;
         menuChosen = 0;
         return static_cast<Screen>(tmp);
@@ -77,16 +74,7 @@ void Home::draw()
 {
     if (confirmResetBox)
     {
-        if (GuiWindowBox({ 400, 200, 400, 200 }, ""))
-            confirmResetBox = false;
-        std::string text = "Reset " + dictionary[*modeChosen] + "?";
-        DrawTextEx(fnt, ("Reset " + dictionary[*modeChosen]).c_str(), { 600 - MeasureTextEx(fnt, text.c_str(), 20, 1).x / 2, 250 }, 20, 1, BLACK);
-        if (GuiButton({ 500, 300, 200, 50 }, "RESET"))
-        {
-            word.clear();
-            data[*modeChosen].resetData();
-            confirmResetBox = false;
-        }
+        resetBox();
         return;
     }
     Vector2 mousePos = GetMousePosition();
@@ -177,6 +165,20 @@ void Home::draw()
 
     if (GuiButton(rec_reset, "RESET"))
         confirmResetBox = true;
+}
 
-    
+void Home::resetBox()
+{
+    if (GuiWindowBox({ 300, 170, 600, 250 }, ""))
+        confirmResetBox = false;
+    std::string text = "Are you sure to reset " + dictionary[*modeChosen] + "?";
+    DrawTextEx(fnt, text.c_str(), {600 - MeasureTextEx(fnt, text.c_str(), 27, 1).x / 2, 220}, 27, 1, BLACK);
+    if (GuiButton({ 400, 330, 100, 50 }, "NO"))
+        confirmResetBox = false;
+    if (GuiButton({ 700, 330, 100, 50 }, "YES"))
+    {
+        word.clear();
+        data[*modeChosen].resetData();
+        confirmResetBox = false;
+    }
 }
