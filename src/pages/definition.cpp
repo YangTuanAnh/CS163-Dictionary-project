@@ -220,7 +220,46 @@ void Definitionmenu::editEachDef()
     }
 }
 
-
+void Definitionmenu::addDef()
+{
+    if (GetMouseWheelMove() == 1 && y_coordinate < 200)
+        y_coordinate += 30;
+    if (GetMouseWheelMove() == -1)
+        y_coordinate -= 30;
+    GuiTextBoxMulti({ 50, y_coordinate, 1100, 5000 }, newdata, 800, true);
+    DrawRectangleRec({ 0, 100, 1200, 90 }, RAYWHITE);
+    DrawTextEx(fnt, TextFormat("%i/%i", strlen(newdata), 500), {950, 140}, 40, 1, LIGHTGRAY);
+    DrawTextEx(fnt, "ADD MENU", { 70, 130 }, 40, 1, RED);
+    if (GuiButton({ 800, 130, 100, 50 }, "ADD"))
+    {
+        newData.clear();
+        for (int i = 0; i < 501 && newdata[i] != '\0'; i++)
+        {
+            newData.push_back(newdata[i]);
+            newdata[i] = '\0';
+        }
+        y_coordinate = 200;
+        addDefButton = false;
+        data[*modeChosen].insertDef(selectedWord, newData);
+        tmp = selectedWord->defs[defChosen]->data;
+        if (MeasureTextEx(fnt, tmp.c_str(), 25, 1).x > rec_def.width - 20)
+        {
+            propotion = float(MeasureTextEx(fnt, tmp.c_str(), 25, 1).x / (rec_def.width - 20));
+            pre = 0;
+            position = tmp.length() / (float)propotion;
+            while (position < tmp.length())
+            {
+                while (tmp[position] != ' ' || MeasureTextEx(fnt, tmp.substr(pre, position - pre).c_str(), 25, 1).x > rec_def.width - 20)
+                    position--;
+                tmp[position] = '\n';
+                pre = position + 1;
+                position += tmp.length() / (float)propotion;
+            }
+        }
+        eachDef.push_back(tmp);
+        edit_height.push_back(MeasureTextEx(fnt, eachDef.back().c_str(), 25, 1).y + edit_height[eachDef.size() - 1] + 35);
+    }
+}
 
 void Definitionmenu::saveBox()
 {

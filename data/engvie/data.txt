@@ -1,6 +1,11 @@
-a	Tu dau tien trong bang chu cai
+a	Tu dau tien trong bang chu caimer ekrgker koegk er oegoke okeg eog okg eokgo erkgo eg eogergoeg erige goer ge goerg  eogoerg eg oerg oekg eg eri aig adg kod agdkgak dkg d okd gdka  dkagkdog odkaogd jfiwej iwjfiw jfj ijwije jwfji jwjei jwef ijewi jiwiefwi wjfiw fjwi fwif wjfiw fwfi wjfiefjwif wjfjiwejf iejfief eijf if wjf ie weijfi wjf eif eef weif i fwijfiefjef wjfi wifjwif wefj wif wjfiw
 a	Mot (so luong)
 a	La tien to cua cac tu tieng Anh
+a	fefssaf jdisc sjdis jdsici jdjcj djsisi jisj djisj
+a	jisdjv sjvi sjsdiv sisdv idj svji isjdvi djisvdji sdjvis jsdvj
+a	ijfwi isjf sjddi sdjfis sdifji
+a	dssjid jsifjsd jsif sdj sdifj sj fjsdif sjf
+a	fs dfsdfsd
 action	Hanh dong
 agree	Dong y
 dictionary	Tu dien
