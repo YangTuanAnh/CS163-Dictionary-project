@@ -33,6 +33,7 @@ public:
 class ResourceWord
 {
 public:
+    double _value;
     std::string data;
     std::vector<Definition *> defs;
     ResourceWord(const std::string &s);
@@ -41,7 +42,7 @@ public:
 class Definition
 {
 public:
-    int _cnt;
+    double _value;
     std::string data;
     Word *word;
     Definition(const std::string &s);
@@ -92,3 +93,4 @@ std::string Normalize(const std::string &s);
 std::vector<std::string> Split(const std::string &s, char delim);
 bool IsPrefix(const std::string &p, const std::string &s);
 bool checkQuizValidation(int new_option, std::vector<int> &quiz);
+int editDistance(const std::string &s, const std::string &t);
