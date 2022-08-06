@@ -121,6 +121,62 @@ void Definitionmenu::deleteBox()
     }
 }
 
+void Definitionmenu::editMenu()
+{
+    if (editEachDefButton)
+    {
+        editEachDef();
+        return;
+    }
+    if (confirmSaveBox)
+    {
+        saveBox();
+        return;
+    }
+    if (addDefButton)
+    {
+        addDef();
+        return;
+    }
+    if (GetMouseWheelMove() == 1 && edit_height[0] < 200)
+    {
+        for (int i = 0; i <= eachDef.size(); i++)
+            edit_height[i] += 40;
+    }
+    if (GetMouseWheelMove() == -1 && edit_height.back() >= 540)
+    {
+        for (int i = 0; i <= eachDef.size(); i++)
+            edit_height[i] -= 40;
+    }
+    for (int i = 0; i < eachDef.size(); i++)
+    {
+        DrawTextEx(fnt, eachDef[i].c_str(), { 34, (float)edit_height[i] + 8 }, 25, 1, BLACK);
+        DrawRectangleLinesEx({ 20, (float)edit_height[i], 1100, (float)edit_height[i + 1] - edit_height[i] - 20 }, 2, BLACK);
+        if (GuiButton({ 1130, (float)edit_height[i], 65, 40 }, "Edit") && GetMousePosition().y > 200)
+        {
+            edit_height.clear();
+            defChosen = i;
+            editEachDefButton = true;
+            newData = selectedWord->defs[defChosen]->data;
+            strcpy(newdata, newData.c_str());
+            return;
+        }
+    }
+    DrawRectangleRec({ 0, 100, 1200, 90 }, RAYWHITE);
+    DrawTextEx(fnt, "EDIT MENU", { 70, 130 }, 40, 1, RED);
+    if (GuiButton({ 800, 130, 100, 50 }, "SAVE"))
+        confirmSaveBox = true;
+    if (GuiButton({ 920, 130, 200, 50 }, "ADD MORE"))
+    {
+        addDefButton = true;
+        newData = "\0";
+        defChosen = eachDef.size();
+        newdata[0] = '\0';
+    }
+}
+
+
+
 void Definitionmenu::saveBox()
 {
     if (GuiWindowBox({ 300, 170, 600, 250 }, ""))
