@@ -39,6 +39,7 @@ Screen Home::update()
             if (SearchInput[0] == '\0' && CheckCollisionPointRec(GetMousePosition(), {rec_result[i].x + 750, rec_result[i].y + 5, 32, 32}))
             {
                 data[*modeChosen].updateHistory(word[i], false);
+                word = data[*modeChosen].getSearchHistory();
                 break;
             }
             else if (CheckCollisionPointRec(GetMousePosition(), {rec_result[i].x + 790, rec_result[i].y + 5, 32, 32}))
@@ -58,7 +59,6 @@ Screen Home::update()
             }
         }
     }
-
     if (menuChosen)
     {
         if (SearchInput[0] == '\0')
