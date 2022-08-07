@@ -24,15 +24,19 @@ Screen Definitionmenu::update()
             tmp = selectedWord->defs[j]->data;
             if (MeasureTextEx(fnt, tmp.c_str(), 25, 1).x > rec_def.width - 20)
             {
-                propotion = float(MeasureTextEx(fnt, tmp.c_str(), 25, 1).x / (rec_def.width - 20));
+                propotion = float(MeasureTextEx(fnt, tmp.c_str(), 25, 1).x / rec_def.width);
                 pre = 0;
                 position = tmp.length() / (float)propotion;
                 while (position < tmp.length())
                 {
-                    while (tmp[position] != ' ' || MeasureTextEx(fnt, tmp.substr(pre, position - pre).c_str(), 25, 1).x > rec_def.width - 20)
-                        position--;
-                    tmp[position] = '\n';
-                    pre = position + 1;
+                    while (position < tmp.length() && MeasureTextEx(fnt, tmp.substr(pre, position - pre).c_str(), 25, 1).x < rec_def.width - 20)
+                        position++;
+                    if (position < tmp.length() - 1)
+                        while (tmp[position] != ' ' || MeasureTextEx(fnt, tmp.substr(pre, position - pre).c_str(), 25, 1).x > rec_def.width - 20)
+                            position--;
+                    if (position < tmp.length() - 1)
+                        tmp[position] = '\n';
+                    pre = position + 2;
                     position += tmp.length() / (float)propotion;
                 }
             }
@@ -64,7 +68,7 @@ void Definitionmenu::draw()
         editMenu();
         return;
     }
-    DrawTextEx(fnt, fullDef.c_str(), { rec_def.x + 15, rec_def.y }, 25, 1, BLACK);
+    DrawTextEx(fnt, fullDef.c_str(), { rec_def.x + 10, rec_def.y }, 25, 1, BLACK);
     DrawRectangleRec({ 52, 124, rec_box.width - 4, 78 }, RAYWHITE);
     DrawRectangleRec({ 52, 520, rec_box.width - 4, 78 }, RAYWHITE);
     if (GuiButton({ rec_box.x + rec_box.width - 15 - button_width, rec_box.y + rec_box.height - 60, button_width, 45 }, "Delete"))
@@ -84,6 +88,7 @@ void Definitionmenu::draw()
 
     if (GuiButton({ rec_box.x + rec_box.width - (15 + button_width) * 4, rec_box.y + rec_box.height - 60, button_width, 45 }, "Edit"))
     {
+        rec_def.y = 205;
         fullDef = "\0";
         editButton = true;
         edit_height.push_back(200);
@@ -97,6 +102,7 @@ void Definitionmenu::draw()
     DrawRectangleRec({ 51, 100, rec_box.width - 2, 35 }, LIGHTGRAY);
     if (GuiButton({ 1100,100,50,35 }, "X"))
     {
+        rec_def.y = 205;
         selectedWord = NULL;
         fullDef = "\0";
         eachDef.clear();
@@ -116,6 +122,7 @@ void Definitionmenu::deleteBox()
         confirmDeleteBox = false;
     if (GuiButton({ 700, 330, 100, 50 }, "YES"))
     {
+        rec_def.y = 205;
         Word* temp = selectedWord;
         selectedWord = nullptr;
         data[*modeChosen].updateHistory(temp, false);
@@ -203,15 +210,19 @@ void Definitionmenu::editEachDef()
         tmp = selectedWord->defs[defChosen]->data;
         if (MeasureTextEx(fnt, tmp.c_str(), 25, 1).x > rec_def.width - 20)
         {
-            propotion = float(MeasureTextEx(fnt, tmp.c_str(), 25, 1).x / (rec_def.width - 20));
+            propotion = float(MeasureTextEx(fnt, tmp.c_str(), 25, 1).x / rec_def.width);
             pre = 0;
             position = tmp.length() / (float)propotion;
             while (position < tmp.length())
             {
-                while (tmp[position] != ' ' || MeasureTextEx(fnt, tmp.substr(pre, position - pre).c_str(), 25, 1).x > rec_def.width - 20)
-                    position--;
-                tmp[position] = '\n';
-                pre = position + 1;
+                while (position < tmp.length() && MeasureTextEx(fnt, tmp.substr(pre, position - pre).c_str(), 25, 1).x < rec_def.width - 20)
+                    position++;
+                if (position < tmp.length() - 1)
+                    while (tmp[position] != ' ' || MeasureTextEx(fnt, tmp.substr(pre, position - pre).c_str(), 25, 1).x > rec_def.width - 20)
+                        position--;
+                if (position < tmp.length() - 1)
+                    tmp[position] = '\n';
+                pre = position + 2;
                 position += tmp.length() / (float)propotion;
             }
         }
@@ -248,15 +259,19 @@ void Definitionmenu::addDef()
         tmp = selectedWord->defs[defChosen]->data;
         if (MeasureTextEx(fnt, tmp.c_str(), 25, 1).x > rec_def.width - 20)
         {
-            propotion = float(MeasureTextEx(fnt, tmp.c_str(), 25, 1).x / (rec_def.width - 20));
+            propotion = float(MeasureTextEx(fnt, tmp.c_str(), 25, 1).x / rec_def.width);
             pre = 0;
             position = tmp.length() / (float)propotion;
             while (position < tmp.length())
             {
-                while (tmp[position] != ' ' || MeasureTextEx(fnt, tmp.substr(pre, position - pre).c_str(), 25, 1).x > rec_def.width - 20)
-                    position--;
-                tmp[position] = '\n';
-                pre = position + 1;
+                while (position < tmp.length() && MeasureTextEx(fnt, tmp.substr(pre, position - pre).c_str(), 25, 1).x < rec_def.width - 20)
+                    position++;
+                if (position < tmp.length() - 1)
+                    while (tmp[position] != ' ' || MeasureTextEx(fnt, tmp.substr(pre, position - pre).c_str(), 25, 1).x > rec_def.width - 20)
+                        position--;
+                if (position < tmp.length() - 1)
+                    tmp[position] = '\n';
+                pre = position + 2;
                 position += tmp.length() / (float)propotion;
             }
         }
