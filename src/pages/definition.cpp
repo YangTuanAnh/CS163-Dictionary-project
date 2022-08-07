@@ -116,6 +116,8 @@ void Definitionmenu::deleteBox()
     {
         Word* temp = selectedWord;
         selectedWord = nullptr;
+        data[*modeChosen].updateHistory(temp, false);
+        data[*modeChosen].removeFavorite(temp);
         data[*modeChosen].deleteWord(temp);
         confirmDeleteBox = false;
     }
