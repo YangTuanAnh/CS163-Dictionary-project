@@ -5,6 +5,8 @@
 const int button_width = 100;
 Definitionmenu::Definitionmenu()
 {
+    for (int i = 0; i < 501; i++)
+        newdata[i] = '\0';
 }
 Screen Definitionmenu::update()
 {

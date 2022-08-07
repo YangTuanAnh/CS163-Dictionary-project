@@ -7,7 +7,7 @@
 Word *selectedWord = NULL;
 Home::Home()
 {
-    char **icon = GuiLoadIcons("../data/icons.rgi", true);
+    char **icon = GuiLoadIcons("CS163_github/data/icons.rgi", true);
     for (int i = 0; i < 20; i++)
         rec_result[i] = {320, (float)200 + 125 * i, 830, 120};
     for (int i = 0; i < 5; i++)
