@@ -201,10 +201,11 @@ void Dictionary::deleteDef(Definition* def)
 
 void Dictionary::deleteWord(Word* word)
 {
-    for (auto def : word->defs)
+    while (!word->defs.empty())
     {
-        deleteDef(def);
+        deleteDef(word->defs.back());
     }
+    
     if (std::find(allWords.begin(), allWords.end(), word) == allWords.end())
     {
         std::cerr << "Error: allWords does not contain this word (deleteWord)" << std::endl;
@@ -212,6 +213,7 @@ void Dictionary::deleteWord(Word* word)
     }
     allWords.erase(std::find(allWords.begin(), allWords.end(), word));
     assert(trie->trie_delete(word->data) == success);
+    history.erase(history.begin());
     delete word;
 }
 
