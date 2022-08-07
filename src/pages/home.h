@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <cstring>
 #include "../utility/search.h"
 #include <raylib.h>
 #include "../utility/screen.h"
