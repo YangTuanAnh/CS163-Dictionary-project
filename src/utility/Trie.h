@@ -50,7 +50,7 @@ private:
 	void getSearchResults(Trie_Node<Record>* cur, std::vector<Record>& results);
 	void resetValues(Trie_Node<Record>* cur);
 	void calcValues(Trie_Node<Record>* cur, double sum);
-	void Deallocate(Trie_Node<Record>* cur);
+	void Deallocate(Trie_Node<Record>*& cur);
 };
 
 template <class Record>
@@ -93,7 +93,7 @@ Trie<Record>::~Trie()
 }
 
 template <class Record>
-void Trie<Record>::Deallocate(Trie_Node<Record>* cur) {
+void Trie<Record>::Deallocate(Trie_Node<Record>*& cur) {
 	if (cur == nullptr) {
 		return;
 	}
@@ -101,6 +101,7 @@ void Trie<Record>::Deallocate(Trie_Node<Record>* cur) {
 		Deallocate(cur->branch[i]);
 	}
 	delete cur;
+	cur = nullptr;
 }
 
 template <class Record>
@@ -173,10 +174,6 @@ Trie_error Trie<Record>::trie_delete(const std::string& target)
 	}
 	else {
 		cur->data = defaultValue;
-		for (int i = 0; i < branchLimit; i++)
-			if (cur->branch[i] != nullptr)
-				return success;
-		Deallocate(cur);
 		return success;
 	}
 }
