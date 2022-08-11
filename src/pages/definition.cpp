@@ -58,14 +58,14 @@ Screen Definitionmenu::update()
 
 void Definitionmenu::draw()
 {
-    if (confirmDeleteBox)
-    {
-        deleteBox();
-        return;
-    }
     if (editButton)
     {
         editMenu();
+        return;
+    }
+    if (confirmDeleteBox)
+    {
+        deleteBox(-1);
         return;
     }
     DrawTextEx(fnt, fullDef.c_str(), { rec_def.x + 10, rec_def.y }, 25, 1, BLACK);
@@ -112,22 +112,43 @@ void Definitionmenu::draw()
     DrawLine(50, 135, 1150, 135, BLACK);
 }
 
-void Definitionmenu::deleteBox()
+void Definitionmenu::deleteBox(short type) //-1. delete Word, 1. delete Def
 {
     if (GuiWindowBox({ 300, 170, 600, 250 }, ""))
         confirmDeleteBox = false;
-    std::string text = "Are you sure to delete '" + selectedWord->data + "'?";
+    if (type == -1)
+        text = "Are you sure to delete '" + selectedWord->data + "'?";
+    else text = "Are you sure to delete this definition?";
     DrawTextEx(fnt, text.c_str(), { 600 - MeasureTextEx(fnt, text.c_str(), 27, 1).x / 2, 220 }, 27, 1, BLACK);
     if (GuiButton({ 400, 330, 100, 50 }, "NO"))
         confirmDeleteBox = false;
     if (GuiButton({ 700, 330, 100, 50 }, "YES"))
     {
-        rec_def.y = 205;
-        Word* temp = selectedWord;
-        selectedWord = nullptr;
-        data[*modeChosen].updateHistory(temp, false);
-        data[*modeChosen].removeFavorite(temp);
-        data[*modeChosen].deleteWord(temp);
+        if (type == -1)
+        {
+            rec_def.y = 205;
+            Word* temp = selectedWord;
+            selectedWord = nullptr;
+            data[*modeChosen].updateHistory(temp, false);
+            data[*modeChosen].removeFavorite(temp);
+            data[*modeChosen].deleteWord(temp);
+        }
+        else
+        {
+            editEachDefButton = false;
+            newData.clear();
+            for (int i = 0; i < 501 && newdata[i] != '\0'; i++)
+                newdata[i] = '\0';
+            y_coordinate = 200;
+            confirmDeleteBox = false;
+            data[*modeChosen].deleteDef(selectedWord->defs[defChosen]);
+            eachDef.erase(eachDef.begin() + defChosen);
+            edit_height.push_back(200);
+            for (int i = 1; i <= eachDef.size(); i++)
+            {
+                edit_height.push_back(MeasureTextEx(fnt, eachDef[i - 1].c_str(), 25, 1).y + edit_height[i - 1] + 35);
+            }
+        }
         confirmDeleteBox = false;
     }
 }
@@ -175,9 +196,9 @@ void Definitionmenu::editMenu()
     }
     DrawRectangleRec({ 0, 100, 1200, 90 }, RAYWHITE);
     DrawTextEx(fnt, "EDIT MENU", { 70, 130 }, 40, 1, RED);
-    if (GuiButton({ 800, 130, 100, 50 }, "SAVE"))
+    if (GuiButton({ 750, 130, 100, 50 }, "SAVE"))
         confirmSaveBox = true;
-    if (GuiButton({ 920, 130, 200, 50 }, "ADD MORE"))
+    if (GuiButton({ 880, 130, 170, 50 }, "ADD MORE"))
     {
         addDefButton = true;
         newData = "\0";
@@ -188,15 +209,22 @@ void Definitionmenu::editMenu()
 
 void Definitionmenu::editEachDef()
 {
+    if (confirmDeleteBox)
+    {
+        deleteBox(1);
+        return;
+    }
     if (GetMouseWheelMove() == 1  && y_coordinate < 200)
         y_coordinate += 30;
     if (GetMouseWheelMove() == -1)
         y_coordinate -= 30;
     GuiTextBoxMulti({ 50, y_coordinate, 1100, 5000 }, newdata, 800, true);
     DrawRectangleRec({ 0, 100, 1200, 90 }, RAYWHITE);
-    DrawTextEx(fnt, TextFormat("%i/%i", strlen(newdata), 500), {950, 140}, 40, 1, LIGHTGRAY);
+    DrawTextEx(fnt, TextFormat("%i/%i", strlen(newdata), 500), {1080, 150}, 30, 1, LIGHTGRAY);
     DrawTextEx(fnt, "EDIT MENU", { 70, 130 }, 40, 1, RED);
-    if (GuiButton({ 800, 130, 100, 50 }, "SAVE"))
+    if (GuiButton({ 880, 130, 150, 50 }, "DELETE"))
+        confirmDeleteBox = true;
+    if (GuiButton({ 750, 130, 100, 50 }, "SAVE"))
     {
         newData.clear();
         for (int i = 0; i < 501 && newdata[i] != '\0'; i++)

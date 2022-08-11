@@ -4,7 +4,7 @@
 struct Definitionmenu
 {
 private:
-    void deleteBox();
+    void deleteBox(short type);
     void editMenu();
     void editEachDef();
     void addDef();
@@ -16,7 +16,7 @@ private:
     std::vector<std::string> eachDef;
     std::vector<int> edit_height;
     std::vector<bool> editMode;
-    std::string tmp, newData;
+    std::string tmp, newData, text;
     char newdata[501];
     float propotion, y_coordinate = 200;
     int position, pre, defChosen = -1;
