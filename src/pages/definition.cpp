@@ -187,8 +187,7 @@ void Definitionmenu::editMenu()
             edit_height.clear();
             defChosen = i;
             editEachDefButton = true;
-            newData = selectedWord->defs[defChosen]->data;
-            strcpy(newdata, newData.c_str());
+            strcpy(newdata, selectedWord->defs[defChosen]->data.c_str());
             return;
         }
     }

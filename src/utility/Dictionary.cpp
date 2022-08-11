@@ -171,6 +171,7 @@ void Dictionary::insertDef(Word* word, std::string newDef)
     Definition* def = new Definition(newDef);
     allDefs.push_back(def);
     word->defs.push_back(def);
+    def->word = word;
     updateDefsLinks(def, +1);
 }
 
