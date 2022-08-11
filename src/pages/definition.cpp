@@ -129,8 +129,6 @@ void Definitionmenu::deleteBox(short type) //-1. delete Word, 1. delete Def
             rec_def.y = 205;
             Word* temp = selectedWord;
             selectedWord = nullptr;
-            data[*modeChosen].updateHistory(temp, false);
-            data[*modeChosen].removeFavorite(temp);
             data[*modeChosen].deleteWord(temp);
         }
         else

@@ -213,6 +213,7 @@ void Dictionary::deleteWord(Word* word)
     }
     allWords.erase(std::find(allWords.begin(), allWords.end(), word));
     assert(trie->trie_delete(word->data) == success);
+    history.erase(history.begin());
     delete word;
 }
 
