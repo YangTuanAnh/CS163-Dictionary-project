@@ -17,7 +17,7 @@ Home::Home()
 
 Screen Home::update()
 {
-    if (confirmResetBox) return HOME;
+    if (confirmResetBox || addWordButton) return HOME;
     if (GetMouseWheelMove() == -1 && rec_result[word.size() - 1].y > 475)
     {
         for (int i = 0; i < word.size(); i++)
@@ -75,6 +75,11 @@ void Home::draw()
     if (confirmResetBox)
     {
         resetBox();
+        return;
+    }
+    if (addWordButton)
+    {
+        addWord();
         return;
     }
     Vector2 mousePos = GetMousePosition();
@@ -148,7 +153,15 @@ void Home::draw()
         if (SearchInput[0] == '\0')
             word = data[*modeChosen].getSearchHistory();
         else
+        {
             word = data[*modeChosen].SearchWord(SearchInput);
+            if (!word.size())
+            {
+                DrawTextEx(fnt, "No word match this search !!!", { 300, 205 }, 25, 1, RED);
+                if (GuiLabelButton({ 320, 250, 80, 40 }, "Add this word"))
+                    addWordButton = true;
+            }
+        }
     }
     if (SearchEdit)
     {
@@ -171,7 +184,7 @@ void Home::resetBox()
 {
     if (GuiWindowBox({ 300, 170, 600, 250 }, ""))
         confirmResetBox = false;
-    std::string text = "Are you sure to reset " + dictionary[*modeChosen] + "?";
+    text = "Are you sure to reset " + dictionary[*modeChosen] + "?";
     DrawTextEx(fnt, text.c_str(), {600 - MeasureTextEx(fnt, text.c_str(), 27, 1).x / 2, 220}, 27, 1, BLACK);
     if (GuiButton({ 400, 330, 100, 50 }, "NO"))
         confirmResetBox = false;
@@ -181,4 +194,20 @@ void Home::resetBox()
         data[*modeChosen].resetData();
         confirmResetBox = false;
     }
+}
+
+void Home::addWord()
+{
+    if (GuiWindowBox({ 300, 170, 600, 250 }, ""))
+        addWordButton = false;
+    text = "Are you sure to add this word? (Edit later)";
+    DrawTextEx(fnt, text.c_str(), { 600 - MeasureTextEx(fnt, text.c_str(), 27, 1).x / 2, 220 }, 27, 1, BLACK);
+    if (GuiButton({ 400, 330, 100, 50 }, "Cancel"))
+        addWordButton = false;
+    if (GuiButton({ 700, 330, 100, 50 }, "Yes"))
+    {
+        data[*modeChosen].insertWord(SearchInput);
+        addWordButton = false;
+    }
+
 }

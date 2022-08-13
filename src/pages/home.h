@@ -23,13 +23,14 @@ private:
     std::vector<std::string> modes = {"Search Word", "Search Def", "Favorite", "History", "Game"};
     std::vector<std::string> dictionary = {"ENG-ENG", "ENG-VIE", "SLANG", "EMOTIONAL"};
     short menuChosen = 0;
-    bool dropDowmBox = false;
-    bool confirmResetBox = false;
+    bool dropDowmBox = false, confirmResetBox = false, addWordButton = false;
+    std::string text;
 public:
     Home();
     Screen update();
     void draw();
     void resetBox();
+    void addWord();
     ~Home()
     {
 
