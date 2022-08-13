@@ -11,11 +11,7 @@
 #include "Trie.h"
 #include "limits.h"
 
-const std::string digits = "0123456789";
-const std::string lowercase = "abcdefghijklmnopqrstuvwxyz";
-const std::string uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const std::string symbols = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
-const std::string space = " ";
+const std::string printable = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~ ";
 
 class Word;
 class Definition;
