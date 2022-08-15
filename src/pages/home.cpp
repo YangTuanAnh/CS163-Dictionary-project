@@ -17,7 +17,8 @@ Home::Home()
 
 Screen Home::update()
 {
-    if (confirmResetBox || addWordButton) return HOME;
+    if (confirmResetBox || addWordButton)
+        return HOME;
     if (GetMouseWheelMove() == -1 && rec_result[word.size() - 1].y > 475)
     {
         for (int i = 0; i < word.size(); i++)
@@ -92,7 +93,7 @@ void Home::draw()
 
     for (int i = 0; i < word.size(); i++)
     {
-        DrawRectangleRec(rec_result[i], DARKBLUE);
+        DrawRectangleGradientV(rec_result[i].x, rec_result[i].y, rec_result[i].width, rec_result[i].height, DARKBLUE, {24, 123, 205, 255});
         if (SearchInput[0] == '\0' && CheckCollisionPointRec(mousePos, {rec_result[i].x + 750, rec_result[i].y + 5, 32, 32}))
             GuiDrawIcon(202, rec_result[i].x + 750, rec_result[i].y + 5, 2, RED);
         else if (CheckCollisionPointRec(mousePos, {rec_result[i].x + 790, rec_result[i].y + 5, 32, 32}))
@@ -100,15 +101,13 @@ void Home::draw()
         else
         {
             if (CheckCollisionPointRec(mousePos, rec_result[i]) && mousePos.y > 180 && !dropDowmBox)
-                DrawRectangleRec(rec_result[i], BLUE);
+                DrawRectangleGradientV(rec_result[i].x, rec_result[i].y, rec_result[i].width, rec_result[i].height, BLUE, {42, 157, 244, 255});
             if (SearchInput[0] == '\0')
                 GuiDrawIcon(202, rec_result[i].x + 750, rec_result[i].y + 5, 2, WHITE);
             GuiDrawIcon(201, rec_result[i].x + 790, rec_result[i].y + 5, 2, WHITE);
         }
         if (word[i]->isFavorite)
-            GuiDrawIcon(186, rec_result[i].x + 700, rec_result[i].y - 5, 3, RED);
-        else
-            GuiDrawIcon(200, rec_result[i].x + 700, rec_result[i].y - 5, 3, BLACK);
+            GuiDrawIcon(186, rec_result[i].x + rec_result[i].width - 64, rec_result[i].y, 3, RED);
         DrawTextEx(fnt, word[i]->data.c_str(), {rec_result[i].x + 10, rec_result[i].y + 10}, 34, 2, WHITE);
         for (int j = 0; j < std::min(2, int(word[i]->defs.size())); j++)
         {
@@ -157,8 +156,8 @@ void Home::draw()
             word = data[*modeChosen].SearchWord(SearchInput);
             if (!word.size())
             {
-                DrawTextEx(fnt, "No word match this search !!!", { 300, 205 }, 25, 1, RED);
-                if (GuiLabelButton({ 320, 250, 80, 40 }, "Add this word"))
+                DrawTextEx(fnt, "No word match this search !!!", {300, 205}, 25, 1, RED);
+                if (GuiLabelButton({320, 250, 80, 40}, "Add this word"))
                     addWordButton = true;
             }
         }
@@ -182,13 +181,13 @@ void Home::draw()
 
 void Home::resetBox()
 {
-    if (GuiWindowBox({ 300, 170, 600, 250 }, ""))
+    if (GuiWindowBox({300, 170, 600, 250}, ""))
         confirmResetBox = false;
     text = "Are you sure to reset " + dictionary[*modeChosen] + "?";
     DrawTextEx(fnt, text.c_str(), {600 - MeasureTextEx(fnt, text.c_str(), 27, 1).x / 2, 220}, 27, 1, BLACK);
-    if (GuiButton({ 400, 330, 100, 50 }, "NO"))
+    if (GuiButton({400, 330, 100, 50}, "NO"))
         confirmResetBox = false;
-    if (GuiButton({ 700, 330, 100, 50 }, "YES"))
+    if (GuiButton({700, 330, 100, 50}, "YES"))
     {
         word.clear();
         data[*modeChosen].resetData();
@@ -198,16 +197,15 @@ void Home::resetBox()
 
 void Home::addWord()
 {
-    if (GuiWindowBox({ 300, 170, 600, 250 }, ""))
+    if (GuiWindowBox({300, 170, 600, 250}, ""))
         addWordButton = false;
     text = "Are you sure to add this word? (Edit later)";
-    DrawTextEx(fnt, text.c_str(), { 600 - MeasureTextEx(fnt, text.c_str(), 27, 1).x / 2, 220 }, 27, 1, BLACK);
-    if (GuiButton({ 400, 330, 100, 50 }, "Cancel"))
+    DrawTextEx(fnt, text.c_str(), {600 - MeasureTextEx(fnt, text.c_str(), 27, 1).x / 2, 220}, 27, 1, BLACK);
+    if (GuiButton({400, 330, 100, 50}, "Cancel"))
         addWordButton = false;
-    if (GuiButton({ 700, 330, 100, 50 }, "Yes"))
+    if (GuiButton({700, 330, 100, 50}, "Yes"))
     {
         data[*modeChosen].insertWord(SearchInput);
         addWordButton = false;
     }
-
 }

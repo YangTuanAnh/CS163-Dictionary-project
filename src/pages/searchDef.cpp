@@ -5,10 +5,10 @@
 SearchDef::SearchDef()
 {
     for (int i = 0; i < 50; i++)
-        rec_result[i] = { 320, (float)200 + 125 * i, 830, 120 };
+        rec_result[i] = {320, (float)200 + 125 * i, 830, 120};
     for (int i = 0; i < 5; i++)
-        rec_modes[i] = { 30, (float)125 + 90 * i, 245, 60 };
-    rec_modes[menuChosen] = { 20, (float)115 + 90 * menuChosen, 265, 80 };
+        rec_modes[i] = {30, (float)125 + 90 * i, 245, 60};
+    rec_modes[menuChosen] = {20, (float)115 + 90 * menuChosen, 265, 80};
 }
 
 Screen SearchDef::update()
@@ -37,7 +37,7 @@ Screen SearchDef::update()
                 data[*modeChosen].getFullDefinition(selectedWord->data);
 
                 for (int i = 0; i < 50; i++)
-                    rec_result[i] = { 320, (float)200 + 125 * i, 830, 120 };
+                    rec_result[i] = {320, (float)200 + 125 * i, 830, 120};
                 return DEFINITION;
             }
         }
@@ -64,11 +64,11 @@ void SearchDef::draw()
     }
     for (int i = 0; i < word.size(); i++)
     {
-        DrawRectangleRec(rec_result[i], DARKBLUE);
+        DrawRectangleGradientV(rec_result[i].x, rec_result[i].y, rec_result[i].width, rec_result[i].height, DARKBLUE, {24, 123, 205, 255});
         if (CheckCollisionPointRec(mousePos, rec_result[i]) && mousePos.y > 180 && !dropDowmBox)
-            DrawRectangleRec(rec_result[i], BLUE);
+            DrawRectangleGradientV(rec_result[i].x, rec_result[i].y, rec_result[i].width, rec_result[i].height, BLUE, {42, 157, 244, 255});
 
-        DrawTextEx(fnt, word[i]->data.c_str(), { rec_result[i].x + 10, rec_result[i].y + 10 }, 34, 2, WHITE);
+        DrawTextEx(fnt, word[i]->data.c_str(), {rec_result[i].x + 10, rec_result[i].y + 10}, 34, 2, WHITE);
         for (int j = 0; j < std::min(2, int(word[i]->defs.size())); j++)
         {
             std::string s = word[i]->defs[j]->data;
@@ -78,7 +78,7 @@ void SearchDef::draw()
                     s.insert(s.begin() + rec_result[i].width / 13 + k, '.');
                 s.insert(s.begin() + rec_result[i].width / 13 + 3, '\0');
             }
-            DrawTextEx(fnt, s.c_str(), { rec_result[i].x + 15, rec_result[i].y + 35 * j + 50 }, 25, 2, LIGHTGRAY);
+            DrawTextEx(fnt, s.c_str(), {rec_result[i].x + 15, rec_result[i].y + 35 * j + 50}, 25, 2, LIGHTGRAY);
         }
     }
     DrawRectangle(310, 100, 850, 90, RAYWHITE);
@@ -102,9 +102,10 @@ void SearchDef::draw()
         {
             if (SearchInput[0] != '\0')
                 word = data[*modeChosen].SearchDef(SearchInput);
-            else word.clear();
+            else
+                word.clear();
             for (int i = 0; i < 50; i++)
-                rec_result[i] = { 320, (float)200 + 125 * i, 830, 120 };
+                rec_result[i] = {320, (float)200 + 125 * i, 830, 120};
         }
     }
 }

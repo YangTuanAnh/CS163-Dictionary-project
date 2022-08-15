@@ -10,7 +10,8 @@ Definitionmenu::Definitionmenu()
 }
 Screen Definitionmenu::update()
 {
-    if (confirmDeleteBox || editButton) return DEFINITION;
+    if (confirmDeleteBox || editButton)
+        return DEFINITION;
     if (!selectedWord)
     {
         fullDef = "\0";
@@ -19,7 +20,7 @@ Screen Definitionmenu::update()
     }
     if (fullDef == "\0")
     {
-        for (int j = 0;j < selectedWord->defs.size();j++)
+        for (int j = 0; j < selectedWord->defs.size(); j++)
         {
             tmp = selectedWord->defs[j]->data;
             if (MeasureTextEx(fnt, tmp.c_str(), 25, 1).x > rec_def.width - 20)
@@ -68,25 +69,25 @@ void Definitionmenu::draw()
         deleteBox(-1);
         return;
     }
-    DrawTextEx(fnt, fullDef.c_str(), { rec_def.x + 10, rec_def.y }, 25, 1, BLACK);
-    DrawRectangleRec({ 52, 124, rec_box.width - 4, 78 }, RAYWHITE);
-    DrawRectangleRec({ 52, 520, rec_box.width - 4, 78 }, RAYWHITE);
-    if (GuiButton({ rec_box.x + rec_box.width - 15 - button_width, rec_box.y + rec_box.height - 60, button_width, 45 }, "Delete"))
+    DrawTextEx(fnt, fullDef.c_str(), {rec_def.x + 10, rec_def.y}, 25, 1, BLACK);
+    DrawRectangleRec({52, 100, rec_box.width - 4, 100}, RAYWHITE);
+    DrawRectangleRec({52, 500, rec_box.width - 4, 100}, RAYWHITE);
+    if (GuiButton({rec_box.x + rec_box.width - 15 - button_width, rec_box.y + rec_box.height - 60, button_width, 45}, "Delete"))
         confirmDeleteBox = true;
     if (!selectedWord->isFavorite)
     {
-        GuiDrawIcon(200, 1000, 123, 5, GRAY);
-        if (GuiButton({ rec_box.x + rec_box.width - (15 + button_width) * 3, rec_box.y + rec_box.height - 60, button_width * 2 + 15, 45 }, "Add Favorite"))
+        GuiDrawIcon(200, 1080, 163, 3, GRAY);
+        if (GuiButton({rec_box.x + rec_box.width - (15 + button_width) * 3, rec_box.y + rec_box.height - 60, button_width * 2 + 15, 45}, "Add Favorite"))
             data[*modeChosen].updateFavorite(selectedWord);
     }
     else
     {
-        GuiDrawIcon(186, 1000, 123, 5, RED);
-        if (GuiButton({ rec_box.x + rec_box.width - (15 + button_width) * 3, rec_box.y + rec_box.height - 60, button_width * 2 + 15, 45 }, "Remove Favorite"))
+        GuiDrawIcon(186, 1080, 163, 3, RED);
+        if (GuiButton({rec_box.x + rec_box.width - (15 + button_width) * 3, rec_box.y + rec_box.height - 60, button_width * 2 + 15, 45}, "Remove Favorite"))
             data[*modeChosen].removeFavorite(selectedWord);
     }
 
-    if (GuiButton({ rec_box.x + rec_box.width - (15 + button_width) * 4, rec_box.y + rec_box.height - 60, button_width, 45 }, "Edit"))
+    if (GuiButton({rec_box.x + rec_box.width - (15 + button_width) * 4, rec_box.y + rec_box.height - 60, button_width, 45}, "Edit"))
     {
         rec_def.y = 205;
         fullDef = "\0";
@@ -98,9 +99,9 @@ void Definitionmenu::draw()
         }
         return;
     }
-    DrawTextEx(fnt, selectedWord->data.c_str(), { rec_box.x + 15, rec_box.y + 38 }, 45, 2, BLACK);
-    DrawRectangleRec({ 51, 100, rec_box.width - 2, 35 }, LIGHTGRAY);
-    if (GuiButton({ 1100,100,50,35 }, "X"))
+    DrawTextEx(fnt, selectedWord->data.c_str(), {rec_box.x + 15, rec_box.y + 38}, 45, 2, BLACK);
+    DrawRectangleGradientH(51, 120, rec_box.width - 2, 35, BLUE, {42, 157, 244, 255});
+    if (GuiButton({1100, 120, 50, 35}, "X"))
     {
         rec_def.y = 205;
         selectedWord = NULL;
@@ -108,26 +109,27 @@ void Definitionmenu::draw()
         eachDef.clear();
         return;
     }
-    DrawRectangleLinesEx({ rec_box }, 2, BLACK);
-    DrawLine(50, 135, 1150, 135, BLACK);
+    DrawRectangleLinesEx({rec_box}, 1.5, BLACK);
+    DrawLine(50, 155, 1150, 155, BLACK);
 }
 
 void Definitionmenu::deleteBox(short type) //-1. delete Word, 1. delete Def
 {
-    if (GuiWindowBox({ 300, 170, 600, 250 }, ""))
+    if (GuiWindowBox({300, 170, 600, 250}, ""))
         confirmDeleteBox = false;
     if (type == -1)
         text = "Are you sure to delete '" + selectedWord->data + "'?";
-    else text = "Are you sure to delete this definition?";
-    DrawTextEx(fnt, text.c_str(), { 600 - MeasureTextEx(fnt, text.c_str(), 27, 1).x / 2, 220 }, 27, 1, BLACK);
-    if (GuiButton({ 400, 330, 100, 50 }, "NO"))
+    else
+        text = "Are you sure to delete this definition?";
+    DrawTextEx(fnt, text.c_str(), {600 - MeasureTextEx(fnt, text.c_str(), 27, 1).x / 2, 220}, 27, 1, BLACK);
+    if (GuiButton({400, 330, 100, 50}, "NO"))
         confirmDeleteBox = false;
-    if (GuiButton({ 700, 330, 100, 50 }, "YES"))
+    if (GuiButton({700, 330, 100, 50}, "YES"))
     {
         if (type == -1)
         {
             rec_def.y = 205;
-            Word* temp = selectedWord;
+            Word *temp = selectedWord;
             selectedWord = nullptr;
             data[*modeChosen].deleteWord(temp);
         }
@@ -180,9 +182,9 @@ void Definitionmenu::editMenu()
     }
     for (int i = 0; i < eachDef.size(); i++)
     {
-        DrawTextEx(fnt, eachDef[i].c_str(), { 34, (float)edit_height[i] + 8 }, 25, 1, BLACK);
-        DrawRectangleLinesEx({ 20, (float)edit_height[i], 1100, (float)edit_height[i + 1] - edit_height[i] - 20 }, 2, BLACK);
-        if (GuiButton({ 1130, (float)edit_height[i], 65, 40 }, "Edit") && GetMousePosition().y > 200)
+        DrawTextEx(fnt, eachDef[i].c_str(), {34, (float)edit_height[i] + 8}, 25, 1, BLACK);
+        DrawRectangleLinesEx({20, (float)edit_height[i], 1100, (float)edit_height[i + 1] - edit_height[i] - 20}, 2, BLACK);
+        if (GuiButton({1130, (float)edit_height[i], 65, 40}, "Edit") && GetMousePosition().y > 200)
         {
             edit_height.clear();
             defChosen = i;
@@ -191,11 +193,11 @@ void Definitionmenu::editMenu()
             return;
         }
     }
-    DrawRectangleRec({ 0, 100, 1200, 90 }, RAYWHITE);
-    DrawTextEx(fnt, "EDIT MENU", { 70, 130 }, 40, 1, RED);
-    if (GuiButton({ 750, 130, 100, 50 }, "SAVE"))
+    DrawRectangleRec({0, 100, 1200, 90}, RAYWHITE);
+    DrawTextEx(fnt, "EDIT MENU", {70, 130}, 40, 1, RED);
+    if (GuiButton({750, 130, 100, 50}, "SAVE"))
         confirmSaveBox = true;
-    if (GuiButton({ 880, 130, 170, 50 }, "ADD MORE"))
+    if (GuiButton({880, 130, 170, 50}, "ADD MORE"))
     {
         addDefButton = true;
         newData = "\0";
@@ -211,17 +213,17 @@ void Definitionmenu::editEachDef()
         deleteBox(1);
         return;
     }
-    if (GetMouseWheelMove() == 1  && y_coordinate < 200)
+    if (GetMouseWheelMove() == 1 && y_coordinate < 200)
         y_coordinate += 30;
     if (GetMouseWheelMove() == -1)
         y_coordinate -= 30;
-    GuiTextBoxMulti({ 50, y_coordinate, 1100, 5000 }, newdata, 800, true);
-    DrawRectangleRec({ 0, 100, 1200, 90 }, RAYWHITE);
+    GuiTextBoxMulti({50, y_coordinate, 1100, 5000}, newdata, 800, true);
+    DrawRectangleRec({0, 100, 1200, 90}, RAYWHITE);
     DrawTextEx(fnt, TextFormat("%i/%i", strlen(newdata), 500), {1080, 150}, 30, 1, LIGHTGRAY);
-    DrawTextEx(fnt, "EDIT MENU", { 70, 130 }, 40, 1, RED);
-    if (GuiButton({ 880, 130, 150, 50 }, "DELETE"))
+    DrawTextEx(fnt, "EDIT MENU", {70, 130}, 40, 1, RED);
+    if (GuiButton({880, 130, 150, 50}, "DELETE"))
         confirmDeleteBox = true;
-    if (GuiButton({ 750, 130, 100, 50 }, "SAVE"))
+    if (GuiButton({750, 130, 100, 50}, "SAVE"))
     {
         newData.clear();
         for (int i = 0; i < 501 && newdata[i] != '\0'; i++)
@@ -266,11 +268,11 @@ void Definitionmenu::addDef()
         y_coordinate += 30;
     if (GetMouseWheelMove() == -1)
         y_coordinate -= 30;
-    GuiTextBoxMulti({ 50, y_coordinate, 1100, 5000 }, newdata, 800, true);
-    DrawRectangleRec({ 0, 100, 1200, 90 }, RAYWHITE);
+    GuiTextBoxMulti({50, y_coordinate, 1100, 5000}, newdata, 800, true);
+    DrawRectangleRec({0, 100, 1200, 90}, RAYWHITE);
     DrawTextEx(fnt, TextFormat("%i/%i", strlen(newdata), 500), {950, 140}, 40, 1, LIGHTGRAY);
-    DrawTextEx(fnt, "ADD MENU", { 70, 130 }, 40, 1, RED);
-    if (GuiButton({ 800, 130, 100, 50 }, "ADD"))
+    DrawTextEx(fnt, "ADD MENU", {70, 130}, 40, 1, RED);
+    if (GuiButton({800, 130, 100, 50}, "ADD"))
     {
         newData.clear();
         for (int i = 0; i < 501 && newdata[i] != '\0'; i++)
@@ -307,13 +309,13 @@ void Definitionmenu::addDef()
 
 void Definitionmenu::saveBox()
 {
-    if (GuiWindowBox({ 300, 170, 600, 250 }, ""))
+    if (GuiWindowBox({300, 170, 600, 250}, ""))
         confirmSaveBox = false;
     std::string text = "Save changes in this definition?";
-    DrawTextEx(fnt, text.c_str(), { 600 - MeasureTextEx(fnt, text.c_str(), 27, 1).x / 2, 220 }, 27, 1, BLACK);
-    if (GuiButton({ 400, 330, 100, 50 }, "Cancel"))
+    DrawTextEx(fnt, text.c_str(), {600 - MeasureTextEx(fnt, text.c_str(), 27, 1).x / 2, 220}, 27, 1, BLACK);
+    if (GuiButton({400, 330, 100, 50}, "Cancel"))
         confirmSaveBox = false;
-    if (GuiButton({ 700, 330, 100, 50 }, "Yes"))
+    if (GuiButton({700, 330, 100, 50}, "Yes"))
     {
         editButton = false;
         for (int i = 0; i < eachDef.size(); i++)

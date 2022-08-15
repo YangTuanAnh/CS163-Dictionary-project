@@ -16,6 +16,11 @@ private:
     bool correctAns = false;
     bool pressed = false;
     std::string ans = "";
+    Color button_color[4][2] = {{RED, MAROON},
+                                {YELLOW, GOLD},
+                                {BLUE, DARKBLUE},
+                                {LIME, GREEN}};
+    std::string options[4] = {"A", "B", "C", "D"};
 
 public:
     Game()
