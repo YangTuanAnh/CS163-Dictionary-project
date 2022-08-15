@@ -88,7 +88,7 @@ public:
         default:
             break;
         }
-        DrawRectangleRec(rec_top, DARKBLUE);
+        DrawRectangleGradientEx(rec_top, {3, 37, 76, 255}, DARKBLUE, {24, 123, 205, 255}, {42, 157, 244, 255});
         DrawText("CS163_GROUP8_DICTIONARY", 390, 60, 28, WHITE);
         EndDrawing();
     }

@@ -9,6 +9,28 @@ Screen Game::update()
         std::cerr << (isWordGame ? quiz[i]->defs[0]->data : quiz[i]->data) << ' ';
     std::cerr << '\n';
     std::cerr << (!isWordGame ? quiz[4]->defs[0]->data : quiz[4]->data) << '\n';
+
+    if (IsMouseButtonPressed(0))
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            if (CheckCollisionPointRec(GetMousePosition(), {(float)320 + 220 * i, 500, 200, 65}))
+            {
+                pressed = true;
+                if (quiz[i]->data == quiz[4]->data)
+                {
+                    ans = "Correct answer: " + options[i];
+                    correctAns = true;
+                }
+                else
+                {
+                    ans = "Wrong answer: " + options[i];
+                    correctAns = false;
+                }
+            }
+        }
+    }
+
     if (menuChosen != 4)
     {
         short tmp = menuChosen;
@@ -23,7 +45,6 @@ void Game::draw()
     for (int i = 0; i < 5; i++)
         if (GuiButton(rec_modes[i], modes[i].c_str()))
             menuChosen = i;
-    std::string options[] = {"A", "B", "C", "D"};
 
     if (isWordGame)
     {
@@ -100,20 +121,12 @@ void Game::draw()
     }
 
     for (int i = 0; i < 4; i++)
-        if (GuiButton({(float)320 + 220 * i, 500, 200, 65}, options[i].c_str()))
-        {
-            pressed = true;
-            if (quiz[i]->data == quiz[4]->data)
-            {
-                ans = "Correct answer: " + options[i];
-                correctAns = true;
-            }
-            else
-            {
-                ans = "Wrong answer";
-                correctAns = false;
-            }
-        }
+    {
+        DrawRectangleGradientH(320 + 220 * i, 500, 200, 65, button_color[i][0], button_color[i][1]);
+        if (CheckCollisionPointRec(GetMousePosition(), {(float)320 + 220 * i, 500, 200, 65}))
+            DrawRectangleGradientH(320 + 220 * i, 500, 200, 65, button_color[i][1], button_color[i][0]);
+        DrawTextEx(fnt, options[i].c_str(), {(float)320 + 220 * i + (200 - 40) / 2, (float)500 + (65 - 40) / 2}, 40, 1, WHITE);
+    }
     if (pressed)
         DrawTextEx(fnt, ans.c_str(), {320, 145}, 30, 1, correctAns ? GREEN : RED);
 }

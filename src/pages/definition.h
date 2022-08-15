@@ -10,8 +10,8 @@ private:
     void addDef();
     void saveBox();
 
-    Rectangle rec_box{ 50, 100, 1100, 500 };
-    Rectangle rec_def{ 50, 205, 1100, 300 };
+    Rectangle rec_box{50, 120, 1100, 460};
+    Rectangle rec_def{50, 205, 1100, 300};
     std::string fullDef = "\0";
     std::vector<std::string> eachDef;
     std::vector<int> edit_height;
@@ -21,6 +21,7 @@ private:
     float propotion, y_coordinate = 200;
     int position, pre, defChosen = -1;
     bool confirmDeleteBox = false, confirmSaveBox = false, editButton = false, editEachDefButton = false, addDefButton = false;
+
 public:
     Definitionmenu();
     ~Definitionmenu()

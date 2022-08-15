@@ -59,9 +59,9 @@ void Favorite::draw()
 
     for (int i = 0; i < word.size(); i++)
     {
-        DrawRectangleRec(rec_result[i], DARKBLUE);
+        DrawRectangleGradientV(rec_result[i].x, rec_result[i].y, rec_result[i].width, rec_result[i].height, DARKBLUE, {24, 123, 205, 255});
         if (CheckCollisionPointRec(mousePos, rec_result[i]) && mousePos.y > 180 && !dropDowmBox)
-            DrawRectangleRec(rec_result[i], BLUE);
+            DrawRectangleGradientV(rec_result[i].x, rec_result[i].y, rec_result[i].width, rec_result[i].height, BLUE, {42, 157, 244, 255});
 
         DrawTextEx(fnt, word[i]->data.c_str(), {rec_result[i].x + 10, rec_result[i].y + 10}, 34, 2, WHITE);
         for (int j = 0; j < std::min(2, int(word[i]->defs.size())); j++)
