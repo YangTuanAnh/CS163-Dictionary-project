@@ -8,6 +8,7 @@
 #include <chrono>
 #include <algorithm>
 #include <utility>
+#include <math.h>
 #include "Trie.h"
 #include "limits.h"
 

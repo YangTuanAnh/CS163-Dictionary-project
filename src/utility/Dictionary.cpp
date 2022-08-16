@@ -273,7 +273,8 @@ std::vector<Word*> Dictionary::SearchDef(const std::string& key)
         if (def->_value > 0)
         {
             candidates.push_back(def);
-            def->_value *= (double)1.0 - editDistance(key, def->data) / (double)def->data.size() ;
+            //def->_value *= (double)1.0 - editDistance(key, def->data) / (double)def->data.size() ;
+            def->_value = editDistance(key, def->data) / (25 - 25 * exp(-0.139762 * def->_value)) - (11 * exp(0.262364 * def->_value) - 11);
         }
         if ((int)candidates.size() == 50 * SEARCH_RESULTS_LIMIT)
         {
@@ -282,7 +283,7 @@ std::vector<Word*> Dictionary::SearchDef(const std::string& key)
     }
 
     std::sort(candidates.begin(), candidates.end(), [](auto a, auto b)
-        { return a->_value > b->_value; });
+        { return a->_value < b->_value; });
     std::vector<Word*> result;
     for (auto def : candidates) {
         bool found = false;
@@ -290,7 +291,7 @@ std::vector<Word*> Dictionary::SearchDef(const std::string& key)
             found |= (word == def->word);
         }
         if (!found) {
-            //std::cerr << def->word->data << ' ' << def->_value << std::endl;
+            std::cerr << def->word->data << ' ' << def->_value << std::endl;
             result.push_back(def->word);
         }
         if ((int) result.size() == SEARCH_RESULTS_LIMIT) {
@@ -573,5 +574,6 @@ int editDistance(const std::string &s, const std::string &t) {
             }
         }
     }
-    return dp[m][n];
+    // penalty for excess length 
+    return dp[m][n] + 10 * std::max(0, (int)s.size() - int(t.size())) * std::max(0, (int)s.size() - int(t.size()));
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <math.h>
 #include "limits.h"
 
 enum Trie_error
@@ -261,8 +262,9 @@ void Trie<Record>::calcValues(Trie_Node<Record>* cur, double sum) {
 	if (cur->data != defaultValue) {
 		sum += cur->data->_value;
 		if (sum >= 1e-2) {
+			double val = sum * pow(0.99, (double)cur->data->defs.size());
 			for (auto def : cur->data->defs) {
-				def->_value += sum;
+				def->_value += val;
 			}
 		}
 	}
