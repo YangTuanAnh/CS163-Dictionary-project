@@ -86,6 +86,13 @@ void SearchDef::draw()
     if (GuiTextBox(rec_search, SearchInput, 200, SearchEdit))
     {
         SearchEdit ^= 1;
+        if (!SearchEdit)
+        {
+            if (SearchInput[0] != '\0')
+                word = data[*modeChosen].SearchDef(SearchInput);
+            else
+                word.clear();
+        }
     }
     if (GuiDropdownBox(rec_dictionary, (dictionary[0] + "\n" + dictionary[1] + "\n" + dictionary[2] + "\n" + dictionary[3]).c_str(), modeChosen, dropDowmBox))
     {
@@ -99,13 +106,7 @@ void SearchDef::draw()
     if (SearchEdit)
     {
         if (GetKeyPressed())
-        {
-            if (SearchInput[0] != '\0')
-                word = data[*modeChosen].SearchDef(SearchInput);
-            else
-                word.clear();
             for (int i = 0; i < 50; i++)
                 rec_result[i] = {320, (float)200 + 125 * i, 830, 120};
-        }
     }
 }

@@ -7,7 +7,7 @@
 Word *selectedWord = NULL;
 Home::Home()
 {
-    char **icon = GuiLoadIcons("CS163_github/data/icons.rgi", true);
+    char **icon = GuiLoadIcons("../data/icons.rgi", true);
     for (int i = 0; i < 20; i++)
         rec_result[i] = {320, (float)200 + 125 * i, 830, 120};
     for (int i = 0; i < 5; i++)
@@ -107,7 +107,9 @@ void Home::draw()
             GuiDrawIcon(201, rec_result[i].x + 790, rec_result[i].y + 5, 2, WHITE);
         }
         if (word[i]->isFavorite)
-            GuiDrawIcon(186, rec_result[i].x + rec_result[i].width - 64, rec_result[i].y, 3, RED);
+            GuiDrawIcon(186, rec_result[i].x + rec_result[i].width - 50, rec_result[i].y + 45, 3, RED);
+        else
+            GuiDrawIcon(200, rec_result[i].x + rec_result[i].width - 50, rec_result[i].y + 45, 3, BLACK);
         DrawTextEx(fnt, word[i]->data.c_str(), {rec_result[i].x + 10, rec_result[i].y + 10}, 34, 2, WHITE);
         for (int j = 0; j < std::min(2, int(word[i]->defs.size())); j++)
         {
